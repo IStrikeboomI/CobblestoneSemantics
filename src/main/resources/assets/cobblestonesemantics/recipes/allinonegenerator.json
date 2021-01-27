@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "III",
+        "CLM",
+        "RRR"
+    ],
+    "key":
+    {
+        "I":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+        "R":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        },
+        "C":
+        {
+            "item": "cobblestonesemantics:cobblegenerator1"
+        },
+        "L":
+        {
+            "item": "cobblestonesemantics:lavagenerator"
+        },
+        "M":
+        {
+            "item": "cobblestonesemantics:cobblestonemelter"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:allinonegenerator",
+        "count": 1
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "OO ",
+        " S ",
+        " S "
+    ],
+    "key":
+    {
+        "O":
+        {
+            "type": "forge:ore_dict",
+            "ore": "cobblestoneinfusedobsidian"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_infused_obsidian_hoe",
+        "count": 1
+    }
+}

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "cobblestonesemantics",
+  "name": "Cobblestone Semantics",
+  "description": "Has new tools for cobblestones to help your modded experience through cobblestone!",
+  "version": "1.0",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Strikeboom","ChauhanSai"],
+  "credits": "Strikeboom made the code and ChauhanSai made the textures",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

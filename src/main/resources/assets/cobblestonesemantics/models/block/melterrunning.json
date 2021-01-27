@@ -1,0 +1,12 @@
+{
+   "parent": "block/cube",
+   "textures": {
+		"particle": "cobblestonesemantics:blocks/meltertop",
+		"up":"cobblestonesemantics:blocks/meltertop",
+		"down":"cobblestonesemantics:blocks/melterbottom",
+		"east":"cobblestonesemantics:blocks/melterside",
+		"west":"cobblestonesemantics:blocks/melterside",
+		"north":"cobblestonesemantics:blocks/melterfrontrunning",
+		"south":"cobblestonesemantics:blocks/melterside"
+   }
+}

@@ -1,0 +1,34 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "DDD",
+        "LGW",
+        "DDD"
+    ],
+    "key":
+    {
+        "D":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dirt"
+        },
+        "L":
+        {
+            "item": "minecraft:lava_bucket"
+        },
+        "W": {
+            "item": "minecraft:water_bucket"
+        },
+        "G":
+        {
+            "type": "forge:ore_dict",
+            "ore": "blockGlass"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblegenerator1",
+        "count": 1
+    }
+}

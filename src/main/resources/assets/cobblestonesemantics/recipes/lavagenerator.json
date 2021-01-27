@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "ISI",
+        "SES",
+        "RSR"
+    ],
+    "key":
+    {
+        "I":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotGold"
+        },
+        "E":
+        {
+            "item": "minecraft:furnace"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        },
+        "R":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:lavagenerator",
+        "count": 1
+    }
+}

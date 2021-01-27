@@ -1,0 +1,6 @@
+{
+   "parent": "item/generated",
+   "textures": {
+       "layer0": "cobblestonesemantics:items/cobblestone_infused_obsidian_helmet"
+   }
+}

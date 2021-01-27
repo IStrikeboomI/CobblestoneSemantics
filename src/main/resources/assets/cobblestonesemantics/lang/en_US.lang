@@ -1,0 +1,61 @@
+
+tile.cobblestonesemantics.cobblegenerator1.name=Dirt Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator2.name=Stone Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator3.name=Iron Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator4.name=Redstone Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator5.name=Gold Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator6.name=Diamond Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator7.name=Emerald Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator8.name=Nether Star Cobblestone Generator
+tile.cobblestonesemantics.cobblegenerator9.name=Dragon Egg Cobblestone Generator
+tile.cobblestonesemantics.cobblestonemelter.name=Cobblestone Melter
+tile.cobblestonesemantics.lavagenerator.name=Lava Generator
+tile.cobblestonesemantics.allinonegenerator.name=All In One Generator
+tile.cobblestonesemantics.cobblestone_infused_obsidian.name=Cobblestone Infused Obsidian
+
+item.cobblestonesemantics.cobblestone_infused_obsidian_helmet.name=Cobblestone Infused Obsidian Helmet
+item.cobblestonesemantics.cobblestone_infused_obsidian_chestplate.name=Cobblestone Infused Obsidian Chestplate
+item.cobblestonesemantics.cobblestone_infused_obsidian_leggings.name=Cobblestone Infused Obsidian Leggings
+item.cobblestonesemantics.cobblestone_infused_obsidian_boots.name=Cobblestone Infused Obsidian Boots
+
+item.cobblestonesemantics.cobblestone_infused_obsidian_pickaxe.name=Cobblestone Infused Obsidian Pickaxe
+item.cobblestonesemantics.cobblestone_infused_obsidian_axe.name=Cobblestone Infused Obsidian Axe
+item.cobblestonesemantics.cobblestone_infused_obsidian_sword.name=Cobblestone Infused Obsidian Sword
+item.cobblestonesemantics.cobblestone_infused_obsidian_shovel.name=Cobblestone Infused Obsidian Shovel
+item.cobblestonesemantics.cobblestone_infused_obsidian_hoe.name=Cobblestone Infused Obsidian Hoe
+item.cobblestonesemantics.cobblestone_bag.name=Cobblestone Bag
+item.cobblestonesemantics.cobblestone_infused_obsidian_bag.name=Cobblestone Infused Obsidian Bag
+
+fluid.moltencobblestoneinfusedobsidian=Molten Cobblestone Infused Obsidian
+
+tooltip.cobblestonesemantics.warningupgrade=WARNING: Upgrading To Obsidian Bag Will Clear All Items Already Inside The Bag!
+tooltip.cobblestonesemantics.holdsnine=Holds 9 Stacks Of Items!
+tooltip.cobblestonesemantics.upgrade=Can Upgrade With A Single Piece Of Cobblestone Infused Obsidian
+tooltip.cobblestonesemantics.holds27=Holds 27 Stacks Of Items!
+
+tile.cobblestonesemantics.tooltip.delay=Ticks until Cobblestone:
+tile.cobblestonesemantics.tooltip.tier=Tier:
+tile.cobblestonesemantics.tooltip.storage=Total Capacity:
+tile.cobblestonesemantics.tooltip.outputs=Outputs to an inventory above or below!
+tile.cobblestonesemantics.tooltip.saved=Contents Saved!
+tile.cobblestonesemantics.tooltip.lava=mB of Lava Every
+tile.cobblestonesemantics.tooltip.produces=Produces
+tile.cobblestonesemantics.tooltip.ticks=Ticks
+tile.cobblestonesemantics.tooltip.every=Every
+tile.cobblestonesemantics.tooltip.allinonedelay=The Higher The Tier of the Cobblestone Generator Then the Faster The Machine works
+tile.cobblestonesemantics.tooltip.allinoneproduced=Every 2 Lava Generators needs to be compensated with 1 Cobblestone Melter to produce the optimal amount of energy
+
+tile.cobblestonesemantics.message.amount=Cobblestone Amount:
+
+itemGroup.cobblestonesemantics=Cobblestone Semantics
+
+material.cobblestonesemantics.cobblestone_infused_obsidian.name=Cobblestone Infused Obsidian
+
+cobblestonesemantics.config.name=Cobblestone Semantics
+cobblestonesemantics.config.blocks=Blocks
+cobblestonesemantics.config.blocks.melter=Melter
+cobblestonesemantics.config.blocks.melter.melterdelay=Melter Delay
+cobblestonesemantics.config.blocks.melter.lavapercobble=Lava Per Cobblestone
+cobblestonesemantics.config.blocks.lavagenerator=Lava Generator
+cobblestonesemantics.config.blocks.lavagenerator.generatordelay=Generator Delay
+cobblestonesemantics.config.blocks.lavagenerator.powerperlavabucket=Power Per Lava Bucket

@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "OOO",
+        "O O",
+        "O O"
+    ],
+    "key":
+    {
+        "O":
+        {
+            "type": "forge:ore_dict",
+            "ore": "cobblestoneinfusedobsidian"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_infused_obsidian_leggings",
+        "count": 1
+    }
+}

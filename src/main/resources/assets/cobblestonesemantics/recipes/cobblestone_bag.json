@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " S ",
+        "LOL",
+        " L "
+    ],
+    "key":
+    {
+        "O":
+        {
+            "type": "forge:ore_dict",
+            "ore": "cobblestone"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "string"
+        },
+        "L":
+        {
+            "type": "forge:ore_dict",
+            "ore": "leather"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_bag",
+        "count": 1
+    }
+}

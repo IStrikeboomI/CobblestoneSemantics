@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "running=false":{ "model": "cobblestonesemantics:melter"},
+        "running=true":{ "model": "cobblestonesemantics:melterrunning" }
+    }
+}

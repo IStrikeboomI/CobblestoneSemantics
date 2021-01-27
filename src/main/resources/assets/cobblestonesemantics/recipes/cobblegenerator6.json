@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "CCC",
+        "CGC",
+        "CCC"
+    ],
+    "key":
+    {
+        "C":
+        {
+            "type": "forge:ore_dict",
+            "ore": "gemDiamond"
+        },
+        "G":
+        {
+            "item": "cobblestonesemantics:cobblegenerator5"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblegenerator6",
+        "count": 1
+    }
+}

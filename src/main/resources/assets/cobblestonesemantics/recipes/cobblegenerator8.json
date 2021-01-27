@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " C ",
+        "CGC",
+        " C "
+    ],
+    "key":
+    {
+        "C":
+        {
+            "type": "forge:ore_dict",
+            "ore": "netherStar"
+        },
+        "G":
+        {
+            "item": "cobblestonesemantics:cobblegenerator7"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblegenerator8",
+        "count": 1
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "cobblestonesemantics:block/generator",
+    "textures": {
+        "front": "cobblestonesemantics:blocks/cobblegenerator9"
+    }
+}

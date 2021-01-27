@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "running=false":{ "model": "cobblestonesemantics:lavagenerator"},
+        "running=true":{ "model": "cobblestonesemantics:lavageneratorrunning" }
+    }
+}

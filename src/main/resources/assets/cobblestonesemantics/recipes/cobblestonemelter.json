@@ -1,0 +1,31 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "BSB",
+        "SES",
+        "BSB"
+    ],
+    "key":
+    {
+        "B":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotBrick"
+        },
+        "E":
+        {
+            "item": "minecraft:bucket"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestonemelter",
+        "count": 1
+    }
+}
