@@ -3,7 +3,6 @@ package Strikeboom.cobblestonesemantics.integrations.jei.lavagenerator;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.handlers.ConfigHandler;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -13,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class LavaGeneratorRecipeWrapper implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInput(VanillaTypes.FLUID,new FluidStack(FluidRegistry.LAVA,1000));
+        ingredients.setInput(FluidStack.class,new FluidStack(FluidRegistry.LAVA,1000));
     }
 
     @Override
