@@ -1,42 +1,62 @@
 package Strikeboom.cobblestonesemantics.items;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.handlers.GuiHandler;
-import Strikeboom.cobblestonesemantics.items.wrappers.ItemItemStackHandlerCapabilityWrapper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
+import Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers.ItemItemStackHandlerCapabilityWrapper;
+import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneInfusedObsidianBagMenu;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class CobblestoneInfusedObsidianBag extends Item {
-
     public CobblestoneInfusedObsidianBag() {
-        maxStackSize = 1;
+        super(CobblestoneSemanticsItems.ITEM_PROPERTIES.defaultDurability(0));
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(I18n.format("tooltip." + CobblestoneSemantics.MOD_ID + ".holds27"));
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","27"));
     }
+    @Nullable
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (!worldIn.isRemote) {
-            playerIn.openGui(CobblestoneSemantics.instance, GuiHandler.COBBLESTONEINFUSEDOBSIDIANBAG,worldIn,(int)playerIn.posX,(int)playerIn.posY,(int)playerIn.posZ);
-        }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
-    }
-
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ItemItemStackHandlerCapabilityWrapper(27,this);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        if (!pLevel.isClientSide) {
+            if (pPlayer.getItemInHand(pUsedHand).getItem() == this) {
+                MenuProvider containerProvider = new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return new TranslatableComponent("item."+CobblestoneSemantics.MOD_ID+".cobblestone_infused_obsidian_bag");
+                    }
+
+                    @Override
+                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
+                        return new CobblestoneInfusedObsidianBagMenu(windowId, pPlayer.getOnPos(), playerInventory, playerEntity);
+                    }
+                };
+                NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPlayer.getOnPos());
+            }
+        }
+        return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
     }
 }

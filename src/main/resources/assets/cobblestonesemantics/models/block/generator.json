@@ -1,14 +1,14 @@
 {
 	"textures": {
-		"0": "cobblestonesemantics:blocks/generator_back",
-		"1": "minecraft:blocks/iron_block",
-		"2": "cobblestonesemantics:blocks/generator_top",
-		"3": "cobblestonesemantics:blocks/generator_side",
-		"4": "cobblestonesemantics:blocks/generator_front",
-		"6": "minecraft:blocks/lava_flow",
-		"7": "minecraft:blocks/water_flow",
+		"0": "cobblestonesemantics:block/generator_back",
+		"1": "minecraft:block/iron_block",
+		"2": "cobblestonesemantics:block/generator_top",
+		"3": "cobblestonesemantics:block/generator_side",
+		"4": "cobblestonesemantics:block/generator_front",
+		"6": "minecraft:block/lava_flow",
+		"7": "cobblestonesemantics:block/water_flow",
 		"8": "#front",
-		"particle": "cobblestonesemantics:blocks/generator_back"
+		"particle": "cobblestonesemantics:block/generator_back"
 	},
 	"display": {
 		"gui": {

@@ -1,116 +1,125 @@
 package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.tileentity.TileEntityAllInOneGenerator;
-import Strikeboom.cobblestonesemantics.handlers.GuiHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import Strikeboom.cobblestonesemantics.guis.blockentities.AllInOneGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.guis.menus.AllInOneGeneratorMenu;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AllInOneGenerator extends Block {
+public class AllInOneGenerator extends Block implements EntityBlock {
     public AllInOneGenerator() {
-        super(Material.IRON);
-        setSoundType(SoundType.METAL);
-        setHardness(6.0F);
-        setResistance(100.0F);
-        setHarvestLevel("pickaxe", 2);
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-        if (stack.hasTagCompound()) {
-            tooltip.add(TextFormatting.GREEN + I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.saved"));
-        }
-        tooltip.add(I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.allinonedelay"));
-        tooltip.add(I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.allinoneproduced"));
-        super.addInformation(stack, player, tooltip, advanced);
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileEntityAllInOneGenerator();
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            playerIn.openGui(CobblestoneSemantics.instance, GuiHandler.ALLINONEGENERATOR,worldIn,pos.getX(),pos.getY(), pos.getZ());
-        }
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
+        super(BlockBehaviour.Properties.of(Material.METAL)
+                .sound(SoundType.METAL)
+                .strength(6f,100f)
+                .requiresCorrectToolForDrops());
     }
     @Override
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    public boolean isBlockNormalCube(IBlockState state) {
-        return false;
-    }
-    @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) {
-            return true;
-        }
-        return super.removedByPlayer(state, world, pos, player, false);
-    }
-
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        ItemStack stack = new ItemStack(this);
-        NBTTagCompound nbt = new NBTTagCompound();
-        world.getTileEntity(pos).writeToNBT(nbt);
-        stack.setTagCompound(nbt);
-        drops.add(stack);
-    }
-
-    @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
-        worldIn.setBlockToAir(pos);
-    }
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (!worldIn.isRemote) {
-            if (stack.getTagCompound() != null) {
-                stack.getTagCompound().setInteger("x",pos.getX());
-                stack.getTagCompound().setInteger("y",pos.getY());
-                stack.getTagCompound().setInteger("z",pos.getZ());
-                worldIn.getTileEntity(pos).readFromNBT(stack.getTagCompound());
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        if (pStack.hasTag()) {
+            if (pStack.getTag().contains("BlockEntityTag")) {
+                pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
             }
         }
+        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_delay"));
+        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_produced"));
+    }
+
+    //these 2 functions below help save the data into the item stack when breaking block
+    @Override
+    public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
+        if (!pLevel.isClientSide) {
+            ItemStack stack = new ItemStack(this);
+
+            if (pBlockEntity != null) {
+                pBlockEntity.saveToItem(stack);
+            }
+
+            ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
+            itementity.setDefaultPickUpDelay();
+            pLevel.addFreshEntity(itementity);
+        }
+    }
+
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        if (!pLevel.isClientSide) {
+            if (pStack.hasTag()) {
+                CompoundTag tag = BlockItem.getBlockEntityData(pStack);
+                pLevel.getBlockEntity(pPos).load(tag);
+            }
+        }
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new AllInOneGeneratorBlockEntity(pPos,pState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        if (pLevel.isClientSide) {
+            return null;
+        }
+
+        return (pLevel1, pPos, pState1, pBlockEntity) -> {
+            if (pBlockEntity instanceof AllInOneGeneratorBlockEntity blockEntity) {
+                blockEntity.tickServer();
+            }
+        };
+    }
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide) {
+            if (pLevel.getBlockEntity(pPos) instanceof AllInOneGeneratorBlockEntity) {
+                MenuProvider containerProvider = new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return TextComponent.EMPTY;
+                    }
+
+                    @Override
+                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
+                        return new AllInOneGeneratorMenu(windowId, pPos, playerInventory, playerEntity);
+                    }
+                };
+                NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPos);
+            }
+        }
+        return InteractionResult.SUCCESS;
     }
 }

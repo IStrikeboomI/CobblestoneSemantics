@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal":{ "model": "cobblestonesemantics:cobblestone_infused_obsidian" }
+        "":{ "model": "cobblestonesemantics:block/cobblestone_infused_obsidian" }
     }
 }

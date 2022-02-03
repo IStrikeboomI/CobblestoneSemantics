@@ -1,6 +1,6 @@
 {
-   "parent": "item/generated",
+   "parent": "item/handheld",
    "textures": {
-       "layer0": "cobblestonesemantics:items/cobblestone_infused_obsidian_hoe"
+       "layer0": "cobblestonesemantics:item/cobblestone_infused_obsidian_hoe"
    }
 }

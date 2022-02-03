@@ -1,135 +1,144 @@
 package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.tileentity.TileEntityLavaGenerator;
-import Strikeboom.cobblestonesemantics.handlers.ConfigHandler;
-import Strikeboom.cobblestonesemantics.handlers.GuiHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import Strikeboom.cobblestonesemantics.guis.blockentities.LavaGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.guis.menus.LavaGeneratorMenu;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
-public class LavaGenerator extends Block {
-    public static final PropertyBool RUNNING = PropertyBool.create("running");
+public class LavaGenerator extends Block implements EntityBlock {
     public LavaGenerator() {
-        super(Material.IRON);
-        setSoundType(SoundType.METAL);
-        setHardness(6.0F);
-        setResistance(100.0F);
-        setHarvestLevel("pickaxe", 2);
-        setDefaultState(this.getDefaultState().withProperty(RUNNING, Boolean.TRUE));
+        super(BlockBehaviour.Properties.of(Material.METAL)
+                .sound(SoundType.METAL)
+                .strength(6f,100f)
+                .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
+                .requiresCorrectToolForDrops());
     }
-
     @Override
-    public int getLightValue(@Nonnull IBlockState state, IBlockAccess world, @Nonnull BlockPos pos) {
-        if(state.getValue(RUNNING)) {
-            return 15;
-        }
-        return 0;
-    }
-    
-    @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-        if (stack.hasTagCompound()) {
-            tooltip.add(TextFormatting.GREEN + I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.saved"));
-        }
-        tooltip.add(I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.produces") + " "+ ConfigHandler.BLOCKS.LAVA_GENERATOR.powerPerLavaBucket +
-                " RF/FE " + I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.every") + " " +ConfigHandler.BLOCKS.LAVA_GENERATOR.generatorDelay + " " +
-                I18n.format("tile." + CobblestoneSemantics.MOD_ID + ".tooltip.ticks"));
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            if (FluidUtil.interactWithFluidHandler(playerIn,hand,worldIn,pos,null)) {
-                return true;
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        if (pStack.hasTag()) {
+            if (pStack.getTag().contains("BlockEntityTag")) {
+                pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
             }
-            playerIn.openGui(CobblestoneSemantics.instance, GuiHandler.LAVAGENERATOR,worldIn,pos.getX(),pos.getY(),pos.getZ());
         }
-        return true;
+        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.lava_generator", CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get(),CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get()));
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(BlockStateProperties.POWERED);
     }
 
+    @Nullable
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileEntityLavaGenerator();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return super.getStateForPlacement(context).setValue(BlockStateProperties.POWERED, false);
     }
 
+    //these 2 functions below help save the data into the item stack when breaking block
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, RUNNING);
-    }
+    public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
+        if (!pLevel.isClientSide) {
+            ItemStack stack = new ItemStack(this);
 
-    @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(RUNNING,false);
-    }
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(RUNNING,meta == 1);
-    }
+            if (pBlockEntity != null) {
+                pBlockEntity.saveToItem(stack);
+            }
 
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(RUNNING) ? 1 : 0;
-    }
-
-    @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) {
-            return true;
+            ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
+            itementity.setDefaultPickUpDelay();
+            pLevel.addFreshEntity(itementity);
         }
-        return super.removedByPlayer(state, world, pos, player, false);
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        ItemStack stack = new ItemStack(this);
-        NBTTagCompound nbt = new NBTTagCompound();
-        world.getTileEntity(pos).writeToNBT(nbt);
-        stack.setTagCompound(nbt);
-        drops.add(stack);
-    }
-
-    @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
-        worldIn.setBlockToAir(pos);
-    }
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (!worldIn.isRemote) {
-            if (stack.getTagCompound() != null) {
-                stack.getTagCompound().setInteger("x",pos.getX());
-                stack.getTagCompound().setInteger("y",pos.getY());
-                stack.getTagCompound().setInteger("z",pos.getZ());
-                worldIn.getTileEntity(pos).readFromNBT(stack.getTagCompound());
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        if (!pLevel.isClientSide) {
+            if (pStack.hasTag()) {
+                CompoundTag tag = BlockItem.getBlockEntityData(pStack);
+                pLevel.getBlockEntity(pPos).load(tag);
             }
         }
     }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new LavaGeneratorBlockEntity(pPos,pState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        if (pLevel.isClientSide) {
+            return null;
+        }
+
+        return (pLevel1, pPos, pState1, pBlockEntity) -> {
+            if (pBlockEntity instanceof LavaGeneratorBlockEntity blockEntity) {
+                blockEntity.tickServer();
+            }
+        };
+    }
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide) {
+            if (pLevel.getBlockEntity(pPos) instanceof LavaGeneratorBlockEntity) {
+                if (FluidUtil.interactWithFluidHandler(pPlayer, pHand, pLevel, pPos, null)) {
+                    return InteractionResult.SUCCESS;
+                }
+                MenuProvider containerProvider = new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return new TranslatableComponent("block."+CobblestoneSemantics.MOD_ID+".lava_generator");
+                    }
+
+                    @Override
+                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
+                        return new LavaGeneratorMenu(windowId, pPos, playerInventory, playerEntity);
+                    }
+                };
+                NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPos);
+            }
+        }
+        return InteractionResult.SUCCESS;
+    }
 }
