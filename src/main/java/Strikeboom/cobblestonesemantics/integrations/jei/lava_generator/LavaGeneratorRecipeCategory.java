@@ -3,8 +3,6 @@ package Strikeboom.cobblestonesemantics.integrations.jei.lava_generator;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.integrations.jei.CobblestoneSemanticsJeiPlugin;
-import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_melter.CobblestoneMelterRecipe;
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -18,10 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
 
 public class LavaGeneratorRecipeCategory implements IRecipeCategory<LavaGeneratorRecipe> {
     private final IDrawable BACKGROUND;

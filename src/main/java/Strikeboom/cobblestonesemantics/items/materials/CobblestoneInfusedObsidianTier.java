@@ -1,12 +1,9 @@
 package Strikeboom.cobblestonesemantics.items.materials;
 
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CobblestoneInfusedObsidianTier implements Tier {
     @Override

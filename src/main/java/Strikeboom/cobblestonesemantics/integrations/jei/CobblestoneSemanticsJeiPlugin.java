@@ -2,7 +2,6 @@ package Strikeboom.cobblestonesemantics.integrations.jei;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneMelterMenu;
-import Strikeboom.cobblestonesemantics.guis.menus.LavaGeneratorMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipe;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipeCategory;
