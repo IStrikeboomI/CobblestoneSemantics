@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "powered=false":{ "model": "cobblestonesemantics:block/lava_generator"},
+        "powered=true":{ "model": "cobblestonesemantics:block/lava_generator_running" }
+    }
+}

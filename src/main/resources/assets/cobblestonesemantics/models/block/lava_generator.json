@@ -1,0 +1,12 @@
+{
+   "parent": "block/cube",
+   "textures": {
+		"particle": "cobblestonesemantics:block/lava_generator_top",
+		"up":"cobblestonesemantics:block/lava_generator_top",
+		"down":"minecraft:block/iron_block",
+		"east":"cobblestonesemantics:block/lava_generator_side",
+		"west":"cobblestonesemantics:block/lava_generator_side",
+		"north":"cobblestonesemantics:block/lava_generator_front",
+		"south":"cobblestonesemantics:block/lava_generator_side"
+   }
+}

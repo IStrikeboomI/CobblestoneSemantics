@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "powered=false":{ "model": "cobblestonesemantics:block/cobblestone_melter"},
+        "powered=true":{ "model": "cobblestonesemantics:block/cobblestone_melter_running" }
+    }
+}

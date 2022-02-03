@@ -1,0 +1,22 @@
+
+{
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients":
+    [
+        {
+            "tag": "forge:nether_stars"
+        },
+        {
+            "tag": "forge:nether_stars"
+        },
+        {
+            "item":"cobblestonesemantics:cobblestone_generator_8"
+        }
+    ],
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_generator_9",
+        "count": 1
+    }
+}

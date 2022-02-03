@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients":
+    [
+
+        {
+            "tag": "forge:cobblestone_infused_obsidian"
+        },
+        {
+            "item": "cobblestonesemantics:cobblestone_bag"
+        }
+
+    ],
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_infused_obsidian_bag",
+        "count": 1
+    }
+}

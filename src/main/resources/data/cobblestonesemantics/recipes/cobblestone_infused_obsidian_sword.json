@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "O",
+        "O",
+        "S"
+    ],
+    "key":
+    {
+        "O":
+        {
+            "tag": "forge:cobblestone_infused_obsidian"
+        },
+        "S":
+        {
+            "item": "minecraft:stick"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_infused_obsidian_sword",
+        "count": 1
+    }
+}

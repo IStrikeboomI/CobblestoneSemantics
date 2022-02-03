@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "CCC",
+        "CGC",
+        "CCC"
+    ],
+    "key":
+    {
+        "C":
+        {
+            "tag":"forge:ingots/gold"
+        },
+        "G":
+        {
+            "item": "cobblestonesemantics:cobblestone_generator_4"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:cobblestone_generator_5",
+        "count": 1
+    }
+}

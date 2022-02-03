@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "III",
+        "CLM",
+        "RRR"
+    ],
+    "key":
+    {
+        "I":
+        {
+            "tag": "forge:ingots/iron"
+        },
+        "R":
+        {
+            "tag":"forge:dusts/redstone"
+        },
+        "C":
+        {
+            "item": "cobblestonesemantics:cobblestone_generator_1"
+        },
+        "L":
+        {
+            "item": "cobblestonesemantics:lava_generator"
+        },
+        "M":
+        {
+            "item": "cobblestonesemantics:cobblestone_melter"
+        }
+    },
+    "result":
+    {
+        "item": "cobblestonesemantics:all_in_one_generator",
+        "count": 1
+    }
+}

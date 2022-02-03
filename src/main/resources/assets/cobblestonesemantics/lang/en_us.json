@@ -1,0 +1,53 @@
+{
+    "block.cobblestonesemantics.cobblestone_generator":"Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_1":"Dirt Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_2":"Stone Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_3":"Iron Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_4":"Redstone Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_5":"Gold Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_6":"Diamond Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_7":"Emerald Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_8":"Netherite Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_9":"Nether Star Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_generator_10":"Dragon Egg Cobblestone Generator",
+    "block.cobblestonesemantics.cobblestone_melter":"Cobblestone Melter",
+    "block.cobblestonesemantics.lava_generator":"Lava Generator",
+    "block.cobblestonesemantics.all_in_one_generator":"All In One Generator",
+    "block.cobblestonesemantics.cobblestone_infused_obsidian":"Cobblestone Infused Obsidian",
+
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_helmet":"Cobblestone Infused Obsidian Helmet",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_chestplate":"Cobblestone Infused Obsidian Chestplate",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_leggings":"Cobblestone Infused Obsidian Leggings",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_boots":"Cobblestone Infused Obsidian Boots",
+
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_pickaxe":"Cobblestone Infused Obsidian Pickaxe",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_axe":"Cobblestone Infused Obsidian Axe",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_sword":"Cobblestone Infused Obsidian Sword",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_shovel":"Cobblestone Infused Obsidian Shovel",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_hoe":"Cobblestone Infused Obsidian Hoe",
+    "item.cobblestonesemantics.cobblestone_bag":"Cobblestone Bag",
+    "item.cobblestonesemantics.cobblestone_infused_obsidian_bag":"Cobblestone Infused Obsidian Bag",
+    "item.cobblestonesemantics.molten_cobblestone_infused_obsidian_bucket":"Molten Cobblestone Infused Obsidian Bucket",
+
+    "fluid.cobblestonesemantics.molten_cobblestone_infused_obsidian":"Molten Cobblestone Infused Obsidian",
+
+    "tooltip.cobblestonesemantics.warning_upgrade":"WARNING: Upgrading To Cobblestone Infused Obsidian Bag Will Clear All Items Already Inside The Bag!",
+    "tooltip.cobblestonesemantics.holds":"Holds %s Stacks Of Items!",
+    "tooltip.cobblestonesemantics.upgrade":"Can Upgrade With A Single Piece Of Cobblestone Infused Obsidian",
+
+    "block.cobblestonesemantics.tooltip.delay":"Ticks until Next Cobblestone: %s",
+    "block.cobblestonesemantics.tooltip.amount":"Amount of Cobblestone Each Operation: %s",
+    "block.cobblestonesemantics.tooltip.tier":"Tier: %s",
+    "block.cobblestonesemantics.tooltip.storage":"Total Capacity: %s",
+    "block.cobblestonesemantics.tooltip.crouch":"Crouch and Right Click to See How Much Cobblestone There Is Inside!",
+    "block.cobblestonesemantics.tooltip.outputs":"Outputs to an inventory above or below!",
+    "block.cobblestonesemantics.tooltip.saved":"Contents Saved!",
+    "block.cobblestonesemantics.tooltip.cobblestone_melter":"Produces %1$smb of Lava Every %2$s ticks for Each Block of Cobblestone",
+    "block.cobblestonesemantics.tooltip.lava_generator":"Produces %1$s RF/FE Every %2$s ticks For Each Bucket of Lava",
+    "block.cobblestonesemantics.tooltip.all_in_one_delay":"The Higher The Tier of the Cobblestone Generator Then the Faster The Machine works",
+    "block.cobblestonesemantics.tooltip.all_in_one_produced":"Every 2 Lava Generators needs to be compensated with 1 Cobblestone Melter to produce the optimal amount of energy",
+
+    "block.cobblestonesemantics.message.amount":"Cobblestone Amount: %s",
+
+    "itemGroup.cobblestonesemantics":"Cobblestone Semantics"
+}

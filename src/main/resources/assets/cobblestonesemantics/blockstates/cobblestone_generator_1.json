@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "":{ "model": "cobblestonesemantics:block/cobblestone_generator_1" }
+    }
+}

@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "cobblestonesemantics:cobblestone_generator_1",
+    "cobblestonesemantics:cobblestone_generator_2",
+    "cobblestonesemantics:cobblestone_generator_3",
+    "cobblestonesemantics:cobblestone_generator_4",
+    "cobblestonesemantics:cobblestone_generator_5",
+    "cobblestonesemantics:cobblestone_generator_6",
+    "cobblestonesemantics:cobblestone_generator_7",
+    "cobblestonesemantics:cobblestone_generator_8",
+    "cobblestonesemantics:cobblestone_generator_9",
+    "cobblestonesemantics:cobblestone_generator_10",
+    "cobblestonesemantics:cobblestone_melter",
+    "cobblestonesemantics:lava_generator",
+    "cobblestonesemantics:all_in_one_generator"
+  ]
+}
