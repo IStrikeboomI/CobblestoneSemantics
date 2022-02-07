@@ -3,6 +3,7 @@ package Strikeboom.cobblestonesemantics.guis.blockentities;
 import Strikeboom.cobblestonesemantics.guis.blockentities.energystorage.CobblestoneSemanticsEnergyStorage;
 import Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers.AllInOneGeneratorItemHandler;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -72,10 +73,11 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
     }
     public void tickServer() {
         boolean shouldUpdate = false;
+
         if (!itemStackHandler.getStackInSlot(0).isEmpty() &&
                 itemStackHandler.getLavaGenerators() > 0 &&
                 itemStackHandler.getLavaMelters() > 0 &&
-                energyStorage.getEnergyStored() + (int)(Math.floor(itemStackHandler.getLavaGenerators() / 2f) < itemStackHandler.getLavaMelters() ? Math.floor(itemStackHandler.getLavaGenerators() / 2f) :itemStackHandler.getLavaMelters()) <= energyStorage.getMaxEnergyStored()) {
+                energyStorage.getEnergyStored() + ( CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get() * (int)(Math.floor(itemStackHandler.getLavaGenerators() / 2f) < itemStackHandler.getLavaMelters() ? Math.floor(itemStackHandler.getLavaGenerators() / 2f) :itemStackHandler.getLavaMelters())) <= energyStorage.getMaxEnergyStored()) {
 
             cooldown += itemStackHandler.getCobbleGenTier();
             if (cooldown > delay) {
@@ -90,7 +92,7 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
         }
         if (cooldown % delay == 0 && cooldown != 0) {
             cooldown = 0;
-            energyStorage.addEnergy(100000 * (int)(Math.floor(itemStackHandler.getLavaGenerators() / 2f) < itemStackHandler.getLavaMelters() ? Math.floor(itemStackHandler.getLavaGenerators() / 2f) :itemStackHandler.getLavaMelters()));
+            energyStorage.addEnergy(CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get() * (int)(Math.floor(itemStackHandler.getLavaGenerators() / 2f) < itemStackHandler.getLavaMelters() ? Math.floor(itemStackHandler.getLavaGenerators() / 2f) :itemStackHandler.getLavaMelters()));
         }
         if (shouldUpdate) {
             setChanged();
