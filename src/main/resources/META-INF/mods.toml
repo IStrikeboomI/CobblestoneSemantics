@@ -27,13 +27,13 @@ displayName="Cobblestone Semantics" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/cobblestone-semantics" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="cobblestonesemantics.png" #optional
+logoFile="" #optional
 # A text field displayed in the mod UI
 credits="Strikeboom made the code and ChauhanSai made the textures" #optional
 # A text field displayed in the mod UI
 authors="Strikeboom and ChauhanSai" #optional
 # The description text for the mod (multi line!) (#mandatory)
-description="Has new tools and machines for cobblestones to help your modded experience with cobblestone!"
+description="Cobblestone semantics adds new blocks and generators that, in combination, produce loads of lava and energy automatically! This mod also adds new armor and tools made from cobblestone infused obsidian."
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.cobblestonesemantics]] #optional
     # the modid of the dependency

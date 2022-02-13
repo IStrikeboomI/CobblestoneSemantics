@@ -2,7 +2,7 @@
 ### A Minecraft Mod made with Java For Forge
 
 #### Generate with Cobblestone Semantics, made by [IStrikeboomI](https://github.com/IStrikeboomI) and [ChauhanSai](https://github.com/ChauhanSai). 
-Cobblestone semantics adds new armor and tools made from cobblestone infused obsidian. Cobblestone semantics also has new blocks and generators that, in combination, produce loads of lava. 
+Cobblestone semantics adds new blocks and generators that, in combination, produce loads of lava and energy automatically! This mod also adds new armor and tools made from cobblestone infused obsidian.
 
 Recommended with use of [JEI(Just Enough Items)](https://www.curseforge.com/minecraft/mc-mods/jei)
 For Minecraft Java Version **1.18.1**
