@@ -60,7 +60,7 @@ public class CobblestoneMelterRecipeCategory implements IRecipeCategory<Cobblest
 
     @Override
     public void setIngredients(CobblestoneMelterRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputs(VanillaTypes.ITEM,recipe.getInputs());
+        ingredients.setInput(VanillaTypes.ITEM,recipe.getInput());
         ingredients.setOutput(VanillaTypes.FLUID,recipe.getOutput());
     }
 

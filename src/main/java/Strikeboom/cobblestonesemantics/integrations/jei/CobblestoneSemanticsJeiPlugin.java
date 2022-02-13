@@ -18,9 +18,11 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.Tags;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JeiPlugin
 public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
@@ -46,7 +48,7 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         IModPlugin.super.registerRecipes(registration);
-        registration.addRecipes(Collections.singletonList(new CobblestoneMelterRecipe()),COBBLESTONE_MELTER);
+        registration.addRecipes(Tags.Blocks.COBBLESTONE.getValues().stream().map(CobblestoneMelterRecipe::new).collect(Collectors.toList()), COBBLESTONE_MELTER);
         registration.addRecipes(Collections.singletonList(new LavaGeneratorRecipe()),LAVA_GENERATOR);
         registration.addRecipes(List.of(new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get())),
                                         new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_2.get())),
