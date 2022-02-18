@@ -26,7 +26,7 @@ public class ItemItemStackHandlerCapabilityWrapper implements ICapabilitySeriali
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerLazyOptional.cast();
         }
-        return null;
+        return LazyOptional.empty();
     }
 
     @Override
