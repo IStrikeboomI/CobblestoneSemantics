@@ -3,7 +3,6 @@ package Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class CobblestoneMelterItemHandler extends ItemStackHandler {
     public CobblestoneMelterItemHandler(int size) {
@@ -11,7 +10,7 @@ public class CobblestoneMelterItemHandler extends ItemStackHandler {
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(int slot, ItemStack stack) {
         return Tags.Items.COBBLESTONE.contains(stack.getItem());
     }
 

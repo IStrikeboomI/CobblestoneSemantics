@@ -19,7 +19,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
+
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -99,9 +99,9 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
             this.level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_ALL);
         }
     }
-    @NotNull
+    
     @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability( Capability<T> cap, final @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerLazyOptional.cast();
         }

@@ -3,7 +3,7 @@ package Strikeboom.cobblestonesemantics.items.materials;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+
 
 public class CobblestoneInfusedObsidianTier implements Tier {
     @Override
@@ -30,7 +30,7 @@ public class CobblestoneInfusedObsidianTier implements Tier {
     }
 
     @Override
-    public @NotNull Ingredient getRepairIngredient() {
+    public  Ingredient getRepairIngredient() {
         return Ingredient.of(CobblestoneSemanticsBlocks.COBBLESTONE_INFUSED_OBSIDIAN.get());
     }
 }

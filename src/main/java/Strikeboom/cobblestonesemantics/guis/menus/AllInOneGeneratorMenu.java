@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
+
 
 public class AllInOneGeneratorMenu extends AbstractContainerMenu {
     public final AllInOneGeneratorBlockEntity blockEntity;
@@ -85,7 +85,7 @@ public class AllInOneGeneratorMenu extends AbstractContainerMenu {
         return previous;
     }
     @Override
-    public boolean stillValid(@NotNull Player pPlayer) {
+    public boolean stillValid( Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos()), pPlayer, CobblestoneSemanticsBlocks.ALL_IN_ONE_GENERATOR.get());
     }
 }

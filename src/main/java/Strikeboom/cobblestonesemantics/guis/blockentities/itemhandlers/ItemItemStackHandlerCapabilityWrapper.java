@@ -9,7 +9,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemItemStackHandlerCapabilityWrapper implements ICapabilitySerializable<CompoundTag> {
@@ -20,9 +19,9 @@ public class ItemItemStackHandlerCapabilityWrapper implements ICapabilitySeriali
         itemHandlerLazyOptional = LazyOptional.of(() -> handler);
     }
 
-    @NotNull
+
     @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability( Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerLazyOptional.cast();
         }

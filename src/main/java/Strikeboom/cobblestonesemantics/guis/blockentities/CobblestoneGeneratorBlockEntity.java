@@ -15,7 +15,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
-import org.jetbrains.annotations.NotNull;
+
 
 import javax.annotation.Nullable;
 
@@ -127,9 +127,9 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         return amount;
     }
 
-    @NotNull
+    
     @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability( Capability<T> cap, final @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerLazyOptional.cast();
         }

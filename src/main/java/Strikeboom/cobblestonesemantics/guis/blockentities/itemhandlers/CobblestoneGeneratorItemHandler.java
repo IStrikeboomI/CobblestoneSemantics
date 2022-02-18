@@ -2,7 +2,6 @@ package Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class CobblestoneGeneratorItemHandler extends ItemStackHandler {
     public CobblestoneGeneratorItemHandler(int slots) {
@@ -10,7 +9,7 @@ public class CobblestoneGeneratorItemHandler extends ItemStackHandler {
     }
 
     @Override
-    public @NotNull ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         return stack;
     }
     public ItemStack getLargestSlotThenRemove() {

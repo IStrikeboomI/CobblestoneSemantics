@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
+
 
 public class CobblestoneMelterMenu extends AbstractContainerMenu {
 
@@ -77,7 +77,7 @@ public class CobblestoneMelterMenu extends AbstractContainerMenu {
 
 
     @Override
-    public boolean stillValid(@NotNull Player pPlayer) {
+    public boolean stillValid( Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos()), pPlayer, CobblestoneSemanticsBlocks.COBBLESTONE_MELTER.get());
     }
 

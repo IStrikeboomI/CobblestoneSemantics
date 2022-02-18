@@ -5,7 +5,6 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class AllInOneGeneratorItemHandler extends ItemStackHandler {
     public AllInOneGeneratorItemHandler() {
@@ -13,7 +12,7 @@ public class AllInOneGeneratorItemHandler extends ItemStackHandler {
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(int slot, ItemStack stack) {
         if (slot == 0 && Block.byItem(stack.getItem()) instanceof CobblestoneGenerator) {
             return true;
         }
