@@ -44,6 +44,7 @@
     "block.cobblestonesemantics.tooltip.saved":"Contents Saved!",
     "block.cobblestonesemantics.tooltip.cobblestone_melter":"Produces %1$smb of Lava Every %2$s ticks for Each Block of Cobblestone",
     "block.cobblestonesemantics.tooltip.lava_generator":"Produces %1$s RF/FE Every %2$s ticks For Each Bucket of Lava",
+    "block.cobblestonesemantics.tooltip.all_in_one_explainer":"Automatically generates power when supplied with a Cobblestone Generator, Cobblestone Melter, and Lava Generator",
     "block.cobblestonesemantics.tooltip.all_in_one_delay":"The Higher The Tier of the Cobblestone Generator Then the Faster The Machine works",
     "block.cobblestonesemantics.tooltip.all_in_one_produced":"Every 2 Lava Generators needs to be compensated with 1 Cobblestone Melter to produce the optimal amount of energy",
 
