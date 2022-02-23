@@ -38,8 +38,20 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
     int delay;
     public CobblestoneMelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.COBBLESTONE_MELTER_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        itemStackHandler = new CobblestoneMelterItemHandler(1);
-        fluidTank = new CobblestoneMelterFluidTank(FluidAttributes.BUCKET_VOLUME * 10);
+        itemStackHandler = new CobblestoneMelterItemHandler(1)  {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+            }
+        };
+        fluidTank = new CobblestoneMelterFluidTank(FluidAttributes.BUCKET_VOLUME * 10)  {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+            }
+        };
         itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
         fluidHandlerLazyOptional = LazyOptional.of(() -> fluidTank);
         cooldown = 0;
@@ -97,6 +109,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
                 fluidTank.setFluid(new FluidStack(Fluids.LAVA,CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get()));
             }
             itemStackHandler.getStackInSlot(0).shrink(1);
+            level.setBlockAndUpdate(getBlockPos(),getBlockState().setValue(BlockStateProperties.POWERED,false));
         }
         if (shouldUpdate) {
             setChanged();

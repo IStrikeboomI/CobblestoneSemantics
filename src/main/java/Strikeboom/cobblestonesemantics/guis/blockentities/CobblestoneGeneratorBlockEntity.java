@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,12 +28,24 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
     int cooldown = 0;
     public CobblestoneGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        itemStackHandler = new CobblestoneGeneratorItemHandler(1);
+        itemStackHandler = new CobblestoneGeneratorItemHandler(1) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+            }
+        };
         itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
     }
     public CobblestoneGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState,int storageSlots,int delayUntilNextCobbleStone,int amountOfCobblestoneEachOperation) {
         super(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        itemStackHandler = new CobblestoneGeneratorItemHandler(storageSlots);
+        itemStackHandler = new CobblestoneGeneratorItemHandler(storageSlots)  {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+            }
+        };
         itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
         this.delayUntilNextCobbleStone = delayUntilNextCobbleStone;
         this.amountOfCobblestoneEachOperation = amountOfCobblestoneEachOperation;

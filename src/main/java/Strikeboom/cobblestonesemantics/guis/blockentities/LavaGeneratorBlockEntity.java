@@ -35,9 +35,21 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
     private int delay;
     public LavaGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.LAVA_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        fluidTank = new LavaGeneratorFluidTank(FluidAttributes.BUCKET_VOLUME * 5);
+        fluidTank = new LavaGeneratorFluidTank(FluidAttributes.BUCKET_VOLUME * 5) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+            }
+        };
         fluidHandlerLazyOptional = LazyOptional.of(() -> fluidTank);
-        energyStorage = new CobblestoneSemanticsEnergyStorage(1000000,false,true);
+        energyStorage = new CobblestoneSemanticsEnergyStorage(1000000,false,true) {
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+            }
+        };
         energyLazyOptional = LazyOptional.of(() -> energyStorage);
         cooldown = 0;
         delay = CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get();

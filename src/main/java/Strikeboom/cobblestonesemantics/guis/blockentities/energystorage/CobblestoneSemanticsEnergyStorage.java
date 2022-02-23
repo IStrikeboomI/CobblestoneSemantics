@@ -3,12 +3,10 @@ package Strikeboom.cobblestonesemantics.guis.blockentities.energystorage;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class CobblestoneSemanticsEnergyStorage extends EnergyStorage {
-    public CobblestoneSemanticsEnergyStorage(int capacity,boolean receivePower ,boolean sendPower) {
+    public CobblestoneSemanticsEnergyStorage(int capacity, boolean receivePower , boolean sendPower) {
         super(capacity,receivePower ? capacity : 0,sendPower ? capacity : 0);
     }
-    protected void onEnergyChanged() {
-    }
-
+    protected void onEnergyChanged() {}
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         int rc = super.extractEnergy(maxExtract, simulate);

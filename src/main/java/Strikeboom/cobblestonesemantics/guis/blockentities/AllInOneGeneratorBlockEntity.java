@@ -33,9 +33,21 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
     private int delay;
     public AllInOneGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.ALL_IN_ONE_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        itemStackHandler = new AllInOneGeneratorItemHandler();
+        itemStackHandler = new AllInOneGeneratorItemHandler() {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_ALL);
+            }
+        };
         itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
-        energyStorage = new CobblestoneSemanticsEnergyStorage(10000000,false,true);
+        energyStorage = new CobblestoneSemanticsEnergyStorage(10000000,false,true) {
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
+                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_ALL);
+            }
+        };
         energyLazyOptional = LazyOptional.of(() -> energyStorage);
         cooldown = 0;
         delay = 100;
