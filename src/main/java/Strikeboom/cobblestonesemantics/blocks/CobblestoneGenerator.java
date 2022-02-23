@@ -136,8 +136,10 @@ public class CobblestoneGenerator extends Block implements EntityBlock {
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (!pLevel.isClientSide) {
             if (pStack.hasTag()) {
-                CompoundTag tag = BlockItem.getBlockEntityData(pStack);
-                pLevel.getBlockEntity(pPos).load(tag);
+                if (pStack.getTag().contains("BlockEntityTag")) {
+                    CompoundTag tag = BlockItem.getBlockEntityData(pStack);
+                    pLevel.getBlockEntity(pPos).load(tag);
+                }
             }
         }
     }
