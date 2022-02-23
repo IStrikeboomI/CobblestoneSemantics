@@ -17,7 +17,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 
-
 import javax.annotation.Nullable;
 
 public class CobblestoneGeneratorBlockEntity extends BlockEntity {
