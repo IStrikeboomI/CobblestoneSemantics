@@ -26,7 +26,7 @@ import java.util.List;
 
 public class CobblestoneInfusedObsidianBag extends Item {
     public CobblestoneInfusedObsidianBag() {
-        super(CobblestoneSemanticsItems.ITEM_PROPERTIES.defaultDurability(0));
+        super(CobblestoneSemanticsItems.ITEM_PROPERTIES);
     }
 
     @Override

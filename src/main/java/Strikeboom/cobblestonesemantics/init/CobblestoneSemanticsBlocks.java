@@ -62,6 +62,6 @@ public class CobblestoneSemanticsBlocks {
     public static final RegistryObject<Item> ALL_IN_ONE_GENERATOR_ITEM = fromBlock(ALL_IN_ONE_GENERATOR);
 
     public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
-        return CobblestoneSemanticsItems.ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), CobblestoneSemanticsItems.ITEM_PROPERTIES));
+        return CobblestoneSemanticsItems.ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), CobblestoneSemanticsItems.ITEM_PROPERTIES.durability(0).stacksTo(64)));
     }
 }
