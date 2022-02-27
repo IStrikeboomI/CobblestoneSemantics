@@ -43,8 +43,10 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
         energyStorage = new CobblestoneSemanticsEnergyStorage(10000000,false,true) {
             @Override
             protected void onEnergyChanged() {
-                setChanged();
-                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_ALL);
+                if (level != null) {
+                    setChanged();
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
             }
         };
         energyLazyOptional = LazyOptional.of(() -> energyStorage);
