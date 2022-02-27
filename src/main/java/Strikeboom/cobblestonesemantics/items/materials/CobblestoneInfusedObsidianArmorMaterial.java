@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 public class CobblestoneInfusedObsidianArmorMaterial implements ArmorMaterial {
     @Override
     public int getDurabilityForSlot(EquipmentSlot pSlot) {
-        return 35;
+        return new int[]{555, 625, 610, 485}[pSlot.getIndex()];
     }
 
     @Override
