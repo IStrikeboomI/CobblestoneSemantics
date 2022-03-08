@@ -11,12 +11,12 @@ public class CobblestoneMelterItemHandler extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return Tags.Items.COBBLESTONE.contains(stack.getItem());
+        return stack.is(Tags.Items.COBBLESTONE) || stack.is(Tags.Items.STONE);
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (!Tags.Items.COBBLESTONE.contains(stack.getItem())) {
+        if (!stack.is(Tags.Items.COBBLESTONE)) {
             return stack;
         }
         return super.insertItem(slot, stack, simulate);

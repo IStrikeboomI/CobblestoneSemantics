@@ -5,12 +5,15 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.integrations.jei.CobblestoneSemanticsJeiPlugin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -25,17 +28,14 @@ public class LavaGeneratorRecipeCategory implements IRecipeCategory<LavaGenerato
         BACKGROUND = helper.createDrawable(new ResourceLocation(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"),8,3,160,80);
         final IDrawableStatic STATIC_ARROW = helper.createDrawable(new ResourceLocation(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"),176,0,24,16);
         ARROW = helper.createAnimatedDrawable(STATIC_ARROW,200, IDrawableAnimated.StartDirection.LEFT,false);
-        ICON = helper.createDrawableIngredient(new ItemStack(CobblestoneSemanticsBlocks.LAVA_GENERATOR.get()));
-    }
-    @Override
-    public ResourceLocation getUid() {
-        return CobblestoneSemanticsJeiPlugin.LAVA_GENERATOR;
+        ICON = helper.createDrawableIngredient(VanillaTypes.ITEM,new ItemStack(CobblestoneSemanticsBlocks.LAVA_GENERATOR.get()));
     }
 
     @Override
-    public Class<? extends LavaGeneratorRecipe> getRecipeClass() {
-        return LavaGeneratorRecipe.class;
+    public RecipeType<LavaGeneratorRecipe> getRecipeType() {
+        return CobblestoneSemanticsJeiPlugin.LAVA_GENERATOR;
     }
+
 
     @Override
     public Component getTitle() {
@@ -52,20 +52,28 @@ public class LavaGeneratorRecipeCategory implements IRecipeCategory<LavaGenerato
         return ICON;
     }
 
-    @Override
-    public void setIngredients(LavaGeneratorRecipe recipe, IIngredients ingredients) {
-        ingredients.setInput(VanillaTypes.FLUID,recipe.getIngredient());
-    }
 
     @Override
-    public void draw(LavaGeneratorRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
-        IRecipeCategory.super.draw(recipe, stack, mouseX, mouseY);
+    public void draw(LavaGeneratorRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+        IRecipeCategory.super.draw(recipe, recipeSlotsView, stack, mouseX, mouseY);
         ARROW.draw(stack,72,29);
     }
 
+    @SuppressWarnings("removal")
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, LavaGeneratorRecipe recipe, IIngredients ingredients) {
-        recipeLayout.getFluidStacks().init(0,true,13,6,24,66,5000,true,null);
-        recipeLayout.getFluidStacks().set(ingredients);
+    public ResourceLocation getUid() {
+        return getRecipeType().getUid();
+    }
+
+    @SuppressWarnings("removal")
+    @Override
+    public Class<? extends LavaGeneratorRecipe> getRecipeClass() {
+        return getRecipeType().getRecipeClass();
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, LavaGeneratorRecipe recipe, IFocusGroup focuses) {
+        IRecipeCategory.super.setRecipe(builder, recipe, focuses);
+        builder.addSlot(RecipeIngredientRole.INPUT,13,6).addIngredient(VanillaTypes.FLUID,recipe.getIngredient()).setFluidRenderer(5000,false,24,66);
     }
 }
