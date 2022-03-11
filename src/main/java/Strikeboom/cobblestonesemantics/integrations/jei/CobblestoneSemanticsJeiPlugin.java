@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,13 +52,10 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         IModPlugin.super.registerRecipes(registration);
-        registration.addRecipes(COBBLESTONE_MELTER, List.of(
-                new CobblestoneMelterRecipe(Blocks.COBBLESTONE),
-                new CobblestoneMelterRecipe(Blocks.INFESTED_COBBLESTONE),
-                new CobblestoneMelterRecipe(Blocks.MOSSY_COBBLESTONE),
-                new CobblestoneMelterRecipe(Blocks.DEEPSLATE),
-                new CobblestoneMelterRecipe(Blocks.STONE)
-        ));
+        List<CobblestoneMelterRecipe> cobblestoneMelterRecipes = new ArrayList<>();
+        Registry.ITEM.getTagOrEmpty(Tags.Items.COBBLESTONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
+        Registry.ITEM.getTagOrEmpty(Tags.Items.STONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
+        registration.addRecipes(COBBLESTONE_MELTER, cobblestoneMelterRecipes);
         registration.addRecipes(LAVA_GENERATOR,Collections.singletonList(new LavaGeneratorRecipe()));
         registration.addRecipes(COBBLESTONE_GENERATOR,List.of(new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get())),
                                         new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_2.get())),

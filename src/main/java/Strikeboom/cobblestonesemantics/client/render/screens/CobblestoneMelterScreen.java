@@ -1,4 +1,4 @@
-package Strikeboom.cobblestonesemantics.guis.screens;
+package Strikeboom.cobblestonesemantics.client.render.screens;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneMelterMenu;

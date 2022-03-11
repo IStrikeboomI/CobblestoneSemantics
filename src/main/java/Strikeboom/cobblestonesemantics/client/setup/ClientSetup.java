@@ -1,6 +1,6 @@
-package Strikeboom.cobblestonesemantics.setup;
+package Strikeboom.cobblestonesemantics.client.setup;
 
-import Strikeboom.cobblestonesemantics.guis.screens.*;
+import Strikeboom.cobblestonesemantics.client.render.screens.*;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.client.gui.screens.MenuScreens;

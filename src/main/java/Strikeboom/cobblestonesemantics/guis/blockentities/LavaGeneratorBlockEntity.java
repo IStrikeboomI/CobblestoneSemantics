@@ -94,13 +94,18 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
         } else {
             if (cooldown != 0) {
                 cooldown = 0;
-                level.setBlockAndUpdate(getBlockPos(),getBlockState().setValue(BlockStateProperties.POWERED,false));
+                if (fluidTank.getFluid().isEmpty()) {
+                    level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
+                }
                 shouldUpdate = true;
             }
         }
         if (cooldown % delay == 0 && cooldown != 0) {
             cooldown = 0;
             fluidTank.getFluid().shrink(FluidAttributes.BUCKET_VOLUME);
+            if (fluidTank.getFluid().isEmpty()) {
+                level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
+            }
             energyStorage.addEnergy(CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get());
         }
         if (shouldUpdate) {

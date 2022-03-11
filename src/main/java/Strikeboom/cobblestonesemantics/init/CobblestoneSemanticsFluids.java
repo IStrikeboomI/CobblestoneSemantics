@@ -1,7 +1,6 @@
 package Strikeboom.cobblestonesemantics.init;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.setup.ModSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
@@ -26,7 +25,7 @@ public class CobblestoneSemanticsFluids {
     public static final RegistryObject<Fluid> MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_FLOWING = FLUIDS.register("molten_cobblestone_infused_obsidian_flowing",() -> new ForgeFlowingFluid.Flowing(createProperties()));
 
     public static final RegistryObject<Block> MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_BLOCK = CobblestoneSemanticsBlocks.BLOCKS.register("molten_cobblestone_infused_obsidian", () -> new LiquidBlock(() -> (FlowingFluid) MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN.get(), BlockBehaviour.Properties.copy(Blocks.LAVA)));
-    public static final RegistryObject<Item> MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_BUCKET = CobblestoneSemanticsItems.ITEMS.register("molten_cobblestone_infused_obsidian_bucket", () -> new BucketItem(MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ModSetup.CREATIVE_MODE_TAB)));
+    public static final RegistryObject<Item> MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_BUCKET = CobblestoneSemanticsItems.ITEMS.register("molten_cobblestone_infused_obsidian_bucket", () -> new BucketItem(MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CobblestoneSemantics.CREATIVE_MODE_TAB)));
 
     private static ForgeFlowingFluid.Properties createProperties() {
         return new ForgeFlowingFluid.Properties(MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN,MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_FLOWING, FluidAttributes.builder(

@@ -96,7 +96,9 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
         } else {
             if (cooldown != 0) {
                 cooldown = 0;
-                level.setBlockAndUpdate(getBlockPos(),getBlockState().setValue(BlockStateProperties.POWERED,false));
+                if (itemStackHandler.getStackInSlot(0).isEmpty()) {
+                    level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
+                }
                 shouldUpdate = true;
             }
         }
@@ -108,7 +110,9 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
                 fluidTank.setFluid(new FluidStack(Fluids.LAVA,CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get()));
             }
             itemStackHandler.getStackInSlot(0).shrink(1);
-            level.setBlockAndUpdate(getBlockPos(),getBlockState().setValue(BlockStateProperties.POWERED,false));
+            if (itemStackHandler.getStackInSlot(0).isEmpty()) {
+                level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
+            }
         }
         if (shouldUpdate) {
             setChanged();

@@ -5,7 +5,6 @@ import Strikeboom.cobblestonesemantics.items.CobblestoneBag;
 import Strikeboom.cobblestonesemantics.items.CobblestoneInfusedObsidianBag;
 import Strikeboom.cobblestonesemantics.items.materials.CobblestoneInfusedObsidianArmorMaterial;
 import Strikeboom.cobblestonesemantics.items.materials.CobblestoneInfusedObsidianTier;
-import Strikeboom.cobblestonesemantics.setup.ModSetup;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -14,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class CobblestoneSemanticsItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CobblestoneSemantics.MOD_ID);
-    public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(ModSetup.CREATIVE_MODE_TAB);
+    public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(CobblestoneSemantics.CREATIVE_MODE_TAB);
 
     public static final Tier COBBLESTONE_INFUSED_OBSIDIAN_TIER = new CobblestoneInfusedObsidianTier();
     public static final RegistryObject<Item> COBBLESTONE_INFUSED_OBSIDIAN_PICKAXE = ITEMS.register("cobblestone_infused_obsidian_pickaxe", () -> new PickaxeItem(COBBLESTONE_INFUSED_OBSIDIAN_TIER, 1, -2.4F, ITEM_PROPERTIES));
