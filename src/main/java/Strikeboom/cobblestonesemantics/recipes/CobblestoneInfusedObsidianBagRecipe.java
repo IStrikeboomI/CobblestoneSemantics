@@ -3,6 +3,7 @@ package Strikeboom.cobblestonesemantics.recipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCustomRecipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -30,7 +31,7 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
             if (stack.is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
                 bagAmount++;
             }
-            if (stack.is(CobblestoneSemanticsBlocks.COBBLESTONE_INFUSED_OBSIDIAN_ITEM.get())) {
+            if (stack.is(CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG)) {
                 cobblestoneInfusedObsidianAmount++;
             }
         }
@@ -86,7 +87,7 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY,Ingredient.of(CobblestoneSemanticsItems.COBBLESTONE_BAG.get()),Ingredient.of(CobblestoneSemanticsBlocks.COBBLESTONE_INFUSED_OBSIDIAN_ITEM.get()));
+        return NonNullList.of(Ingredient.EMPTY,Ingredient.of(CobblestoneSemanticsItems.COBBLESTONE_BAG.get()),Ingredient.of(CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG));
     }
 
 }
