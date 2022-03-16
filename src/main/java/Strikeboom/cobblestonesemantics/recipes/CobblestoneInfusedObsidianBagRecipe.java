@@ -1,6 +1,5 @@
 package Strikeboom.cobblestonesemantics.recipes;
 
-import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCustomRecipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsTags;
