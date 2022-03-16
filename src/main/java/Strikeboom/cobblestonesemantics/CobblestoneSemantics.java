@@ -1,15 +1,12 @@
 package Strikeboom.cobblestonesemantics;
 
-import Strikeboom.cobblestonesemantics.init.*;
 import Strikeboom.cobblestonesemantics.client.setup.ClientSetup;
-import Strikeboom.cobblestonesemantics.recipes.CobblestoneInfusedObsidianBagRecipe;
+import Strikeboom.cobblestonesemantics.init.*;
 import com.google.common.collect.Lists;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;

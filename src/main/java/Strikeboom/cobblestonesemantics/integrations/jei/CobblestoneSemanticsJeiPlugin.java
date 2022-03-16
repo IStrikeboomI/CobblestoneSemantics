@@ -20,13 +20,11 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @JeiPlugin
 public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
