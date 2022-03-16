@@ -1,6 +1,7 @@
 package Strikeboom.cobblestonesemantics.guis.menus;
 
 import Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers.BagItemHandler;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -78,6 +79,6 @@ public class CobblestoneBagMenu extends AbstractContainerMenu {
     }
     @Override
     public boolean stillValid(Player pPlayer) {
-        return true;
+        return pPlayer.getItemInHand(pPlayer.getUsedItemHand()).is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get());
     }
 }
