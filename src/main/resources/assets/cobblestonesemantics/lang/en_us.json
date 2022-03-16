@@ -31,7 +31,7 @@
 
     "fluid.cobblestonesemantics.molten_cobblestone_infused_obsidian":"Molten Cobblestone Infused Obsidian",
 
-    "tooltip.cobblestonesemantics.warning_upgrade":"WARNING: Upgrading To Cobblestone Infused Obsidian Bag Will Clear All Items Already Inside The Bag!",
+    "tooltip.cobblestonesemantics.upgrade_saves":"Upgrading To Cobblestone Infused Obsidian Bag Will Transfer All Items Already Inside The Bag!",
     "tooltip.cobblestonesemantics.holds":"Holds %s Stacks Of Items!",
     "tooltip.cobblestonesemantics.upgrade":"Can Upgrade With A Single Piece Of Cobblestone Infused Obsidian",
 

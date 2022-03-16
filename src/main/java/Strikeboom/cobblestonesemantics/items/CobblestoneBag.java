@@ -34,7 +34,7 @@ public class CobblestoneBag extends Item {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","9"));
         pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".upgrade"));
-        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".warning_upgrade").withStyle(ChatFormatting.RED));
+        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".upgrade_saves").withStyle(ChatFormatting.YELLOW));
     }
 
     @Nullable

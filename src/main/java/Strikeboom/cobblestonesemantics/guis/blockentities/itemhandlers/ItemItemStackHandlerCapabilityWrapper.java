@@ -30,11 +30,15 @@ public class ItemItemStackHandlerCapabilityWrapper implements ICapabilitySeriali
 
     @Override
     public CompoundTag serializeNBT() {
-        return handler.serializeNBT();
+        CompoundTag tag = new CompoundTag();
+        tag.put("ItemStackHandler",handler.serializeNBT());
+        return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        handler.deserializeNBT(nbt);
+        if (nbt.contains("ItemStackHandler")) {
+            handler.deserializeNBT(nbt.getCompound("ItemStackHandler"));
+        }
     }
 }

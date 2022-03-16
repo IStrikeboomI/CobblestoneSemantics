@@ -2,11 +2,14 @@ package Strikeboom.cobblestonesemantics;
 
 import Strikeboom.cobblestonesemantics.init.*;
 import Strikeboom.cobblestonesemantics.client.setup.ClientSetup;
+import Strikeboom.cobblestonesemantics.recipes.CobblestoneInfusedObsidianBagRecipe;
 import com.google.common.collect.Lists;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,6 +45,7 @@ public class CobblestoneSemantics
         CobblestoneSemanticsFluids.FLUIDS.register(modbus);
         CobblestoneSemanticsMenus.MENUS.register(modbus);
         CobblestoneSemanticsBlockEntities.BLOCK_ENTITIES.register(modbus);
+        CobblestoneSemanticsCustomRecipes.RECIPES.register(modbus);
 
         modbus.addListener(this::init);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
@@ -49,8 +53,9 @@ public class CobblestoneSemantics
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CobblestoneSemanticsConfig.COMMON);
     }
     private void init(FMLCommonSetupEvent event) {
-        TierSortingRegistry.registerTier(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_TIER,new ResourceLocation(CobblestoneSemantics.MOD_ID,"cobblestone_infused_obsidian"),
-                Lists.newArrayList(Tiers.WOOD,Tiers.GOLD,Tiers.IRON,Tiers.DIAMOND,Tiers.STONE),Lists.newArrayList(Tiers.NETHERITE));
-
+        event.enqueueWork(() -> {
+            TierSortingRegistry.registerTier(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_TIER,new ResourceLocation(CobblestoneSemantics.MOD_ID,"cobblestone_infused_obsidian"),
+                    Lists.newArrayList(Tiers.WOOD,Tiers.GOLD,Tiers.IRON,Tiers.DIAMOND,Tiers.STONE),Lists.newArrayList(Tiers.NETHERITE));
+        });
     }
 }
