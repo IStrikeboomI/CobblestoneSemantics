@@ -7,6 +7,8 @@ Cobblestone semantics adds new blocks and generators that, in combination, produ
 Recommended with use of [JEI(Just Enough Items)](https://www.curseforge.com/minecraft/mc-mods/jei)
 For Minecraft Java Version **1.18.2**
 
+**Additional config to tweak around delay times and energy produced**
+
 ### Check out the [Bedrock Pack](https://chauhansaimc.wixsite.com/chauhan-sai-mc/post/cobblestone-semantics-minecraft-bedrock-addon-download) 
 
 <img src="/images/blocks.png" width="99%"/>
@@ -46,4 +48,4 @@ Produces 100,000 RF/FE per 200 ticks for each lava bucket
 Automatically generates power when supplied with a Cobblestone Generator, Cobblestone Melter, and Lava Generator
 
 ### Cobblestone Infused Obsidian
-Strong, decorative block
+Strong, decorative block, material
