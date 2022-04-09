@@ -99,14 +99,17 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         //inputs cobble to the slot above or below
         BlockEntity upBE = level.getBlockEntity(this.worldPosition.above());
         if (upBE != null) {
-            if (upBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,Direction.DOWN).isPresent()) {
-                IItemHandler upHandler = upBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,Direction.DOWN).orElse(new EmptyHandler());
-                if (!(upHandler instanceof EmptyHandler)) {
-                    if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-                        for (int i = 0; i < upHandler.getSlots(); i++) {
-                            if (upHandler.getStackInSlot(i).getCount() < upHandler.getSlotLimit(i)) {
-                                upHandler.insertItem(i, itemStackHandler.extractItem(((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex(), 64, false), false);
-                                setChanged();
+            if (!(upBE instanceof CobblestoneGeneratorBlockEntity)) {
+                if (upBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).isPresent()) {
+                    IItemHandler upHandler = upBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(new EmptyHandler());
+                    if (!(upHandler instanceof EmptyHandler)) {
+                        if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
+                            for (int i = 0; i < upHandler.getSlots(); i++) {
+                                if (upHandler.getStackInSlot(i).getCount() < upHandler.getSlotLimit(i)) {
+                                    int largestSlotIndex = ((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex();
+                                    upHandler.insertItem(i, itemStackHandler.extractItem(largestSlotIndex, 64, false), false);
+                                    setChanged();
+                                }
                             }
                         }
                     }
@@ -115,14 +118,16 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         }
         BlockEntity downBE = level.getBlockEntity(this.worldPosition.below());
         if (downBE != null) {
-            if (downBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).isPresent()) {
-                IItemHandler downHandler = downBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,Direction.UP).orElse(new EmptyHandler());
-                if (!(downHandler instanceof EmptyHandler)) {
-                    if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-                        for (int i = 0; i < downHandler.getSlots(); i++) {
-                            if (downHandler.getStackInSlot(i).getCount() < downHandler.getSlotLimit(i)) {
-                                downHandler.insertItem(i, itemStackHandler.extractItem(((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex(), 64, false), false);
-                                setChanged();
+            if (!(downBE instanceof CobblestoneGeneratorBlockEntity)) {
+                if (downBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).isPresent()) {
+                    IItemHandler downHandler = downBE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(new EmptyHandler());
+                    if (!(downHandler instanceof EmptyHandler)) {
+                        if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
+                            for (int i = 0; i < downHandler.getSlots(); i++) {
+                                if (downHandler.getStackInSlot(i).getCount() < downHandler.getSlotLimit(i)) {
+                                    downHandler.insertItem(i, itemStackHandler.extractItem(((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex(), 64, false), false);
+                                    setChanged();
+                                }
                             }
                         }
                     }
