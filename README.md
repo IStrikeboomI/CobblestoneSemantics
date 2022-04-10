@@ -11,8 +11,8 @@ For Minecraft Java Version **1.18.2**
 
 ### Check out the [Bedrock Pack](https://chauhansaimc.wixsite.com/chauhan-sai-mc/post/cobblestone-semantics-minecraft-bedrock-addon-download) 
 
-<img src="/images/blocks.png" width="99%"/>
-<img src="/images/items.png" width="99%"/>
+![image](https://user-images.githubusercontent.com/60586926/162629207-ff5d44ad-9273-4624-a42a-54d3c12f7088.png)
+![image](https://user-images.githubusercontent.com/60586926/162629218-cf938fc8-2b84-48fa-a63e-17540bea1325.png)
 
 ## New Items:
 ### Cobblestone Infused Obsidian Armor
