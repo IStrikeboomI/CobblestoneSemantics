@@ -1,0 +1,9 @@
+{
+  "craftable": false,
+  "tier": 3,
+  "sortOrder": 5,
+  "fluid": "cobblestonesemantics:molten_cobblestone_infused_obsidian",
+  "fluidPerUnit": 144,
+  "temperature": 950,
+  "textColor": "#553f91"
+}

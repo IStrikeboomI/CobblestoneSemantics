@@ -1,0 +1,12 @@
+{
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "item": "cobblestonesemantics:cobblestone_infused_obsidian_boots"
+  },
+  "result": {
+    "fluid": "cobblestonesemantics:molten_cobblestone_infused_obsidian",
+    "amount": 576
+  },
+  "temperature": 600,
+  "time": 55
+}

@@ -1,0 +1,9 @@
+{
+  "type": "tconstruct:casting_basin",
+  "fluid": {
+    "name": "cobblestonesemantics:molten_cobblestone_infused_obsidian",
+    "amount": 144
+  },
+  "result": "cobblestonesemantics:cobblestone_infused_obsidian",
+  "cooling_time": 125
+}

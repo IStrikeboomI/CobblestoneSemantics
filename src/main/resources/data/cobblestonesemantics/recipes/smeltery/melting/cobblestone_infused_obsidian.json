@@ -1,0 +1,12 @@
+{
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:cobblestone_infused_obsidian"
+  },
+  "result": {
+    "fluid": "cobblestonesemantics:molten_cobblestone_infused_obsidian",
+    "amount": 144
+  },
+  "temperature": 600,
+  "time": 55
+}

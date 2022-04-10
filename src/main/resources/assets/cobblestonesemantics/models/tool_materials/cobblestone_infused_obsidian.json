@@ -1,0 +1,5 @@
+{
+  "texture": "cobblestonesemantics:block/cobblestone_infused_obsidian",
+  "fallbacks": ["metal"],
+  "color": "553f91"
+}
