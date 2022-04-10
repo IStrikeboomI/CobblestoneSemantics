@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG] [VERSION]"
+title: "[BUG] [(INSERT VERSION HERE)]"
 labels: bug
 assignees: IStrikeboomI
 
@@ -20,6 +20,7 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Screenshots**
+(Optional)
 If applicable, add screenshots to help explain your problem.
 
 **Version**
@@ -28,7 +29,7 @@ If applicable, add screenshots to help explain your problem.
 -1.12.2
 
 **Subversion**
-(Optional)
+(Optional, If not provided I will just assume it's the latest version)
 -Ex. 1.10,1.5
 
 **Additional context**
