@@ -3,34 +3,34 @@ package Strikeboom.cobblestonesemantics.recipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCustomRecipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsTags;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.SpecialRecipe;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
+public class CobblestoneInfusedObsidianBagRecipe extends SpecialRecipe {
 
     public CobblestoneInfusedObsidianBagRecipe(ResourceLocation pId) {
         super(pId);
     }
 
     @Override
-    public boolean matches(CraftingContainer pContainer, Level pLevel) {
+    public boolean matches(CraftingInventory pContainer, World pWorld) {
         int bagAmount = 0;
         int cobblestoneInfusedObsidianAmount = 0;
         for (int i = 0;i < pContainer.getContainerSize();i++) {
             ItemStack stack = pContainer.getItem(i);
-            if (stack.is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
+            if (CobblestoneSemanticsItems.COBBLESTONE_BAG.get() == stack.getItem()) {
                 bagAmount++;
             }
-            if (stack.is(CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG)) {
+            if (CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG.contains(stack.getItem())) {
                 cobblestoneInfusedObsidianAmount++;
             }
         }
@@ -38,10 +38,10 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer pContainer) {
+    public ItemStack assemble(CraftingInventory pContainer) {
         ItemStack cobblestoneBag = ItemStack.EMPTY;
         for (int i = 0;i < pContainer.getContainerSize();i++) {
-            if (pContainer.getItem(i).is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
+            if (pContainer.getItem(i).getItem() == CobblestoneSemanticsItems.COBBLESTONE_BAG.get()) {
                 cobblestoneBag = pContainer.getItem(i).copy();
             }
         }
@@ -65,13 +65,13 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
-        return CobblestoneSemanticsCustomRecipes.   COBBLESTONE_INFUSED_OBSIDIAN_BAG_RECIPE.get();
+    public IRecipeSerializer<?> getSerializer() {
+        return CobblestoneSemanticsCustomRecipes.COBBLESTONE_INFUSED_OBSIDIAN_BAG_RECIPE.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return RecipeType.CRAFTING;
+    public IRecipeType<?> getType() {
+        return IRecipeType.CRAFTING;
     }
 
     @Override

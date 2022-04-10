@@ -1,25 +1,28 @@
 package Strikeboom.cobblestonesemantics.util;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
 public class ClientUtil {
-    public static void renderFluidBar(PoseStack poseStack, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
+    public static void renderFluidBar(MatrixStack matrixStack, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
         RenderSystem.enableBlend();
+        RenderSystem.enableAlphaTest();
 
         if (fluidStack == null) {
             return;
@@ -31,7 +34,7 @@ public class ClientUtil {
         Minecraft minecraft = Minecraft.getInstance();
         FluidAttributes attributes = fluid.getAttributes();
         ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
-        TextureAtlasSprite fluidStillSprite = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
+        TextureAtlasSprite fluidStillSprite = minecraft.getTextureAtlas(PlayerContainer.BLOCK_ATLAS).apply(fluidStill);
 
         int fluidColor = attributes.getColor(fluidStack);
 
@@ -44,9 +47,9 @@ public class ClientUtil {
             scaledAmount = height;
         }
 
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        Matrix4f matrix = poseStack.last().pose();
-        RenderSystem.setShaderColor(((fluidColor >> 16) & 0xFF) / 255f,((fluidColor >> 8) & 0xFF) / 255f,(fluidColor & 0xFF) / 255f,((fluidColor >> 24) & 0xFF) / 255f);
+        minecraft.getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
+        Matrix4f matrix = matrixStack.last().pose();
+        RenderSystem.color4f(((fluidColor >> 16) & 0xFF) / 255f,((fluidColor >> 8) & 0xFF) / 255f,(fluidColor & 0xFF) / 255f,((fluidColor >> 24) & 0xFF) / 255f);
 
         final int xTileCount = width / 16;
         final int xRemainder = width - (xTileCount * 16);
@@ -72,11 +75,9 @@ public class ClientUtil {
                     uMax = uMax - (maskRight / 16F * (uMax - uMin));
                     vMax = vMax - (maskTop / 16F * (vMax - vMin));
 
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-
-                    Tesselator tessellator = Tesselator.getInstance();
+                    Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder bufferBuilder = tessellator.getBuilder();
-                    bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
                     bufferBuilder.vertex(matrix, x, y + 16, 100).uv(uMin, vMax).endVertex();
                     bufferBuilder.vertex(matrix, x + 16 - maskRight, y + 16, 100).uv(uMax, vMax).endVertex();
                     bufferBuilder.vertex(matrix, x + 16 - maskRight, y + maskTop, 100).uv(uMax, vMin).endVertex();
@@ -85,22 +86,23 @@ public class ClientUtil {
                 }
             }
         }
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.color4f(1, 1, 1, 1);
 
+        RenderSystem.disableAlphaTest();
         RenderSystem.disableBlend();
     }
-    public static void drawFluidCapacityTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, AbstractContainerScreen<?> gui, PoseStack pPoseStack, FluidStack fluidStack) {
-        if (fluidStack != null && fluidStack.getFluid() != null && !fluidStack.getFluid().isSame( Fluids.EMPTY)) {
+    public static void drawFluidCapacityTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, ContainerScreen<?> gui, MatrixStack pMatrixStack, FluidStack fluidStack) {
+        if (fluidStack != null && fluidStack.getFluid() != null && !fluidStack.getFluid().isSame(Fluids.EMPTY)) {
             if (mouseX > xPos && mouseX < xPos + width
                     && mouseY > yPos && mouseY < yPos + height ) {
-                gui.renderTooltip(pPoseStack,new TextComponent(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
+                gui.renderTooltip(pMatrixStack,new StringTextComponent(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
             }
         }
     }
-    public static void drawEnergyTooltip(int mouseX, int mouseY, int xPos,int yPos, int width,int height, AbstractContainerScreen<?> gui, PoseStack pPoseStack, int energy) {
+    public static void drawEnergyTooltip(int mouseX, int mouseY, int xPos,int yPos, int width,int height, ContainerScreen<?> gui, MatrixStack pMatrixStack, int energy) {
         if (mouseX > xPos && mouseX < xPos + width
                 && mouseY > yPos && mouseY < yPos + height ) {
-            gui.renderTooltip(pPoseStack,new TextComponent(energy + " RF/FE") , mouseX, mouseY);
+            gui.renderTooltip(pMatrixStack,new StringTextComponent(energy + " RF/FE") , mouseX, mouseY);
         }
     }
 

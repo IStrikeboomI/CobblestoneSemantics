@@ -1,9 +1,9 @@
 package Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator;
 
 import Strikeboom.cobblestonesemantics.blocks.CobblestoneGenerator;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemStack;
 
 public class CobblestoneGeneratorRecipe {
     ItemStack stack;

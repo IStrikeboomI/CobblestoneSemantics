@@ -1,7 +1,7 @@
 package Strikeboom.cobblestonesemantics.integrations.jei;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneMelterMenu;
+import Strikeboom.cobblestonesemantics.guis.containers.CobblestoneMelterContainer;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipe;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipeCategory;
@@ -12,26 +12,25 @@ import Strikeboom.cobblestonesemantics.integrations.jei.lava_generator.LavaGener
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @JeiPlugin
 public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
 
-    public static final RecipeType<CobblestoneMelterRecipe> COBBLESTONE_MELTER = RecipeType.create(CobblestoneSemantics.MOD_ID,"cobblestone_melter",CobblestoneMelterRecipe.class);
-    public static final RecipeType<LavaGeneratorRecipe>  LAVA_GENERATOR = RecipeType.create(CobblestoneSemantics.MOD_ID,"lava_generator",LavaGeneratorRecipe.class);
-    public static final RecipeType<CobblestoneGeneratorRecipe>  COBBLESTONE_GENERATOR = RecipeType.create(CobblestoneSemantics.MOD_ID,"cobblestone_generator",CobblestoneGeneratorRecipe.class);
+    public static final ResourceLocation COBBLESTONE_MELTER = new ResourceLocation(CobblestoneSemantics.MOD_ID,"cobblestone_melter");
+    public static final ResourceLocation LAVA_GENERATOR = new ResourceLocation(CobblestoneSemantics.MOD_ID,"lava_generator");
+    public static final ResourceLocation COBBLESTONE_GENERATOR = new ResourceLocation(CobblestoneSemantics.MOD_ID,"cobblestone_generator");
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -42,7 +41,8 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IModPlugin.super.registerCategories(registration);
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new CobblestoneMelterRecipeCategory(helper),
+        registration.addRecipeCategories(
+                                        new CobblestoneMelterRecipeCategory(helper),
                                         new LavaGeneratorRecipeCategory(helper),
                                         new CobblestoneGeneratorRecipeCategory(helper));
     }
@@ -51,20 +51,22 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         IModPlugin.super.registerRecipes(registration);
         List<CobblestoneMelterRecipe> cobblestoneMelterRecipes = new ArrayList<>();
-        Registry.ITEM.getTagOrEmpty(Tags.Items.COBBLESTONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
-        Registry.ITEM.getTagOrEmpty(Tags.Items.STONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
-        registration.addRecipes(COBBLESTONE_MELTER, cobblestoneMelterRecipes);
-        registration.addRecipes(LAVA_GENERATOR,Collections.singletonList(new LavaGeneratorRecipe()));
-        registration.addRecipes(COBBLESTONE_GENERATOR,List.of(new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_2.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_3.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_4.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_5.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_6.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_7.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_8.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_9.get())),
-                                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10.get()))));
+        Tags.Items.COBBLESTONE.getValues().forEach(item -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(item))));
+        Tags.Items.STONE.getValues().forEach(item -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(item))));
+        registration.addRecipes(cobblestoneMelterRecipes, COBBLESTONE_MELTER);
+        registration.addRecipes(Collections.singletonList(new LavaGeneratorRecipe()),LAVA_GENERATOR);
+        registration.addRecipes(Arrays.asList(
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_2.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_3.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_4.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_5.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_6.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_7.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_8.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_9.get())),
+                        new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10.get())))
+        ,COBBLESTONE_GENERATOR);
     }
 
     @Override
@@ -78,6 +80,6 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         IModPlugin.super.registerRecipeTransferHandlers(registration);
-        registration.addRecipeTransferHandler(CobblestoneMelterMenu.class,COBBLESTONE_MELTER,0,1,0,36);
+        registration.addRecipeTransferHandler(CobblestoneMelterContainer.class,COBBLESTONE_MELTER,0,1,0,36);
     }
 }

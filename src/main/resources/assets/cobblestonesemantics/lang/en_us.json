@@ -50,5 +50,7 @@
 
     "block.cobblestonesemantics.message.amount":"Cobblestone Amount: %s",
 
-    "itemGroup.cobblestonesemantics":"Cobblestone Semantics"
+    "itemGroup.cobblestonesemantics":"Cobblestone Semantics",
+
+    "material.cobblestonesemantics.cobblestone_infused_obsidian":"Cobblestone Infused Obsidian"
 }

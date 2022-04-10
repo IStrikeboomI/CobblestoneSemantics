@@ -2,13 +2,9 @@ package Strikeboom.cobblestonesemantics;
 
 import Strikeboom.cobblestonesemantics.client.setup.ClientSetup;
 import Strikeboom.cobblestonesemantics.init.*;
-import com.google.common.collect.Lists;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -27,7 +23,7 @@ public class CobblestoneSemantics
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "cobblestonesemantics";
 
-    public static final CreativeModeTab CREATIVE_MODE_TAB = new CreativeModeTab(CobblestoneSemantics.MOD_ID) {
+    public static final ItemGroup CREATIVE_MODE_TAB = new ItemGroup(CobblestoneSemantics.MOD_ID) {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get());
@@ -40,8 +36,8 @@ public class CobblestoneSemantics
         CobblestoneSemanticsBlocks.BLOCKS.register(modbus);
         CobblestoneSemanticsItems.ITEMS.register(modbus);
         CobblestoneSemanticsFluids.FLUIDS.register(modbus);
-        CobblestoneSemanticsMenus.MENUS.register(modbus);
-        CobblestoneSemanticsBlockEntities.BLOCK_ENTITIES.register(modbus);
+        CobblestoneSemanticsContainers.CONTAINERS.register(modbus);
+        CobblestoneSemanticsTileEntities.BLOCK_ENTITIES.register(modbus);
         CobblestoneSemanticsCustomRecipes.RECIPES.register(modbus);
 
         modbus.addListener(this::init);
@@ -51,8 +47,6 @@ public class CobblestoneSemantics
     }
     private void init(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            TierSortingRegistry.registerTier(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_TIER,new ResourceLocation(CobblestoneSemantics.MOD_ID,"cobblestone_infused_obsidian"),
-                    Lists.newArrayList(Tiers.WOOD,Tiers.GOLD,Tiers.IRON,Tiers.DIAMOND,Tiers.STONE),Lists.newArrayList(Tiers.NETHERITE));
         });
     }
 }

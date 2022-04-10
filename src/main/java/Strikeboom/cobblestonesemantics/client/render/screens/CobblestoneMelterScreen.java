@@ -1,26 +1,25 @@
 package Strikeboom.cobblestonesemantics.client.render.screens;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneMelterMenu;
+import Strikeboom.cobblestonesemantics.guis.containers.CobblestoneMelterContainer;
 import Strikeboom.cobblestonesemantics.util.ClientUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class CobblestoneMelterScreen extends AbstractContainerScreen<CobblestoneMelterMenu> {
+public class CobblestoneMelterScreen extends ContainerScreen<CobblestoneMelterContainer> {
     FluidTank tank;
-    public CobblestoneMelterScreen(CobblestoneMelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public CobblestoneMelterScreen(CobblestoneMelterContainer pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         tank = (FluidTank) menu.blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(MatrixStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
@@ -28,8 +27,8 @@ public class CobblestoneMelterScreen extends AbstractContainerScreen<Cobblestone
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        RenderSystem.setShaderTexture(0, new ResourceLocation(CobblestoneSemantics.MOD_ID, "textures/gui/container/cobblestone_melter.png"));
+    protected void renderBg(MatrixStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+        minecraft.getTextureManager().bind(new ResourceLocation(CobblestoneSemantics.MOD_ID, "textures/gui/container/cobblestone_melter.png"));
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
         this.blit(pPoseStack, relX, relY, 0, 0, this.imageWidth, this.imageHeight);

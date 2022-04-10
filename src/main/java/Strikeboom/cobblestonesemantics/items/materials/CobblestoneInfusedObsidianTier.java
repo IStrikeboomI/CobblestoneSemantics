@@ -1,11 +1,11 @@
 package Strikeboom.cobblestonesemantics.items.materials;
 
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.item.IItemTier;
+import net.minecraft.item.crafting.Ingredient;
 
 
-public class CobblestoneInfusedObsidianTier implements Tier {
+public class CobblestoneInfusedObsidianTier implements IItemTier {
     @Override
     public int getUses() {
         return 1800;
@@ -30,7 +30,7 @@ public class CobblestoneInfusedObsidianTier implements Tier {
     }
 
     @Override
-    public  Ingredient getRepairIngredient() {
+    public Ingredient getRepairIngredient() {
         return Ingredient.of(CobblestoneSemanticsBlocks.COBBLESTONE_INFUSED_OBSIDIAN.get());
     }
 }

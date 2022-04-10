@@ -1,128 +1,116 @@
 package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.blockentities.AllInOneGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.guis.menus.AllInOneGeneratorMenu;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
-import org.jetbrains.annotations.Nullable;
+import Strikeboom.cobblestonesemantics.guis.containers.AllInOneGeneratorContainer;
+import Strikeboom.cobblestonesemantics.guis.tileentities.AllInOneGeneratorTileEntity;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class AllInOneGenerator extends Block implements EntityBlock {
+public class AllInOneGenerator extends Block {
     public AllInOneGenerator() {
-        super(BlockBehaviour.Properties.of(Material.METAL)
+        super(AbstractBlock.Properties.of(Material.METAL)
                 .sound(SoundType.METAL)
                 .strength(6f,100f)
                 .requiresCorrectToolForDrops());
     }
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(ItemStack pStack, @Nullable IBlockReader pWorld, List<ITextComponent> pTooltip, ITooltipFlag pFlag) {
         if (pStack.hasTag()) {
-            if (pStack.getTag().contains("BlockEntityTag")) {
-                pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
+            if (pStack.getTag().contains("ItemStackHandler")) {
+                pTooltip.add(new TranslationTextComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(TextFormatting.GREEN));
             }
         }
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_explainer"));
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_delay"));
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_produced"));
+        pTooltip.add(new TranslationTextComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_explainer"));
+        pTooltip.add(new TranslationTextComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_delay"));
+        pTooltip.add(new TranslationTextComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_produced"));
     }
 
     //these 2 functions below help save the data into the item stack when breaking block
     @Override
-    public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
-        if (!pLevel.isClientSide) {
+    public void playerDestroy(World pWorld, PlayerEntity pPlayer, BlockPos pPos, BlockState pState, @Nullable TileEntity pBlockEntity, ItemStack pTool) {
+        if (!pWorld.isClientSide) {
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                pBlockEntity.saveToItem(stack);
+                CompoundNBT nbt = new CompoundNBT();
+                pBlockEntity.save(nbt);
+                stack.setTag(nbt);
             }
-
-            ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
-            itementity.setDefaultPickUpDelay();
-            pLevel.addFreshEntity(itementity);
+            InventoryHelper.dropItemStack(pWorld,pPos.getX(), pPos.getY(), pPos.getZ(),stack);
         }
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (!pLevel.isClientSide) {
+    public void setPlacedBy(World pWorld, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        if (!pWorld.isClientSide) {
             if (pStack.hasTag()) {
-                if (pStack.getTag().contains("BlockEntityTag")) {
-                    CompoundTag tag = BlockItem.getBlockEntityData(pStack);
-                    pLevel.getBlockEntity(pPos).load(tag);
-                }
+                pStack.getTag().putInt("x",pPos.getX());
+                pStack.getTag().putInt("y",pPos.getY());
+                pStack.getTag().putInt("z",pPos.getZ());
+                pWorld.getBlockEntity(pPos).load(pState,pStack.getTag());
             }
         }
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new AllInOneGeneratorBlockEntity(pPos,pState);
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new AllInOneGeneratorTileEntity();
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide) {
-            return null;
-        }
-
-        return (pLevel1, pPos, pState1, pBlockEntity) -> {
-            if (pBlockEntity instanceof AllInOneGeneratorBlockEntity blockEntity) {
-                blockEntity.tickServer();
-            }
-        };
+    public boolean hasTileEntity(BlockState state) {
+        return true;
     }
+
+
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
-            if (pLevel.getBlockEntity(pPos) instanceof AllInOneGeneratorBlockEntity) {
-                MenuProvider containerProvider = new MenuProvider() {
+    public ActionResultType use(BlockState pState, World pWorld, BlockPos pPos, PlayerEntity pPlayer, Hand pHand, BlockRayTraceResult pHit) {
+        if (!pWorld.isClientSide) {
+            if (pWorld.getBlockEntity(pPos) instanceof AllInOneGeneratorTileEntity) {
+                INamedContainerProvider containerProvider = new INamedContainerProvider() {
                     @Override
-                    public Component getDisplayName() {
-                        return TextComponent.EMPTY;
+                    public ITextComponent getDisplayName() {
+                        return new StringTextComponent("");
                     }
 
                     @Override
-                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new AllInOneGeneratorMenu(windowId, pPos, playerInventory, playerEntity);
+                    public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+                        return new AllInOneGeneratorContainer(p_createMenu_1_, pPos, p_createMenu_2_, p_createMenu_3_, IWorldPosCallable.create(pWorld,pPos));
                     }
                 };
-                NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPos);
+                NetworkHooks.openGui((ServerPlayerEntity) pPlayer, containerProvider, pPos);
             }
         }
-        return InteractionResult.SUCCESS;
+        return ActionResultType.SUCCESS;
     }
 }

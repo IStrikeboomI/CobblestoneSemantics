@@ -1,23 +1,22 @@
 package Strikeboom.cobblestonesemantics.client.render.screens;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.blockentities.energystorage.CobblestoneSemanticsEnergyStorage;
-import Strikeboom.cobblestonesemantics.guis.menus.LavaGeneratorMenu;
+import Strikeboom.cobblestonesemantics.guis.containers.LavaGeneratorContainer;
+import Strikeboom.cobblestonesemantics.guis.tileentities.energystorage.CobblestoneSemanticsEnergyStorage;
 import Strikeboom.cobblestonesemantics.util.ClientUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class LavaGeneratorScreen extends AbstractContainerScreen<LavaGeneratorMenu> {
+public class LavaGeneratorScreen extends ContainerScreen<LavaGeneratorContainer> {
     FluidTank tank;
     CobblestoneSemanticsEnergyStorage energy;
-    public LavaGeneratorScreen(LavaGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public LavaGeneratorScreen(LavaGeneratorContainer pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         tank = (FluidTank) menu.blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
         energy = (CobblestoneSemanticsEnergyStorage) menu.blockEntity.getCapability(CapabilityEnergy.ENERGY).orElse(null);
@@ -27,7 +26,7 @@ public class LavaGeneratorScreen extends AbstractContainerScreen<LavaGeneratorMe
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(MatrixStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
@@ -36,8 +35,8 @@ public class LavaGeneratorScreen extends AbstractContainerScreen<LavaGeneratorMe
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        RenderSystem.setShaderTexture(0, new ResourceLocation(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"));
+    protected void renderBg(MatrixStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+        minecraft.getTextureManager().bind(new ResourceLocation(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"));
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
         this.blit(pPoseStack, relX, relY, 0, 0, this.imageWidth, this.imageHeight);

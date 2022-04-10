@@ -1,20 +1,20 @@
 package Strikeboom.cobblestonesemantics.items.materials;
 
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 
-public class CobblestoneInfusedObsidianArmorMaterial implements ArmorMaterial {
+public class CobblestoneInfusedObsidianArmorMaterial implements IArmorMaterial {
     @Override
-    public int getDurabilityForSlot(EquipmentSlot pSlot) {
+    public int getDurabilityForSlot(EquipmentSlotType pSlot) {
         return new int[]{555, 625, 610, 485}[pSlot.getIndex()];
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot pSlot) {
+    public int getDefenseForSlot(EquipmentSlotType pSlot) {
         return new int[] {3, 6, 8, 3}[pSlot.getIndex()];
     }
 
