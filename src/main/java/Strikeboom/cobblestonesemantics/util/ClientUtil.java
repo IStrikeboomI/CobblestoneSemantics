@@ -7,15 +7,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidAttributes;
+
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class ClientUtil {
     public static void renderFluidBar(PoseStack poseStack, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
@@ -29,11 +31,11 @@ public class ClientUtil {
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
-        FluidAttributes attributes = fluid.getAttributes();
-        ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
+
+        ResourceLocation fluidStill = RenderProperties.get(fluid).getStillTexture();
         TextureAtlasSprite fluidStillSprite = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
 
-        int fluidColor = attributes.getColor(fluidStack);
+        int fluidColor = RenderProperties.get(fluid).getColorTint(fluidStack);
 
         int amount = fluidStack.getAmount();
         int scaledAmount = (amount * height) / capacityMb;
@@ -93,14 +95,14 @@ public class ClientUtil {
         if (fluidStack != null && fluidStack.getFluid() != null && !fluidStack.getFluid().isSame( Fluids.EMPTY)) {
             if (mouseX > xPos && mouseX < xPos + width
                     && mouseY > yPos && mouseY < yPos + height ) {
-                gui.renderTooltip(pPoseStack,new TextComponent(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
+                gui.renderTooltip(pPoseStack, Component.literal(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
             }
         }
     }
     public static void drawEnergyTooltip(int mouseX, int mouseY, int xPos,int yPos, int width,int height, AbstractContainerScreen<?> gui, PoseStack pPoseStack, int energy) {
         if (mouseX > xPos && mouseX < xPos + width
                 && mouseY > yPos && mouseY < yPos + height ) {
-            gui.renderTooltip(pPoseStack,new TextComponent(energy + " RF/FE") , mouseX, mouseY);
+            gui.renderTooltip(pPoseStack,Component.literal(energy + " RF/FE") , mouseX, mouseY);
         }
     }
 

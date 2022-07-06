@@ -7,8 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -40,7 +38,7 @@ import java.util.List;
 
 public class AllInOneGenerator extends Block implements EntityBlock {
     public AllInOneGenerator() {
-        super(BlockBehaviour.Properties.of(Material.METAL)
+        super(Properties.of(Material.METAL)
                 .sound(SoundType.METAL)
                 .strength(6f,100f)
                 .requiresCorrectToolForDrops());
@@ -50,12 +48,12 @@ public class AllInOneGenerator extends Block implements EntityBlock {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         if (pStack.hasTag()) {
             if (pStack.getTag().contains("BlockEntityTag")) {
-                pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
+                pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
             }
         }
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_explainer"));
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_delay"));
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_produced"));
+        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_explainer"));
+        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_delay"));
+        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.all_in_one_produced"));
     }
 
     //these 2 functions below help save the data into the item stack when breaking block
@@ -112,7 +110,7 @@ public class AllInOneGenerator extends Block implements EntityBlock {
                 MenuProvider containerProvider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return TextComponent.EMPTY;
+                        return Component.empty();
                     }
 
                     @Override

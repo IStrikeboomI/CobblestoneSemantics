@@ -3,6 +3,7 @@ package Strikeboom.cobblestonesemantics.integrations.jei;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneMelterMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipe;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipeCategory;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_melter.CobblestoneMelterRecipe;
@@ -21,6 +22,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +53,7 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         IModPlugin.super.registerRecipes(registration);
         List<CobblestoneMelterRecipe> cobblestoneMelterRecipes = new ArrayList<>();
+
         Registry.ITEM.getTagOrEmpty(Tags.Items.COBBLESTONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
         Registry.ITEM.getTagOrEmpty(Tags.Items.STONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
         registration.addRecipes(COBBLESTONE_MELTER, cobblestoneMelterRecipes);
@@ -78,6 +81,6 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         IModPlugin.super.registerRecipeTransferHandlers(registration);
-        registration.addRecipeTransferHandler(CobblestoneMelterMenu.class,COBBLESTONE_MELTER,0,1,0,36);
+        registration.addRecipeTransferHandler(CobblestoneMelterMenu.class, CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(),COBBLESTONE_MELTER,0,1,0,36);
     }
 }

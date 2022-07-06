@@ -17,7 +17,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.FluidAttributes;
+
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -34,7 +34,7 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
     private int delay;
     public LavaGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.LAVA_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        fluidTank = new LavaGeneratorFluidTank(FluidAttributes.BUCKET_VOLUME * 5) {
+        fluidTank = new LavaGeneratorFluidTank(5000) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -86,7 +86,7 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
         delay = CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get();
         boolean shouldUpdate = false;
         if (!fluidTank.isEmpty()
-                && fluidTank.getFluid().getAmount() >= FluidAttributes.BUCKET_VOLUME
+                && fluidTank.getFluid().getAmount() >= 1000
                 && energyStorage.getEnergyStored() + CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get() <= energyStorage.getMaxEnergyStored()) {
             cooldown++;
             level.setBlockAndUpdate(getBlockPos(),getBlockState().setValue(BlockStateProperties.POWERED,true));
@@ -102,7 +102,7 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
         }
         if (cooldown % delay == 0 && cooldown != 0) {
             cooldown = 0;
-            fluidTank.getFluid().shrink(FluidAttributes.BUCKET_VOLUME);
+            fluidTank.getFluid().shrink(1000);
             if (fluidTank.getFluid().isEmpty()) {
                 level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
             }

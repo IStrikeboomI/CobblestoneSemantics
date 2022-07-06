@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,7 +43,7 @@ import java.util.List;
 
 public class CobblestoneMelter extends Block implements EntityBlock {
     public CobblestoneMelter() {
-        super(BlockBehaviour.Properties.of(Material.METAL)
+        super(Properties.of(Material.METAL)
                     .sound(SoundType.METAL)
                     .strength(6f,100f)
                     .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
@@ -56,10 +55,10 @@ public class CobblestoneMelter extends Block implements EntityBlock {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         if (pStack.hasTag()) {
             if (pStack.getTag().contains("BlockEntityTag")) {
-                pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
+                pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
             }
         }
-        pTooltip.add(new TranslatableComponent("block." + CobblestoneSemantics.MOD_ID + ".tooltip.cobblestone_melter", CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get(),CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get()));
+        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.cobblestone_melter", CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get(),CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get()));
     }
 
     @Override
@@ -104,7 +103,7 @@ public class CobblestoneMelter extends Block implements EntityBlock {
                 MenuProvider containerProvider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return new TranslatableComponent("block."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
+                        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
                     }
 
                     @Override

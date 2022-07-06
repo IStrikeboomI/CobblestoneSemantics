@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -44,7 +44,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
                 level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
             }
         };
-        fluidTank = new CobblestoneMelterFluidTank(FluidAttributes.BUCKET_VOLUME * 10)  {
+        fluidTank = new CobblestoneMelterFluidTank(10000)  {
             @Override
             protected void onContentsChanged() {
                 setChanged();

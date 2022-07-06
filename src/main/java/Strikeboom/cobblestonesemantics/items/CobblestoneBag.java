@@ -7,7 +7,6 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -32,9 +31,9 @@ public class CobblestoneBag extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","9"));
-        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".upgrade"));
-        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".upgrade_saves").withStyle(ChatFormatting.YELLOW));
+        pTooltipComponents.add(Component.translatable("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","9"));
+        pTooltipComponents.add(Component.translatable("tooltip." + CobblestoneSemantics.MOD_ID + ".upgrade"));
+        pTooltipComponents.add(Component.translatable("tooltip." + CobblestoneSemantics.MOD_ID + ".upgrade_saves").withStyle(ChatFormatting.YELLOW));
     }
 
     @Nullable
@@ -50,7 +49,7 @@ public class CobblestoneBag extends Item {
                 MenuProvider containerProvider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return new TranslatableComponent("item."+CobblestoneSemantics.MOD_ID+".cobblestone_bag");
+                        return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".cobblestone_bag");
                     }
 
                     @Override

@@ -7,6 +7,7 @@ import Strikeboom.cobblestonesemantics.items.materials.CobblestoneInfusedObsidia
 import Strikeboom.cobblestonesemantics.items.materials.CobblestoneInfusedObsidianTier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -30,4 +31,25 @@ public class CobblestoneSemanticsItems {
 
     public static final RegistryObject<Item> COBBLESTONE_BAG = ITEMS.register("cobblestone_bag", CobblestoneBag::new);
     public static final RegistryObject<Item> COBBLESTONE_INFUSED_OBSIDIAN_BAG = ITEMS.register("cobblestone_infused_obsidian_bag", CobblestoneInfusedObsidianBag::new);
+
+    public static final RegistryObject<Item> MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_BUCKET = ITEMS.register("molten_cobblestone_infused_obsidian_bucket", () -> new BucketItem(CobblestoneSemanticsFluids.MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CobblestoneSemantics.CREATIVE_MODE_TAB)));
+
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_1 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_2 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_2);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_3 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_3);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_4 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_4);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_5 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_5);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_6 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_6);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_7 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_7);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_8 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_8);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_9 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_9);
+    public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM_10 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10);
+    public static final RegistryObject<Item> COBBLESTONE_MELTER_ITEM = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_MELTER);
+    public static final RegistryObject<Item> LAVA_GENERATOR_ITEM = fromBlock(CobblestoneSemanticsBlocks.LAVA_GENERATOR);
+    public static final RegistryObject<Item> ALL_IN_ONE_GENERATOR_ITEM = fromBlock(CobblestoneSemanticsBlocks.ALL_IN_ONE_GENERATOR);
+    public static final RegistryObject<Item> COBBLESTONE_INFUSED_OBSIDIAN_ITEM = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_INFUSED_OBSIDIAN);
+
+    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
+        return CobblestoneSemanticsItems.ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), ITEM_PROPERTIES.durability(0).stacksTo(64)));
+    }
 }

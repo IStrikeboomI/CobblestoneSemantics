@@ -16,7 +16,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,7 +28,7 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
         BACKGROUND = helper.createDrawable(new ResourceLocation(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),40,20,100,50);
         IDrawableStatic STATIC_ARROW = helper.createDrawable(new ResourceLocation(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),176,0,24,17);
         ARROW = helper.createAnimatedDrawable(STATIC_ARROW,60, IDrawableAnimated.StartDirection.LEFT,false);
-        ICON = helper.createDrawableIngredient(VanillaTypes.ITEM,new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10.get()));
+        ICON = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10.get()));
 
     }
 
@@ -38,21 +37,9 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
         return CobblestoneSemanticsJeiPlugin.COBBLESTONE_GENERATOR;
     }
 
-    @SuppressWarnings("removal")
-    @Override
-    public ResourceLocation getUid() {
-        return getRecipeType().getUid();
-    }
-
-    @SuppressWarnings("removal")
-    @Override
-    public Class<? extends CobblestoneGeneratorRecipe> getRecipeClass() {
-        return getRecipeType().getRecipeClass();
-    }
-
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("block."+CobblestoneSemantics.MOD_ID+".cobblestone_generator");
+        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_generator");
     }
 
     @Override
@@ -73,7 +60,6 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CobblestoneGeneratorRecipe recipe, IFocusGroup focuses) {
-        IRecipeCategory.super.setRecipe(builder, recipe, focuses);
         builder.addSlot(RecipeIngredientRole.INPUT,10,15).addItemStack(recipe.getInput());
         builder.addSlot(RecipeIngredientRole.OUTPUT,70,15).addItemStack(recipe.getOutput());
     }

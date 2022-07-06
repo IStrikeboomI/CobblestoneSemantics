@@ -6,7 +6,6 @@ import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneInfusedObsidianBagM
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -31,7 +30,7 @@ public class CobblestoneInfusedObsidianBag extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(new TranslatableComponent("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","27"));
+        pTooltipComponents.add(Component.translatable("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","27"));
     }
     @Nullable
     @Override
@@ -46,7 +45,7 @@ public class CobblestoneInfusedObsidianBag extends Item {
                 MenuProvider containerProvider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return new TranslatableComponent("item."+CobblestoneSemantics.MOD_ID+".cobblestone_infused_obsidian_bag");
+                        return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".cobblestone_infused_obsidian_bag");
                     }
 
                     @Override

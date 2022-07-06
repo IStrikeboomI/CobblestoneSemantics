@@ -83,17 +83,18 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         if (cooldown % delayUntilNextCobbleStone == 0) {
             for (int i = 0; i<itemStackHandler.getSlots();i++) {
                 if (!itemStackHandler.getStackInSlot(i).isEmpty()) {
-                    if (itemStackHandler.getStackInSlot(i).getCount() < itemStackHandler.getSlotLimit(i)) {
+                    if (itemStackHandler.getStackInSlot(i).getCount() + amountOfCobblestoneEachOperation <= itemStackHandler.getSlotLimit(i)) {
                         itemStackHandler.getStackInSlot(i).grow(amountOfCobblestoneEachOperation);
                         setChanged();
                         break;
                     }
                 } else {
-                    itemStackHandler.setStackInSlot(i,new ItemStack(Blocks.COBBLESTONE));
+                    itemStackHandler.setStackInSlot(i,new ItemStack(Blocks.COBBLESTONE,amountOfCobblestoneEachOperation));
                     setChanged();
                     break;
                 }
             }
+            cooldown = 0;
         }
 
         //inputs cobble to the slot above or below

@@ -88,9 +88,9 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
         boolean shouldUpdate = false;
 
         if (!itemStackHandler.getStackInSlot(0).isEmpty() &&
-                itemStackHandler.getLavaGenerators() > 0 &&
-                itemStackHandler.getLavaMelters() > 0 &&
-                energyStorage.getEnergyStored() + ( CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get() * (int)(Math.floor(itemStackHandler.getLavaGenerators() / 2f) < itemStackHandler.getLavaMelters() ? Math.floor(itemStackHandler.getLavaGenerators() / 2f) :itemStackHandler.getLavaMelters())) <= energyStorage.getMaxEnergyStored()) {
+                itemStackHandler.getLavaGenerators() >= 2 &&
+                itemStackHandler.getLavaMelters() >= 1 &&
+                energyStorage.getEnergyStored() + (CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get() * (int)(Math.floor(itemStackHandler.getLavaGenerators() / 2f) < itemStackHandler.getLavaMelters() ? Math.floor(itemStackHandler.getLavaGenerators() / 2f) :itemStackHandler.getLavaMelters())) <= energyStorage.getMaxEnergyStored()) {
 
             cooldown += itemStackHandler.getCobbleGenTier();
             if (cooldown > delay) {

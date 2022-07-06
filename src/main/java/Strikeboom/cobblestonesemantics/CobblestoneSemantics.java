@@ -39,6 +39,7 @@ public class CobblestoneSemantics
 
         CobblestoneSemanticsBlocks.BLOCKS.register(modbus);
         CobblestoneSemanticsItems.ITEMS.register(modbus);
+        CobblestoneSemanticsFluids.FLUID_TYPES.register(modbus);
         CobblestoneSemanticsFluids.FLUIDS.register(modbus);
         CobblestoneSemanticsMenus.MENUS.register(modbus);
         CobblestoneSemanticsBlockEntities.BLOCK_ENTITIES.register(modbus);
