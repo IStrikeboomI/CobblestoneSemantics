@@ -1,0 +1,9 @@
+{
+  "type": "tconstruct:material_melting",
+  "input": "cobblestonesemantics:cobblestone_infused_obsidian",
+  "temperature": 1400,
+  "result": {
+    "fluid": "cobblestonesemantics:molten_cobblestone_infused_obsidian",
+    "amount": 144
+  }
+}
