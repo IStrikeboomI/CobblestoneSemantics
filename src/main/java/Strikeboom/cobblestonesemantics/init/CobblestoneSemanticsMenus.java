@@ -18,7 +18,7 @@ public class CobblestoneSemanticsMenus {
     public static final RegistryObject<MenuType<AllInOneGeneratorMenu>> ALL_IN_ONE_GENERATOR_MENU = MENUS.register("all_in_one_generator",
             () -> IForgeMenuType.create((windowId, inv, data) -> new AllInOneGeneratorMenu(windowId, data.readBlockPos(), inv, inv.player)));
     public static final RegistryObject<MenuType<CobblestoneBagMenu>> COBBLESTONE_BAG_MENU = MENUS.register("cobblestone_bag",
-            () -> IForgeMenuType.create((windowId, inv, data) -> new CobblestoneBagMenu(windowId, data.readBlockPos(), inv, inv.player)));
+            () -> IForgeMenuType.create((windowId, inv, data) -> new CobblestoneBagMenu(windowId, inv)));
     public static final RegistryObject<MenuType<CobblestoneInfusedObsidianBagMenu>> COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU = MENUS.register("cobblestone_infused_obsidian_bag",
-            () -> IForgeMenuType.create((windowId, inv, data) -> new CobblestoneInfusedObsidianBagMenu(windowId, data.readBlockPos(), inv, inv.player)));
+            () -> IForgeMenuType.create((windowId, inv, data) -> new CobblestoneInfusedObsidianBagMenu(windowId, inv)));
 }

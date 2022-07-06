@@ -54,7 +54,7 @@ public class CobblestoneBag extends Item {
 
                     @Override
                     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new CobblestoneBagMenu(windowId, pPlayer.getOnPos(), playerInventory, playerEntity);
+                        return new CobblestoneBagMenu(windowId, playerInventory);
                     }
                 };
                 NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPlayer.getOnPos());

@@ -14,7 +14,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class CobblestoneBagMenu extends AbstractContainerMenu {
     private BagItemHandler handler;
-    public CobblestoneBagMenu(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
+    public CobblestoneBagMenu(int windowId, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.COBBLESTONE_BAG_MENU.get(), windowId);
 
         if (!playerInventory.getSelected().isEmpty()) {

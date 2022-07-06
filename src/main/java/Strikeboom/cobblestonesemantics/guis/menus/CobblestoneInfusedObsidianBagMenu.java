@@ -3,7 +3,6 @@ package Strikeboom.cobblestonesemantics.guis.menus;
 import Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers.BagItemHandler;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,7 +13,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class CobblestoneInfusedObsidianBagMenu extends AbstractContainerMenu {
     private BagItemHandler handler;
-    public CobblestoneInfusedObsidianBagMenu(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
+    public CobblestoneInfusedObsidianBagMenu(int windowId, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU.get(), windowId);
 
         if (!playerInventory.getSelected().isEmpty()) {
