@@ -4,30 +4,19 @@ import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
-import net.minecraftforge.common.SoundAction;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class CobblestoneSemanticsFluids {
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, CobblestoneSemantics.MOD_ID);
@@ -45,10 +34,11 @@ public class CobblestoneSemanticsFluids {
             .descriptionId("fluid."+CobblestoneSemantics.MOD_ID+".molten_cobblestone_infused_obsidian")
     ) {
         @Override
-        public void initializeClient(Consumer<IFluidTypeRenderProperties> consumer) {
-            consumer.accept(new IFluidTypeRenderProperties() {
+        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+            consumer.accept(new IClientFluidTypeExtensions() {
+
                 @Override
-                public int getColorTint() {
+                public int getTintColor() {
                     return 0x7e7e21a6;
                 }
 
@@ -60,11 +50,6 @@ public class CobblestoneSemanticsFluids {
                 @Override
                 public ResourceLocation getFlowingTexture() {
                     return new ResourceLocation(CobblestoneSemantics.MOD_ID,"block/molten_cobblestone_infused_obsidian_flowing");
-                }
-
-                @Override
-                public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
-                    return new ResourceLocation(CobblestoneSemantics.MOD_ID,"block/cobblestone_infused_obsidian");
                 }
             });
         }

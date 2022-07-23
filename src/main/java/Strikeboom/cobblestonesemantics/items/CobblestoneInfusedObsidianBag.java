@@ -53,7 +53,7 @@ public class CobblestoneInfusedObsidianBag extends Item {
                         return new CobblestoneInfusedObsidianBagMenu(windowId, playerInventory);
                     }
                 };
-                NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPlayer.getOnPos());
+                NetworkHooks.openScreen((ServerPlayer) pPlayer, containerProvider, pPlayer.getOnPos());
             }
         }
         return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));

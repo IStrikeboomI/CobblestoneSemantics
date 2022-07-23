@@ -137,7 +137,7 @@ public class LavaGenerator extends Block implements EntityBlock {
                         return new LavaGeneratorMenu(windowId, pPos, playerInventory, playerEntity);
                     }
                 };
-                NetworkHooks.openGui((ServerPlayer) pPlayer, containerProvider, pPos);
+                NetworkHooks.openScreen((ServerPlayer) pPlayer, containerProvider, pPos);
             }
         }
         return InteractionResult.SUCCESS;

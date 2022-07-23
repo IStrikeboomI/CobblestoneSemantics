@@ -12,12 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public class ClientUtil {
     public static void renderFluidBar(PoseStack poseStack, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
@@ -31,11 +29,11 @@ public class ClientUtil {
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
-
-        ResourceLocation fluidStill = RenderProperties.get(fluid).getStillTexture();
+        IClientFluidTypeExtensions attributes = IClientFluidTypeExtensions.of(fluid);
+        ResourceLocation fluidStill = attributes.getStillTexture();
         TextureAtlasSprite fluidStillSprite = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
 
-        int fluidColor = RenderProperties.get(fluid).getColorTint(fluidStack);
+        int fluidColor = attributes.getTintColor(fluidStack);
 
         int amount = fluidStack.getAmount();
         int scaledAmount = (amount * height) / capacityMb;

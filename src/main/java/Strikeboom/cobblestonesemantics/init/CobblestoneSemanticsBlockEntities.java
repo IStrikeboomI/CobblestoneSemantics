@@ -11,7 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CobblestoneSemanticsBlockEntities {
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, CobblestoneSemantics.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, CobblestoneSemantics.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<CobblestoneGeneratorBlockEntity>> COBBLESTONE_GENERATOR_BLOCK_ENTITY = BLOCK_ENTITIES.register("cobblestone_generator",() -> BlockEntityType.Builder.of(CobblestoneGeneratorBlockEntity::new,CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get(),
                                                                                                                                                                                                                                                           CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_2.get(),

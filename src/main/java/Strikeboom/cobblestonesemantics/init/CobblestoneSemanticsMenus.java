@@ -9,7 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CobblestoneSemanticsMenus {
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, CobblestoneSemantics.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, CobblestoneSemantics.MOD_ID);
 
     public static final RegistryObject<MenuType<CobblestoneMelterMenu>> COBBLESTONE_MELTER_MENU = MENUS.register("cobblestone_melter",
             () -> IForgeMenuType.create((windowId, inv, data) -> new CobblestoneMelterMenu(windowId, data.readBlockPos(), inv, inv.player)));
