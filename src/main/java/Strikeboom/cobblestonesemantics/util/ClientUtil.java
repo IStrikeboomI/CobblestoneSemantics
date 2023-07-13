@@ -1,9 +1,13 @@
 package Strikeboom.cobblestonesemantics.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -14,11 +18,12 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 
 public class ClientUtil {
-    public static void renderFluidBar(PoseStack poseStack, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
+    public static void renderFluidBar(GuiGraphics guiGraphics, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
         RenderSystem.enableBlend();
 
         if (fluidStack == null) {
@@ -45,7 +50,7 @@ public class ClientUtil {
         }
 
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        Matrix4f matrix = poseStack.last().pose();
+        Matrix4f matrix = guiGraphics.pose().last().pose();
         RenderSystem.setShaderColor(((fluidColor >> 16) & 0xFF) / 255f,((fluidColor >> 8) & 0xFF) / 255f,(fluidColor & 0xFF) / 255f,((fluidColor >> 24) & 0xFF) / 255f);
 
         final int xTileCount = width / 16;
@@ -89,18 +94,18 @@ public class ClientUtil {
 
         RenderSystem.disableBlend();
     }
-    public static void drawFluidCapacityTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, AbstractContainerScreen<?> gui, PoseStack pPoseStack, FluidStack fluidStack) {
+    public static void drawFluidCapacityTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, AbstractContainerScreen<?> gui, Font font, GuiGraphics guiGraphics, FluidStack fluidStack) {
         if (fluidStack != null && fluidStack.getFluid() != null && !fluidStack.getFluid().isSame( Fluids.EMPTY)) {
             if (mouseX > xPos && mouseX < xPos + width
                     && mouseY > yPos && mouseY < yPos + height ) {
-                gui.renderTooltip(pPoseStack, Component.literal(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
+                guiGraphics.renderTooltip(font,Component.literal(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
             }
         }
     }
-    public static void drawEnergyTooltip(int mouseX, int mouseY, int xPos,int yPos, int width,int height, AbstractContainerScreen<?> gui, PoseStack pPoseStack, int energy) {
+    public static void drawEnergyTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, AbstractContainerScreen<?> gui, Font font, GuiGraphics guiGraphics, int energy) {
         if (mouseX > xPos && mouseX < xPos + width
                 && mouseY > yPos && mouseY < yPos + height ) {
-            gui.renderTooltip(pPoseStack,Component.literal(energy + " RF/FE") , mouseX, mouseY);
+            guiGraphics.renderTooltip(font,Component.literal(energy + " RF/FE") , mouseX, mouseY);
         }
     }
 

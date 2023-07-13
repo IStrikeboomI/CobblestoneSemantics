@@ -1,8 +1,8 @@
 package Strikeboom.cobblestonesemantics.items;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers.ItemItemStackHandlerCapabilityWrapper;
-import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneBagMenu;
+import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.ItemItemStackHandlerCapabilityWrapper;
+import Strikeboom.cobblestonesemantics.menus.CobblestoneBagMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;

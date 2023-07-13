@@ -1,8 +1,7 @@
 package Strikeboom.cobblestonesemantics.client.render.screens;
 
-import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneInfusedObsidianBagMenu;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import Strikeboom.cobblestonesemantics.menus.CobblestoneInfusedObsidianBagMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -16,17 +15,17 @@ public class CobblestoneInfusedObsidianBagScreen extends AbstractContainerScreen
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pPoseStack);
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+    protected void renderBg(GuiGraphics guiGraphics, float p_97788_, int p_97789_, int p_97790_) {
+        int i = (this.width - this.getXSize()) / 2;
+        int j = (this.height - this.getYSize()) / 2;
+        guiGraphics.blit(new ResourceLocation("textures/gui/container/generic_54.png"),i, j, 0, 0, this.getXSize(), 3 * 18 + 17);
+        guiGraphics.blit(new ResourceLocation("textures/gui/container/generic_54.png"),i, j + 3 * 18 + 16, 0, 126, this.getXSize(), 96);
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        RenderSystem.setShaderTexture(0,new ResourceLocation("textures/gui/container/generic_54.png"));
-        int i = (this.width - this.getXSize()) / 2;
-        int j = (this.height - this.getYSize()) / 2;
-        blit(pPoseStack,i, j, 0, 0, this.getXSize(), 3 * 18 + 17);
-        blit(pPoseStack,i, j + 3 * 18 + 16, 0, 126, this.getXSize(), 96);    }
+    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(guiGraphics, pMouseX, pMouseY);
+    }
 }

@@ -4,8 +4,6 @@ import Strikeboom.cobblestonesemantics.client.setup.ClientSetup;
 import Strikeboom.cobblestonesemantics.init.*;
 import com.google.common.collect.Lists;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.TierSortingRegistry;
@@ -27,16 +25,10 @@ public class CobblestoneSemantics
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "cobblestonesemantics";
 
-    public static final CreativeModeTab CREATIVE_MODE_TAB = new CreativeModeTab(CobblestoneSemantics.MOD_ID) {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get());
-        }
-    };
-
     public CobblestoneSemantics() {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        CobblestoneSemanticsCreativeModeTabs.CREATIVE_MODE_TABS.register(modbus);
         CobblestoneSemanticsBlocks.BLOCKS.register(modbus);
         CobblestoneSemanticsItems.ITEMS.register(modbus);
         CobblestoneSemanticsFluids.FLUID_TYPES.register(modbus);

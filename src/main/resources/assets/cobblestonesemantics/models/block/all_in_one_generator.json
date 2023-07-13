@@ -11,6 +11,7 @@
 		"10": "cobblestonesemantics:block/all_in_one_generator_right",
 		"particle": "cobblestonesemantics:block/generator_back"
 	},
+	"render_type": "cutout",
 	"display": {
 		"gui": {
 			"rotation": [ 30, 45, 0 ],

@@ -2,5 +2,6 @@
     "parent": "cobblestonesemantics:block/generator",
     "textures": {
         "front": "cobblestonesemantics:block/cobblestone_generator_6"
-    }
+    },
+    "render_type": "cutout"
 }

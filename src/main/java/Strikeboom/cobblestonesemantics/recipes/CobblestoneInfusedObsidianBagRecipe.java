@@ -4,21 +4,19 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCustomRecipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsTags;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
 
     public CobblestoneInfusedObsidianBagRecipe(ResourceLocation pId) {
-        super(pId);
+        super(pId, CraftingBookCategory.EQUIPMENT);
     }
 
     @Override
@@ -38,7 +36,7 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer pContainer) {
+    public ItemStack assemble(CraftingContainer pContainer, RegistryAccess p_267165_) {
         ItemStack cobblestoneBag = ItemStack.EMPTY;
         for (int i = 0;i < pContainer.getContainerSize();i++) {
             if (pContainer.getItem(i).is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
@@ -47,8 +45,8 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
         }
         if (!cobblestoneBag.isEmpty()) {
             ItemStack cobblestoneInfusedObsidianBag = new ItemStack(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get());
-            cobblestoneBag.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent( iItemHandler -> {
-                cobblestoneInfusedObsidianBag.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler1 -> {
+            cobblestoneBag.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
+                cobblestoneInfusedObsidianBag.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler1 -> {
                     for (int i = 0;i < iItemHandler.getSlots();i++) {
                         ((ItemStackHandler)iItemHandler1).setStackInSlot(i,iItemHandler.getStackInSlot(i));
                     }
@@ -58,6 +56,7 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
         }
         return ItemStack.EMPTY;
     }
+
 
     @Override
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
@@ -75,7 +74,7 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267025_) {
         return new ItemStack(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get());
     }
 

@@ -5,16 +5,13 @@ import Strikeboom.cobblestonesemantics.blocks.AllInOneGenerator;
 import Strikeboom.cobblestonesemantics.blocks.CobblestoneGenerator;
 import Strikeboom.cobblestonesemantics.blocks.CobblestoneMelter;
 import Strikeboom.cobblestonesemantics.blocks.LavaGenerator;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -22,7 +19,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class CobblestoneSemanticsBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CobblestoneSemantics.MOD_ID);
 
-    public static final RegistryObject<Block> COBBLESTONE_INFUSED_OBSIDIAN = BLOCKS.register("cobblestone_infused_obsidian", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).sound(SoundType.STONE).strength(50f,2500f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> COBBLESTONE_INFUSED_OBSIDIAN = BLOCKS.register("cobblestone_infused_obsidian", () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).sound(SoundType.STONE).strength(50f,2500f).requiresCorrectToolForDrops()));
 
     //dirt
     public static final RegistryObject<Block> COBBLESTONE_GENERATOR_1 = BLOCKS.register("cobblestone_generator_1", () -> new CobblestoneGenerator(1,1,60,1));

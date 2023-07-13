@@ -1,10 +1,10 @@
 package Strikeboom.cobblestonesemantics.init;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.blockentities.AllInOneGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.guis.blockentities.CobblestoneGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.guis.blockentities.CobblestoneMelterBlockEntity;
-import Strikeboom.cobblestonesemantics.guis.blockentities.LavaGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.blockentities.AllInOneGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.blockentities.CobblestoneMelterBlockEntity;
+import Strikeboom.cobblestonesemantics.blockentities.LavaGeneratorBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

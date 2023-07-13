@@ -1,10 +1,9 @@
 package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.blockentities.CobblestoneGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.guis.blockentities.itemhandlers.CobblestoneGeneratorItemHandler;
+import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneGeneratorItemHandler;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,16 +18,16 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,7 +38,8 @@ public class CobblestoneGenerator extends Block implements EntityBlock {
     int delayUntilNextCobbleStone;
     int amountOfCobblestoneEachOperation;
     public CobblestoneGenerator(int tier,int storageSlots,int delayUntilNextCobbleStone,int amountOfCobblestoneEachOperation) {
-        super(Properties.of(Material.METAL, MaterialColor.CLAY)
+        super(Properties.copy(Blocks.IRON_BLOCK)
+                .mapColor(MapColor.CLAY)
                 .sound(SoundType.METAL)
                 .strength(8f,250f)
                 .requiresCorrectToolForDrops());
@@ -98,7 +98,7 @@ public class CobblestoneGenerator extends Block implements EntityBlock {
        if (!pLevel.isClientSide) {
            if (!pPlayer.isCrouching()) {
                CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) pLevel.getBlockEntity(pPos);
-               be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+               be.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
                    ItemStack stack = ((CobblestoneGeneratorItemHandler)iItemHandler).getLargestSlotThenRemove();
                    if (!stack.isEmpty()) {
                        if (!pPlayer.getInventory().add(stack)) {

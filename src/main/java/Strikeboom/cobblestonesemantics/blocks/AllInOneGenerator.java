@@ -1,8 +1,8 @@
 package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.blockentities.AllInOneGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.guis.menus.AllInOneGeneratorMenu;
+import Strikeboom.cobblestonesemantics.blockentities.AllInOneGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.menus.AllInOneGeneratorMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,14 +22,13 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +37,7 @@ import java.util.List;
 
 public class AllInOneGenerator extends Block implements EntityBlock {
     public AllInOneGenerator() {
-        super(Properties.of(Material.METAL)
+        super(Properties.copy(Blocks.IRON_BLOCK)
                 .sound(SoundType.METAL)
                 .strength(6f,100f)
                 .requiresCorrectToolForDrops());

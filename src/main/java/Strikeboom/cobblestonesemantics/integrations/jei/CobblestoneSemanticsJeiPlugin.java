@@ -1,7 +1,6 @@
 package Strikeboom.cobblestonesemantics.integrations.jei;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.guis.menus.CobblestoneMelterMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator.CobblestoneGeneratorRecipe;
@@ -10,6 +9,7 @@ import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_melter.Cobbl
 import Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_melter.CobblestoneMelterRecipeCategory;
 import Strikeboom.cobblestonesemantics.integrations.jei.lava_generator.LavaGeneratorRecipe;
 import Strikeboom.cobblestonesemantics.integrations.jei.lava_generator.LavaGeneratorRecipeCategory;
+import Strikeboom.cobblestonesemantics.menus.CobblestoneMelterMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -18,7 +18,6 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
@@ -53,9 +52,8 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         IModPlugin.super.registerRecipes(registration);
         List<CobblestoneMelterRecipe> cobblestoneMelterRecipes = new ArrayList<>();
-
-        Registry.ITEM.getTagOrEmpty(Tags.Items.COBBLESTONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
-        Registry.ITEM.getTagOrEmpty(Tags.Items.STONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.value()))));
+        ForgeRegistries.ITEMS.tags().getTag(Tags.Items.COBBLESTONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.asItem()))));
+        ForgeRegistries.ITEMS.tags().getTag(Tags.Items.STONE).forEach(itemHolder -> cobblestoneMelterRecipes.add(new CobblestoneMelterRecipe(new ItemStack(itemHolder.asItem()))));
         registration.addRecipes(COBBLESTONE_MELTER, cobblestoneMelterRecipes);
         registration.addRecipes(LAVA_GENERATOR,Collections.singletonList(new LavaGeneratorRecipe()));
         registration.addRecipes(COBBLESTONE_GENERATOR,List.of(new CobblestoneGeneratorRecipe(new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1.get())),
