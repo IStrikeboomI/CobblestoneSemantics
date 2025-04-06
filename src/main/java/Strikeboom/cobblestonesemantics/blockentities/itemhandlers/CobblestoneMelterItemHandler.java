@@ -1,8 +1,8 @@
 package Strikeboom.cobblestonesemantics.blockentities.itemhandlers;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class CobblestoneMelterItemHandler extends ItemStackHandler {
     public CobblestoneMelterItemHandler(int size) {
@@ -11,12 +11,12 @@ public class CobblestoneMelterItemHandler extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.is(Tags.Items.COBBLESTONE) || stack.is(Tags.Items.STONE);
+        return stack.is(Tags.Items.COBBLESTONES) || stack.is(Tags.Items.STONES);
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (!stack.is(Tags.Items.COBBLESTONE) && !stack.is(Tags.Items.STONE)) {
+        if (!stack.is(Tags.Items.COBBLESTONES) && !stack.is(Tags.Items.STONES)) {
             return stack;
         }
         return super.insertItem(slot, stack, simulate);

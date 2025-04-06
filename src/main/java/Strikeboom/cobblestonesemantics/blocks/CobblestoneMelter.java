@@ -6,6 +6,7 @@ import Strikeboom.cobblestonesemantics.menus.CobblestoneMelterMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,8 +19,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -34,15 +37,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class CobblestoneMelter extends Block implements EntityBlock {
     public CobblestoneMelter() {
-        super(Properties.copy(Blocks.IRON_BLOCK)
+        super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .sound(SoundType.METAL)
                     .strength(6f,100f)
                     .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
@@ -50,12 +52,10 @@ public class CobblestoneMelter extends Block implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        if (pStack.hasTag()) {
-            if (pStack.getTag().contains("BlockEntityTag")) {
-                pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
-            }
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext context, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, context, pTooltip, pFlag);
+        if (!pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA,CustomData.EMPTY).isEmpty()) {
+            pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
         }
         pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.cobblestone_melter", CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get(),CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get()));
     }
@@ -93,12 +93,21 @@ public class CobblestoneMelter extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
-            if (pLevel.getBlockEntity(pPos) instanceof CobblestoneMelterBlockEntity) {
-                if (FluidUtil.interactWithFluidHandler(pPlayer, pHand, pLevel, pPos, null)) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
+            if (level.getBlockEntity(pos) instanceof CobblestoneMelterBlockEntity) {
+                if (FluidUtil.interactWithFluidHandler(player,hand,level,pos, null)) {
                     return InteractionResult.SUCCESS;
                 }
+            }
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
+        if (!pLevel.isClientSide) {
+            if (pLevel.getBlockEntity(pPos) instanceof CobblestoneMelterBlockEntity) {
                 MenuProvider containerProvider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
@@ -107,10 +116,10 @@ public class CobblestoneMelter extends Block implements EntityBlock {
 
                     @Override
                     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new CobblestoneMelterMenu(windowId, pPos, playerInventory, playerEntity);
+                        return new CobblestoneMelterMenu(windowId, pPos, playerInventory);
                     }
                 };
-                NetworkHooks.openScreen((ServerPlayer) pPlayer, containerProvider, pPos);
+                pPlayer.openMenu(containerProvider);
             }
         }
         return InteractionResult.SUCCESS;
@@ -123,7 +132,7 @@ public class CobblestoneMelter extends Block implements EntityBlock {
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                pBlockEntity.saveToItem(stack);
+                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomOnly(pLevel.registryAccess())));
             }
 
             ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
@@ -135,11 +144,9 @@ public class CobblestoneMelter extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (!pLevel.isClientSide) {
-            if (pStack.hasTag()) {
-                if (pStack.getTag().contains("BlockEntityTag")) {
-                    CompoundTag tag = BlockItem.getBlockEntityData(pStack);
-                    pLevel.getBlockEntity(pPos).load(tag);
-                }
+            CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+            if (!data.isEmpty()) {
+                pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
             }
         }
     }

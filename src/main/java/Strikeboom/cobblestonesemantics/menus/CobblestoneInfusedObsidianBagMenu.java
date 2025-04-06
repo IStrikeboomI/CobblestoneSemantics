@@ -8,8 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.SlotItemHandler;
+
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class CobblestoneInfusedObsidianBagMenu extends AbstractContainerMenu {
     private BagItemHandler handler;
@@ -17,20 +18,20 @@ public class CobblestoneInfusedObsidianBagMenu extends AbstractContainerMenu {
         super(CobblestoneSemanticsMenus.COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU.get(), windowId);
 
         if (!playerInventory.getSelected().isEmpty()) {
-            playerInventory.getSelected().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
+            handler = (BagItemHandler) playerInventory.getSelected().getCapability(Capabilities.ItemHandler.ITEM);
+            if (handler != null) {
                 int slotNumber = 0;
-                handler = (BagItemHandler) iItemHandler;
-                for (int i = 0;i < 9;i++) {
-                    for (int j = 0;j < 3;j++) {
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 3; j++) {
                         this.addSlot(new SlotItemHandler(
                                 handler
-                                ,slotNumber
+                                , slotNumber
                                 , 8 + i * 18
-                                ,18 + j * 18));
+                                , 18 + j * 18));
                         slotNumber++;
                     }
                 }
-            });
+            }
         }
 
 

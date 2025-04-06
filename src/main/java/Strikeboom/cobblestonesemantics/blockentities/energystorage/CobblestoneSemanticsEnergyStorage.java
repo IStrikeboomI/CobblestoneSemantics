@@ -1,6 +1,7 @@
 package Strikeboom.cobblestonesemantics.blockentities.energystorage;
 
-import net.minecraftforge.energy.EnergyStorage;
+
+import net.neoforged.neoforge.energy.EnergyStorage;
 
 public class CobblestoneSemanticsEnergyStorage extends EnergyStorage {
     public CobblestoneSemanticsEnergyStorage(int capacity, boolean receivePower , boolean sendPower) {

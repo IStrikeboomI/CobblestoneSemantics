@@ -5,7 +5,7 @@ import Strikeboom.cobblestonesemantics.blockentities.fluidtanks.LavaGeneratorFlu
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -13,21 +13,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class LavaGeneratorBlockEntity extends BlockEntity {
-    private final FluidTank fluidTank;
-    private final LazyOptional<IFluidHandler> fluidHandlerLazyOptional;
-    private final CobblestoneSemanticsEnergyStorage energyStorage;
-    private final LazyOptional<IEnergyStorage> energyLazyOptional;
+    public final FluidTank fluidTank;
+    public final CobblestoneSemanticsEnergyStorage energyStorage;
     private int cooldown;
     private int delay;
     public LavaGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
@@ -39,7 +32,6 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
                 level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
             }
         };
-        fluidHandlerLazyOptional = LazyOptional.of(() -> fluidTank);
         energyStorage = new CobblestoneSemanticsEnergyStorage(1000000,false,true) {
             @Override
             protected void onEnergyChanged() {
@@ -48,20 +40,19 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
                     level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
                 }            }
         };
-        energyLazyOptional = LazyOptional.of(() -> energyStorage);
         cooldown = 0;
         delay = CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get();
     }
     @Override
     public void setRemoved() {
         super.setRemoved();
-        energyLazyOptional.invalidate();
-        fluidHandlerLazyOptional.invalidate();
+        level.invalidateCapabilities(getBlockPos());
+        invalidateCapabilities();
     }
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
         pTag.putInt("energy",energyStorage.getEnergyStored());
-        fluidTank.writeToNBT(pTag);
+        fluidTank.writeToNBT(registries, pTag);
         CompoundTag infoTag = new CompoundTag();
         infoTag.putInt("Cooldown", cooldown);
         infoTag.putInt("Delay", delay);
@@ -69,16 +60,16 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
         if (pTag.contains("energy")) {
             energyStorage.setEnergy(pTag.getInt("energy"));
         }
-        fluidTank.readFromNBT(pTag);
+        fluidTank.readFromNBT(registries, pTag);
         if (pTag.contains("Info")) {
             cooldown = pTag.getCompound("Info").getInt("Cooldown");
             delay = pTag.getCompound("Info").getInt("Delay");
         }
-        super.load(pTag);
+        super.loadAdditional(pTag,registries);
     }
     public void tickServer() {
         delay = CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get();
@@ -111,29 +102,17 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
             this.level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_ALL);
         }
     }
-    
+
     @Override
-    public <T> LazyOptional<T> getCapability( Capability<T> cap, final @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return energyLazyOptional.cast();
-        }
-        if (cap == ForgeCapabilities.FLUID_HANDLER) {
-            return fluidHandlerLazyOptional.cast();
-        }
-        return super.getCapability(cap,side);
-    }
-    @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        saveAdditional(tag);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        saveAdditional(tag,registries);
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        if (tag != null) {
-            load(tag);
-        }
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        loadAdditional(tag,registries);
     }
 
     @Nullable
@@ -143,7 +122,7 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries) {
         // This is called client side: remember the current state of the values that we're interested in
         int oldCooldown = cooldown;
         int oldDelay = delay;
@@ -152,7 +131,7 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
 
         CompoundTag tag = pkt.getTag();
         // This will call loadClientData()
-        handleUpdateTag(tag);
+        handleUpdateTag(tag,registries);
 
         // If any of the values was changed we request a refresh of our model data and send a block update
         if (oldCooldown != cooldown || oldDelay != delay ||

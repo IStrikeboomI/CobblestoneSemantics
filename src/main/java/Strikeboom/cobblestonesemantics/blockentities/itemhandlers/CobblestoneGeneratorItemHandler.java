@@ -1,7 +1,7 @@
 package Strikeboom.cobblestonesemantics.blockentities.itemhandlers;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class CobblestoneGeneratorItemHandler extends ItemStackHandler {
     public CobblestoneGeneratorItemHandler(int slots) {

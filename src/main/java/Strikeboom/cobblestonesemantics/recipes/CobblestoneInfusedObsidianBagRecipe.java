@@ -3,6 +3,7 @@ package Strikeboom.cobblestonesemantics.recipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCustomRecipes;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -12,8 +13,9 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
-public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
+public class CobblestoneInfusedObsidianBagRecipe extends ShapelessRecipe {
 
     public CobblestoneInfusedObsidianBagRecipe(ResourceLocation pId) {
         super(pId, CraftingBookCategory.EQUIPMENT);
@@ -45,7 +47,7 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
         }
         if (!cobblestoneBag.isEmpty()) {
             ItemStack cobblestoneInfusedObsidianBag = new ItemStack(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get());
-            cobblestoneBag.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
+            cobblestoneBag.getCapability(Capabilities.ItemHandler.ITEM).ifPresent(iItemHandler -> {
                 cobblestoneInfusedObsidianBag.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler1 -> {
                     for (int i = 0;i < iItemHandler.getSlots();i++) {
                         ((ItemStackHandler)iItemHandler1).setStackInSlot(i,iItemHandler.getStackInSlot(i));
@@ -76,6 +78,16 @@ public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
     @Override
     public ItemStack getResultItem(RegistryAccess p_267025_) {
         return new ItemStack(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get());
+    }
+
+    @Override
+    public boolean matches(CraftingInput input, Level level) {
+        return false;
+    }
+
+    @Override
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+        return null;
     }
 
     @Override

@@ -4,16 +4,14 @@ import Strikeboom.cobblestonesemantics.client.setup.ClientSetup;
 import Strikeboom.cobblestonesemantics.init.*;
 import com.google.common.collect.Lists;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Tiers;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,9 +23,7 @@ public class CobblestoneSemantics
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "cobblestonesemantics";
 
-    public CobblestoneSemantics() {
-        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public CobblestoneSemantics(IEventBus modbus, ModContainer modContainer) {
         CobblestoneSemanticsCreativeModeTabs.CREATIVE_MODE_TABS.register(modbus);
         CobblestoneSemanticsBlocks.BLOCKS.register(modbus);
         CobblestoneSemanticsItems.ITEMS.register(modbus);
@@ -37,15 +33,9 @@ public class CobblestoneSemantics
         CobblestoneSemanticsBlockEntities.BLOCK_ENTITIES.register(modbus);
         CobblestoneSemanticsCustomRecipes.RECIPES.register(modbus);
 
-        modbus.addListener(this::init);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
+        //modbus.addListener(this::init);
+        NeoForge.EVENT_BUS.register(this);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CobblestoneSemanticsConfig.COMMON);
-    }
-    private void init(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            TierSortingRegistry.registerTier(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_TIER,new ResourceLocation(CobblestoneSemantics.MOD_ID,"cobblestone_infused_obsidian"),
-                    Lists.newArrayList(Tiers.WOOD,Tiers.GOLD,Tiers.IRON,Tiers.DIAMOND,Tiers.STONE),Lists.newArrayList(Tiers.NETHERITE));
-        });
+        modContainer.registerConfig(ModConfig.Type.COMMON, CobblestoneSemanticsConfig.BUILDER.build());
     }
 }

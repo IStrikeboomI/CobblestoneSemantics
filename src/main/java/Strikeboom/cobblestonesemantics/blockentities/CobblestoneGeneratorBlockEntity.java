@@ -4,37 +4,36 @@ import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneGen
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.EmptyHandler;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
 
 import javax.annotation.Nullable;
 
 public class CobblestoneGeneratorBlockEntity extends BlockEntity {
-    ItemStackHandler itemStackHandler;
-    private final LazyOptional<IItemHandler> itemHandlerLazyOptional;
+    public final CobblestoneGeneratorItemHandler itemStackHandler;
     int delayUntilNextCobbleStone = 1;
     int amountOfCobblestoneEachOperation = 1;
     int cooldown = 0;
     public CobblestoneGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
         itemStackHandler = new CobblestoneGeneratorItemHandler(1) {
+
             @Override
-            protected void onContentsChanged(int slot) {
+            public void onContentsChanged(int slot) {
                 setChanged();
                 level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
             }
         };
-        itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
     }
     public CobblestoneGeneratorBlockEntity( BlockPos pWorldPosition, BlockState pBlockState,int storageSlots,int delayUntilNextCobbleStone,int amountOfCobblestoneEachOperation) {
         super(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
@@ -45,19 +44,19 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
                 level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
             }
         };
-        itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
         this.delayUntilNextCobbleStone = delayUntilNextCobbleStone;
         this.amountOfCobblestoneEachOperation = amountOfCobblestoneEachOperation;
     }
     @Override
     public void setRemoved() {
         super.setRemoved();
-        itemHandlerLazyOptional.invalidate();
+        level.invalidateCapabilities(getBlockPos());
+        invalidateCapabilities();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        pTag.put("ItemStackHandler",itemStackHandler.serializeNBT());
+    protected void saveAdditional(CompoundTag pTag,HolderLookup.Provider registries) {
+        pTag.put("ItemStackHandler",itemStackHandler.serializeNBT(registries));
         CompoundTag infoTag = new CompoundTag();
         infoTag.putInt("Cooldown", cooldown);
         infoTag.putInt("DelayUntilNextCobbleStone", delayUntilNextCobbleStone);
@@ -66,17 +65,18 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
         if (pTag.contains("ItemStackHandler")) {
-            itemStackHandler.deserializeNBT(pTag.getCompound("ItemStackHandler"));
+            itemStackHandler.deserializeNBT(registries,pTag.getCompound("ItemStackHandler"));
         }
         if (pTag.contains("Info")) {
             cooldown = pTag.getCompound("Info").getInt("Cooldown");
             delayUntilNextCobbleStone = pTag.getCompound("Info").getInt("DelayUntilNextCobbleStone");
             amountOfCobblestoneEachOperation = pTag.getCompound("Info").getInt("AmountOfCobblestoneEachOperation");
         }
-        super.load(pTag);
+        super.loadAdditional(pTag, registries);
     }
+
 
     public void tickServer() {
         cooldown++;
@@ -101,14 +101,14 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         BlockEntity upBE = level.getBlockEntity(this.worldPosition.above());
         if (upBE != null) {
             if (!(upBE instanceof CobblestoneGeneratorBlockEntity)) {
-                if (upBE.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).isPresent()) {
-                    IItemHandler upHandler = upBE.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).orElse(new EmptyHandler());
-                    if (!(upHandler instanceof EmptyHandler)) {
+                IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK,this.worldPosition.above(),Direction.DOWN);
+                if (cap != null) {
+                    if (!(cap instanceof EmptyItemHandler)) {
                         if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-                            for (int i = 0; i < upHandler.getSlots(); i++) {
-                                if (upHandler.getStackInSlot(i).getCount() < upHandler.getSlotLimit(i)) {
-                                    int largestSlotIndex = ((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex();
-                                    upHandler.insertItem(i, itemStackHandler.extractItem(largestSlotIndex, 64, false), false);
+                            for (int i = 0; i < cap.getSlots(); i++) {
+                                if (cap.getStackInSlot(i).getCount() < cap.getSlotLimit(i)) {
+                                    int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
+                                    cap.insertItem(i, itemStackHandler.extractItem(largestSlotIndex, 64, false), false);
                                     setChanged();
                                 }
                             }
@@ -120,13 +120,13 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         BlockEntity downBE = level.getBlockEntity(this.worldPosition.below());
         if (downBE != null) {
             if (!(downBE instanceof CobblestoneGeneratorBlockEntity)) {
-                if (downBE.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).isPresent()) {
-                    IItemHandler downHandler = downBE.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).orElse(new EmptyHandler());
-                    if (!(downHandler instanceof EmptyHandler)) {
+                IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK,this.worldPosition.below(),Direction.UP);
+                if (cap != null) {
+                    if (!(cap instanceof EmptyItemHandler)) {
                         if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-                            for (int i = 0; i < downHandler.getSlots(); i++) {
-                                if (downHandler.getStackInSlot(i).getCount() < downHandler.getSlotLimit(i)) {
-                                    downHandler.insertItem(i, itemStackHandler.extractItem(((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex(), 64, false), false);
+                            for (int i = 0; i < cap.getSlots(); i++) {
+                                if (cap.getStackInSlot(i).getCount() < cap.getSlotLimit(i)) {
+                                    cap.insertItem(i, itemStackHandler.extractItem(((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex(), 64, false), false);
                                     setChanged();
                                 }
                             }
@@ -145,12 +145,4 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         return amount;
     }
 
-    
-    @Override
-    public <T> LazyOptional<T> getCapability( Capability<T> cap, final @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandlerLazyOptional.cast();
-        }
-        return super.getCapability(cap,side);
-    }
 }

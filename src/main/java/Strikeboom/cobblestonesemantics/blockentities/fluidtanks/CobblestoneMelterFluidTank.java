@@ -1,8 +1,9 @@
 package Strikeboom.cobblestonesemantics.blockentities.fluidtanks;
 
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+
 
 public class CobblestoneMelterFluidTank extends FluidTank {
     public CobblestoneMelterFluidTank(int capacity) {

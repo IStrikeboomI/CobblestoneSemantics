@@ -9,15 +9,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.entity.CommandBlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
@@ -30,13 +35,13 @@ public class ClientUtil {
             return;
         }
         Fluid fluid = fluidStack.getFluid();
-        if (fluid == null || fluidStack.isEmpty()) {
+        if (fluidStack.isEmpty()) {
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
         IClientFluidTypeExtensions attributes = IClientFluidTypeExtensions.of(fluid);
         ResourceLocation fluidStill = attributes.getStillTexture();
-        TextureAtlasSprite fluidStillSprite = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
+        TextureAtlasSprite fluidStillSprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(fluidStill);
 
         int fluidColor = attributes.getTintColor(fluidStack);
 
@@ -49,7 +54,7 @@ public class ClientUtil {
             scaledAmount = height;
         }
 
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         Matrix4f matrix = guiGraphics.pose().last().pose();
         RenderSystem.setShaderColor(((fluidColor >> 16) & 0xFF) / 255f,((fluidColor >> 8) & 0xFF) / 255f,(fluidColor & 0xFF) / 255f,((fluidColor >> 24) & 0xFF) / 255f);
 
@@ -77,16 +82,14 @@ public class ClientUtil {
                     uMax = uMax - (maskRight / 16F * (uMax - uMin));
                     vMax = vMax - (maskTop / 16F * (vMax - vMin));
 
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                    RenderSystem.setShader(CoreShaders.POSITION_TEX);
 
                     Tesselator tessellator = Tesselator.getInstance();
-                    BufferBuilder bufferBuilder = tessellator.getBuilder();
-                    bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferBuilder.vertex(matrix, x, y + 16, 100).uv(uMin, vMax).endVertex();
-                    bufferBuilder.vertex(matrix, x + 16 - maskRight, y + 16, 100).uv(uMax, vMax).endVertex();
-                    bufferBuilder.vertex(matrix, x + 16 - maskRight, y + maskTop, 100).uv(uMax, vMin).endVertex();
-                    bufferBuilder.vertex(matrix, x, y + maskTop, 100).uv(uMin, vMin).endVertex();
-                    tessellator.end();
+                    BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX);
+                    bufferBuilder.addVertex(matrix, x, y + 16, 100).setUv(uMin, vMax);
+                    bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + 16, 100).setUv(uMax, vMax);
+                    bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + maskTop, 100).setUv(uMax, vMin);
+                    bufferBuilder.addVertex(matrix, x, y + maskTop, 100).setUv(uMin, vMin);
                 }
             }
         }
@@ -95,10 +98,10 @@ public class ClientUtil {
         RenderSystem.disableBlend();
     }
     public static void drawFluidCapacityTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, AbstractContainerScreen<?> gui, Font font, GuiGraphics guiGraphics, FluidStack fluidStack) {
-        if (fluidStack != null && fluidStack.getFluid() != null && !fluidStack.getFluid().isSame( Fluids.EMPTY)) {
+        if (fluidStack != null && !fluidStack.getFluid().isSame(Fluids.EMPTY)) {
             if (mouseX > xPos && mouseX < xPos + width
                     && mouseY > yPos && mouseY < yPos + height ) {
-                guiGraphics.renderTooltip(font,Component.literal(fluidStack.getDisplayName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
+                guiGraphics.renderTooltip(font,Component.literal(fluidStack.getHoverName().getString() + " " + fluidStack.getAmount() + " mB"), mouseX, mouseY);
             }
         }
     }

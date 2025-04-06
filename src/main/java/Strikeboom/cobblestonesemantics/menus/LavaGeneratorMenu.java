@@ -14,9 +14,12 @@ import net.minecraft.world.item.ItemStack;
 public class LavaGeneratorMenu extends AbstractContainerMenu {
     public final LavaGeneratorBlockEntity blockEntity;
 
-    public LavaGeneratorMenu(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
+    public LavaGeneratorMenu(int windowId, Inventory playerInventory) {
+        this(windowId,BlockPos.ZERO,playerInventory);
+    }
+    public LavaGeneratorMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), windowId);
-        blockEntity = (LavaGeneratorBlockEntity) player.getCommandSenderWorld().getBlockEntity(pos);
+        blockEntity = (LavaGeneratorBlockEntity) playerInventory.player.getCommandSenderWorld().getBlockEntity(pos);
 
         int xPos = 8;
         int yPos = 84;

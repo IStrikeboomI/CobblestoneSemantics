@@ -4,7 +4,7 @@ import Strikeboom.cobblestonesemantics.blocks.CobblestoneGenerator;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class AllInOneGeneratorItemHandler extends ItemStackHandler {
     public AllInOneGeneratorItemHandler() {

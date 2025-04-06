@@ -1,21 +1,51 @@
 package Strikeboom.cobblestonesemantics.client.setup;
 
+import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.client.render.screens.*;
-import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsFluids;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
+@Mod(value = CobblestoneSemantics.MOD_ID, dist = Dist.CLIENT)
 public class ClientSetup {
-    public static void init(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(), CobblestoneMelterScreen::new);
-            MenuScreens.register(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), LavaGeneratorScreen::new);
-            MenuScreens.register(CobblestoneSemanticsMenus.ALL_IN_ONE_GENERATOR_MENU.get(), AllInOneGeneratorScreen::new);
-            MenuScreens.register(CobblestoneSemanticsMenus.COBBLESTONE_BAG_MENU.get(), CobblestoneBagScreen::new);
-            MenuScreens.register(CobblestoneSemanticsMenus.COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU.get(), CobblestoneInfusedObsidianBagScreen::new);
-        });
+    public ClientSetup(IEventBus modBus) {
+        NeoForge.EVENT_BUS.register(this);
+    }
+    @SubscribeEvent
+    private void registerScreens(RegisterMenuScreensEvent event) {
+       event.register(CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(), CobblestoneMelterScreen::new);
+       event.register(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), LavaGeneratorScreen::new);
+       event.register(CobblestoneSemanticsMenus.ALL_IN_ONE_GENERATOR_MENU.get(), AllInOneGeneratorScreen::new);
+       event.register(CobblestoneSemanticsMenus.COBBLESTONE_BAG_MENU.get(), CobblestoneBagScreen::new);
+       event.register(CobblestoneSemanticsMenus.COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU.get(), CobblestoneInfusedObsidianBagScreen::new);
+    }
+    @SubscribeEvent
+    private void registerFluidTextures(RegisterClientExtensionsEvent event) {
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+
+            @Override
+            public int getTintColor() {
+                return 0x7e7e21a6;
+            }
+
+            @Override
+            public ResourceLocation getStillTexture() {
+                return ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"block/molten_cobblestone_infused_obsidian_still");
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"block/molten_cobblestone_infused_obsidian_flowing");
+            }
+        }, CobblestoneSemanticsFluids.MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_TYPE);
+
     }
 }

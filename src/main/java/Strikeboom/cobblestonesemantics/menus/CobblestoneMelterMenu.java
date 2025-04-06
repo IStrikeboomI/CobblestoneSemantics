@@ -10,25 +10,25 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 
 public class CobblestoneMelterMenu extends AbstractContainerMenu {
 
     public final CobblestoneMelterBlockEntity blockEntity;
     private IItemHandler blockInventory;
-
-    public CobblestoneMelterMenu(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
+    public CobblestoneMelterMenu(int windowId, Inventory playerInventory) {
+        this(windowId,BlockPos.ZERO,playerInventory);
+    }
+    public CobblestoneMelterMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(), windowId);
-        blockEntity = (CobblestoneMelterBlockEntity)player.getCommandSenderWorld().getBlockEntity(pos);
+        blockEntity = (CobblestoneMelterBlockEntity)playerInventory.player.getCommandSenderWorld().getBlockEntity(pos);
 
         if (blockEntity != null) {
-            blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
-                blockInventory = h;
-                addSlot(new SlotItemHandler(h,0,53,33));
-            });
+            blockInventory = playerInventory.player.getCommandSenderWorld().getCapability(Capabilities.ItemHandler.BLOCK,pos,null);
+            addSlot(new SlotItemHandler(blockInventory,0,53,33));
         }
 
         int xPos = 8;

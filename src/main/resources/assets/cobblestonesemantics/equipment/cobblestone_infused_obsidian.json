@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "cobblestonesemantics:cobblestone_infused_obsidian/outer"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "cobblestonesemantics:cobblestone_infused_obsidian/inner"
+      }
+    ]
+  }
+}

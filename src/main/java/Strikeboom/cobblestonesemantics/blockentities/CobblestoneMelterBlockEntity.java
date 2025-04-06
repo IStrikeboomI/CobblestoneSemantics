@@ -6,6 +6,7 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -14,23 +15,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class CobblestoneMelterBlockEntity extends BlockEntity {
-    ItemStackHandler itemStackHandler;
-    private final LazyOptional<IItemHandler> itemHandlerLazyOptional;
-    FluidTank fluidTank;
-    private final LazyOptional<IFluidHandler> fluidHandlerLazyOptional;
+    public ItemStackHandler itemStackHandler;
+    public FluidTank fluidTank;
     int cooldown;
     int delay;
     public CobblestoneMelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
@@ -49,21 +46,20 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
                 level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
             }
         };
-        itemHandlerLazyOptional = LazyOptional.of(() -> itemStackHandler);
-        fluidHandlerLazyOptional = LazyOptional.of(() -> fluidTank);
         cooldown = 0;
         delay = CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get();
     }
     @Override
     public void setRemoved() {
         super.setRemoved();
-        itemHandlerLazyOptional.invalidate();
-        fluidHandlerLazyOptional.invalidate();
+        level.invalidateCapabilities(getBlockPos());
+        invalidateCapabilities();
     }
+
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        pTag.put("ItemStackHandler",itemStackHandler.serializeNBT());
-        fluidTank.writeToNBT(pTag);
+    protected void saveAdditional(CompoundTag pTag,HolderLookup.Provider registries) {
+        pTag.put("ItemStackHandler",itemStackHandler.serializeNBT(registries));
+        fluidTank.writeToNBT(registries,pTag);
         CompoundTag infoTag = new CompoundTag();
         infoTag.putInt("Cooldown", cooldown);
         infoTag.putInt("DelayUntilNextCobbleStone", delay);
@@ -71,16 +67,16 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void loadAdditional(CompoundTag pTag,HolderLookup.Provider registries) {
         if (pTag.contains("ItemStackHandler")) {
-            itemStackHandler.deserializeNBT(pTag.getCompound("ItemStackHandler"));
+            itemStackHandler.deserializeNBT(registries, pTag.getCompound("ItemStackHandler"));
         }
-        fluidTank.readFromNBT(pTag);
+        fluidTank.readFromNBT(registries, pTag);
         if (pTag.contains("Info")) {
             cooldown = pTag.getCompound("Info").getInt("Cooldown");
             delay = pTag.getCompound("Info").getInt("DelayUntilNextCobbleStone");
         }
-        super.load(pTag);
+        super.loadAdditional(pTag,registries);
     }
 
     public void tickServer() {
@@ -117,17 +113,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
             this.level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_ALL);
         }
     }
-    
-    @Override
-    public <T> LazyOptional<T> getCapability( Capability<T> cap, final @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandlerLazyOptional.cast();
-        }
-        if (cap == ForgeCapabilities.FLUID_HANDLER) {
-            return fluidHandlerLazyOptional.cast();
-        }
-        return super.getCapability(cap,side);
-    }
+
 
     public int getCooldown() {
         return cooldown;
@@ -138,17 +124,16 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        saveAdditional(tag);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        saveAdditional(tag,registries);
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        if (tag != null) {
-            load(tag);
-        }
+    public void handleUpdateTag(CompoundTag tag,HolderLookup.Provider registries) {
+        super.handleUpdateTag(tag, registries);
+        loadAdditional(tag, registries);
     }
 
     @Nullable
@@ -158,7 +143,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         // This is called client side: remember the current state of the values that we're interested in
         int oldCooldown = cooldown;
         int oldDelay = delay;
@@ -167,7 +152,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
 
         CompoundTag tag = pkt.getTag();
         // This will call loadClientData()
-        handleUpdateTag(tag);
+        handleUpdateTag(tag,lookupProvider);
 
         // If any of the values was changed we request a refresh of our model data and send a block update
         if (oldCooldown != cooldown || oldDelay != delay ||
