@@ -3,7 +3,11 @@ package Strikeboom.cobblestonesemantics.items;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsItems;
 import Strikeboom.cobblestonesemantics.menus.CobblestoneInfusedObsidianBagMenu;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -13,19 +17,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class CobblestoneInfusedObsidianBag extends Item {
-    public CobblestoneInfusedObsidianBag() {
-        super(CobblestoneSemanticsItems.ITEM_PROPERTIES);
+public class CobblestoneInfusedObsidianBag extends Item implements TooltipProvider {
+    public CobblestoneInfusedObsidianBag(ResourceLocation loc) {
+        super(new Properties().setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc)));
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext context, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","27"));
-    }
 
     @Override
     public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
@@ -46,5 +48,10 @@ public class CobblestoneInfusedObsidianBag extends Item {
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void addToTooltip(TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
+        tooltipAdder.accept(Component.translatable("tooltip." + CobblestoneSemantics.MOD_ID + ".holds","27"));
     }
 }

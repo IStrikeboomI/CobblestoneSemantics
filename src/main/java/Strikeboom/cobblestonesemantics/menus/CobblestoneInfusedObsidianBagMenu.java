@@ -17,8 +17,8 @@ public class CobblestoneInfusedObsidianBagMenu extends AbstractContainerMenu {
     public CobblestoneInfusedObsidianBagMenu(int windowId, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU.get(), windowId);
 
-        if (!playerInventory.getSelected().isEmpty()) {
-            handler = (BagItemHandler) playerInventory.getSelected().getCapability(Capabilities.ItemHandler.ITEM);
+        if (!playerInventory.getSelectedItem().isEmpty()) {
+            handler = (BagItemHandler) playerInventory.getSelectedItem().getCapability(Capabilities.ItemHandler.ITEM);
             if (handler != null) {
                 int slotNumber = 0;
                 for (int i = 0; i < 9; i++) {

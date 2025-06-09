@@ -62,12 +62,12 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
         if (pTag.contains("energy")) {
-            energyStorage.setEnergy(pTag.getInt("energy"));
+            energyStorage.setEnergy(pTag.getInt("energy").orElseThrow());
         }
         fluidTank.readFromNBT(registries, pTag);
         if (pTag.contains("Info")) {
-            cooldown = pTag.getCompound("Info").getInt("Cooldown");
-            delay = pTag.getCompound("Info").getInt("Delay");
+            cooldown = pTag.getCompound("Info").orElseThrow().getInt("Cooldown").orElseThrow();
+            delay = pTag.getCompound("Info").orElseThrow().getInt("Delay").orElseThrow();
         }
         super.loadAdditional(pTag,registries);
     }

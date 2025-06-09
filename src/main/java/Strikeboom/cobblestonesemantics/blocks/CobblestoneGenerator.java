@@ -5,9 +5,13 @@ import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEn
 import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneGeneratorItemHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,18 +40,19 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class CobblestoneGenerator extends Block implements EntityBlock {
+public class CobblestoneGenerator extends Block implements EntityBlock, TooltipProvider {
     int tier;
     int storageSlots;
     int delayUntilNextCobbleStone;
     int amountOfCobblestoneEachOperation;
-    public CobblestoneGenerator(int tier,int storageSlots,int delayUntilNextCobbleStone,int amountOfCobblestoneEachOperation) {
+    public CobblestoneGenerator(int tier, int storageSlots, int delayUntilNextCobbleStone, int amountOfCobblestoneEachOperation, ResourceLocation resourceLocation) {
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                 .mapColor(MapColor.CLAY)
                 .sound(SoundType.METAL)
                 .strength(8f,250f)
-                .requiresCorrectToolForDrops());
+                .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
         this.tier = tier;
         this.storageSlots = storageSlots;
         this.delayUntilNextCobbleStone = delayUntilNextCobbleStone;
@@ -54,19 +60,6 @@ public class CobblestoneGenerator extends Block implements EntityBlock {
     }
 
 
-    @Override
-    public void appendHoverText(ItemStack pStack, Item.TooltipContext context, List<Component> pTooltip, TooltipFlag pFlag) {
-        if (!pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).isEmpty()) {
-            pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
-        }
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.crouch").withStyle(ChatFormatting.YELLOW));
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.outputs").withStyle(ChatFormatting.YELLOW));
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.tier", Integer.toString(tier)));
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.storage", Integer.toString(storageSlots * 64)));
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.delay", Integer.toString(delayUntilNextCobbleStone)));
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.amount", Integer.toString(amountOfCobblestoneEachOperation)));
-
-    }
 
     public int getTier() {
         return tier;
@@ -144,5 +137,19 @@ public class CobblestoneGenerator extends Block implements EntityBlock {
                 pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
             }
         }
+    }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
+        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).isEmpty()) {
+            tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
+        }
+       tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.crouch").withStyle(ChatFormatting.YELLOW));
+       tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.outputs").withStyle(ChatFormatting.YELLOW));
+       tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.tier", Integer.toString(tier)));
+       tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.storage", Integer.toString(storageSlots * 64)));
+       tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.delay", Integer.toString(delayUntilNextCobbleStone)));
+       tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.amount", Integer.toString(amountOfCobblestoneEachOperation)));
+
     }
 }

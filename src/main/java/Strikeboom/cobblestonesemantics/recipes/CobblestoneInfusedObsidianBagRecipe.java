@@ -7,25 +7,26 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.ItemStackHandler;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class CobblestoneInfusedObsidianBagRecipe extends ShapelessRecipe {
+public class CobblestoneInfusedObsidianBagRecipe extends CustomRecipe {
 
-    public CobblestoneInfusedObsidianBagRecipe(ResourceLocation pId) {
-        super(pId, CraftingBookCategory.EQUIPMENT);
+    public CobblestoneInfusedObsidianBagRecipe() {
+        super(CraftingBookCategory.EQUIPMENT);
     }
 
     @Override
-    public boolean matches(CraftingContainer pContainer, Level pLevel) {
+    public boolean matches(CraftingInput pContainer, Level pLevel) {
         int bagAmount = 0;
         int cobblestoneInfusedObsidianAmount = 0;
-        for (int i = 0;i < pContainer.getContainerSize();i++) {
+        for (int i = 0;i < pContainer.size();i++) {
             ItemStack stack = pContainer.getItem(i);
             if (stack.is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
                 bagAmount++;
@@ -38,66 +39,40 @@ public class CobblestoneInfusedObsidianBagRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer pContainer, RegistryAccess p_267165_) {
+    public ItemStack assemble(CraftingInput pContainer, HolderLookup.Provider registries) {
         ItemStack cobblestoneBag = ItemStack.EMPTY;
-        for (int i = 0;i < pContainer.getContainerSize();i++) {
+        for (int i = 0;i < pContainer.size();i++) {
             if (pContainer.getItem(i).is(CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
                 cobblestoneBag = pContainer.getItem(i).copy();
             }
         }
         if (!cobblestoneBag.isEmpty()) {
             ItemStack cobblestoneInfusedObsidianBag = new ItemStack(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get());
-            cobblestoneBag.getCapability(Capabilities.ItemHandler.ITEM).ifPresent(iItemHandler -> {
-                cobblestoneInfusedObsidianBag.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler1 -> {
-                    for (int i = 0;i < iItemHandler.getSlots();i++) {
-                        ((ItemStackHandler)iItemHandler1).setStackInSlot(i,iItemHandler.getStackInSlot(i));
-                    }
-                });
-            });
+            IItemHandler cobblestoneBagHandler = cobblestoneBag.getCapability(Capabilities.ItemHandler.ITEM);
+            IItemHandler cobblestoneInfusedObsidianBagHandler =    cobblestoneInfusedObsidianBag.getCapability(Capabilities.ItemHandler.ITEM);
+            for (int i = 0;i < cobblestoneBagHandler.getSlots();i++) {
+                ((ItemStackHandler)cobblestoneInfusedObsidianBagHandler).setStackInSlot(i,cobblestoneBagHandler.getStackInSlot(i));
+            }
             return cobblestoneInfusedObsidianBag;
         }
         return ItemStack.EMPTY;
     }
 
-
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return pWidth * pHeight >= 2;
+    public RecipeSerializer<CobblestoneInfusedObsidianBagRecipe> getSerializer() {
+        return CobblestoneSemanticsCustomRecipes.COBBLESTONE_INFUSED_OBSIDIAN_BAG_RECIPE.get();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
-        return CobblestoneSemanticsCustomRecipes.   COBBLESTONE_INFUSED_OBSIDIAN_BAG_RECIPE.get();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return RecipeType.CRAFTING;
-    }
-
-    @Override
-    public ItemStack getResultItem(RegistryAccess p_267025_) {
-        return new ItemStack(CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get());
-    }
-
-    @Override
-    public boolean matches(CraftingInput input, Level level) {
-        return false;
-    }
-
-    @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
-        return null;
-    }
-
-    @Override
-    public boolean isSpecial() {
-        return false;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY,Ingredient.of(CobblestoneSemanticsItems.COBBLESTONE_BAG.get()),Ingredient.of(CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG));
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput input) {
+        NonNullList<ItemStack> list = NonNullList.create();
+        if (input.items().stream().noneMatch(itemStack -> itemStack.getItem() == CobblestoneSemanticsItems.COBBLESTONE_BAG.get())) {
+            list.add(CobblestoneSemanticsItems.COBBLESTONE_BAG.get().getDefaultInstance());
+        }
+        if (input.items().stream().noneMatch(itemStack -> itemStack.getTags().anyMatch(itemTagKey -> itemTagKey.equals(CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG)))) {
+            list.add(CobblestoneSemanticsItems.COBBLESTONE_BAG.get().getDefaultInstance());
+        }
+        return list;
     }
 
 }

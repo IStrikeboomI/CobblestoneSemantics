@@ -2,12 +2,17 @@ package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.blockentities.LavaGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.menus.LavaGeneratorMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
+import Strikeboom.cobblestonesemantics.menus.LavaGeneratorMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,8 +23,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -34,30 +42,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class LavaGenerator extends Block implements EntityBlock {
-    public LavaGenerator() {
-        super(Properties.copy(Blocks.IRON_BLOCK)
+public class LavaGenerator extends Block implements EntityBlock, TooltipProvider {
+    public LavaGenerator(ResourceLocation resourceLocation) {
+        super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                 .sound(SoundType.METAL)
                 .strength(6f,100f)
                 .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
-                .requiresCorrectToolForDrops());
+                .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
     }
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        if (pStack.hasTag()) {
-            if (pStack.getTag().contains("BlockEntityTag")) {
-                pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
-            }
-        }
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.lava_generator", CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get(),CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get()));
-    }
+
+
+
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -78,7 +79,7 @@ public class LavaGenerator extends Block implements EntityBlock {
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                pBlockEntity.saveToItem(stack);
+                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomOnly(pLevel.registryAccess())));
             }
 
             ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
@@ -90,11 +91,9 @@ public class LavaGenerator extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (!pLevel.isClientSide) {
-            if (pStack.hasTag()) {
-                if (pStack.getTag().contains("BlockEntityTag")) {
-                    CompoundTag tag = BlockItem.getBlockEntityData(pStack);
-                    pLevel.getBlockEntity(pPos).load(tag);
-                }
+            CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+            if (!data.isEmpty()) {
+                pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
             }
         }
     }
@@ -118,27 +117,51 @@ public class LavaGenerator extends Block implements EntityBlock {
             }
         };
     }
+
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand hand, BlockHitResult hitResult) {
         if (!pLevel.isClientSide) {
             if (pLevel.getBlockEntity(pPos) instanceof LavaGeneratorBlockEntity) {
-                if (FluidUtil.interactWithFluidHandler(pPlayer, pHand, pLevel, pPos, null)) {
+                if (FluidUtil.interactWithFluidHandler(pPlayer, hand, pLevel, pPos, null)) {
                     return InteractionResult.SUCCESS;
                 }
-                MenuProvider containerProvider = new MenuProvider() {
-                    @Override
-                    public Component getDisplayName() {
-                        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".lava_generator");
-                    }
+            }
+        }
+        return super.useItemOn(stack, state, pLevel, pPos, pPlayer, hand, hitResult);
+    }
 
-                    @Override
-                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new LavaGeneratorMenu(windowId, pPos, playerInventory, playerEntity);
-                    }
-                };
-                NetworkHooks.openScreen((ServerPlayer) pPlayer, containerProvider, pPos);
+    @Nullable
+    @Override
+    protected MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".lava_generator");
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
+                return new LavaGeneratorMenu(windowId, pos, playerInventory);
+            }
+        };
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
+        if (!pLevel.isClientSide) {
+            if (pLevel.getBlockEntity(pPos) instanceof LavaGeneratorBlockEntity) {
+                pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos));
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
+        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).isEmpty()) {
+            tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
+        }
+        tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.lava_generator", CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get(),CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get()));
     }
 }

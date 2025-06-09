@@ -69,12 +69,12 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag pTag,HolderLookup.Provider registries) {
         if (pTag.contains("ItemStackHandler")) {
-            itemStackHandler.deserializeNBT(registries, pTag.getCompound("ItemStackHandler"));
+            itemStackHandler.deserializeNBT(registries, pTag.getCompound("ItemStackHandler").orElseThrow());
         }
         fluidTank.readFromNBT(registries, pTag);
         if (pTag.contains("Info")) {
-            cooldown = pTag.getCompound("Info").getInt("Cooldown");
-            delay = pTag.getCompound("Info").getInt("DelayUntilNextCobbleStone");
+            cooldown = pTag.getCompound("Info").orElseThrow().getInt("Cooldown").orElseThrow();
+            delay = pTag.getCompound("Info").orElseThrow().getInt("DelayUntilNextCobbleStone").orElseThrow();
         }
         super.loadAdditional(pTag,registries);
     }

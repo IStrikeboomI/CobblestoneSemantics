@@ -2,7 +2,7 @@ package Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_melter;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CobblestoneMelterRecipe {
     ItemStack stack;

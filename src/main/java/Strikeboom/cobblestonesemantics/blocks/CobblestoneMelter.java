@@ -6,9 +6,13 @@ import Strikeboom.cobblestonesemantics.menus.CobblestoneMelterMenu;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -41,24 +46,18 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class CobblestoneMelter extends Block implements EntityBlock {
-    public CobblestoneMelter() {
+public class CobblestoneMelter extends Block implements EntityBlock, TooltipProvider {
+    public CobblestoneMelter(ResourceLocation resourceLocation) {
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .sound(SoundType.METAL)
                     .strength(6f,100f)
                     .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
-                    .requiresCorrectToolForDrops());
+                    .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, Item.TooltipContext context, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, context, pTooltip, pFlag);
-        if (!pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA,CustomData.EMPTY).isEmpty()) {
-            pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
-        }
-        pTooltip.add(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.cobblestone_melter", CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get(),CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get()));
-    }
+
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -104,22 +103,27 @@ public class CobblestoneMelter extends Block implements EntityBlock {
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
+    @Nullable
+    @Override
+    protected MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
+                return new CobblestoneMelterMenu(windowId, pos, playerInventory);
+            }
+        };
+    }
+
     @Override
     public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             if (pLevel.getBlockEntity(pPos) instanceof CobblestoneMelterBlockEntity) {
-                MenuProvider containerProvider = new MenuProvider() {
-                    @Override
-                    public Component getDisplayName() {
-                        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
-                    }
-
-                    @Override
-                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new CobblestoneMelterMenu(windowId, pPos, playerInventory);
-                    }
-                };
-                pPlayer.openMenu(containerProvider);
+                pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos));
             }
         }
         return InteractionResult.SUCCESS;
@@ -149,5 +153,14 @@ public class CobblestoneMelter extends Block implements EntityBlock {
                 pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
             }
         }
+    }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
+        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA,CustomData.EMPTY).isEmpty()) {
+            tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
+        }
+        tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.cobblestone_melter", CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get(),CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get()));
+
     }
 }

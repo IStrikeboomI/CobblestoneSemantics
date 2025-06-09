@@ -10,10 +10,8 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.stream.Collectors;
 
-@EventBusSubscriber(modid = CobblestoneSemantics.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class CobblestoneSemanticsConfig {
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-
 
     public static final ModConfigSpec.IntValue COBBLESTONE_MELTER_DELAY = BUILDER.push("Cobblestone Melter").comment("Cobblestone Melter Delay").defineInRange("cobblestone_melter_delay",200,2,10000);
     public static final ModConfigSpec.IntValue COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE = BUILDER.comment("Lava Per Cobblestone").defineInRange("cobblestone_melter_lava_per_cobblestone",500,1,10000);;

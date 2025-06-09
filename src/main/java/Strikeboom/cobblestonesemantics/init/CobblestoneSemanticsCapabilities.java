@@ -32,7 +32,7 @@ public class CobblestoneSemanticsCapabilities {
         event.registerBlockEntity(
                 Capabilities.EnergyStorage.BLOCK,
                 CobblestoneSemanticsBlockEntities.ALL_IN_ONE_GENERATOR_BLOCK_ENTITY.get(),
-                new ICapabilityProvider<AllInOneGeneratorBlockEntity, Direction, IEnergyStorage>() {
+                new ICapabilityProvider<>() {
                     @Override
                     public @Nullable IEnergyStorage getCapability(AllInOneGeneratorBlockEntity object, Direction context) {
                         return object.energyStorage;

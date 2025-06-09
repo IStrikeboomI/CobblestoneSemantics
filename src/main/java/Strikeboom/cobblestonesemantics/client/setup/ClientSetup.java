@@ -17,7 +17,7 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod(value = CobblestoneSemantics.MOD_ID, dist = Dist.CLIENT)
 public class ClientSetup {
     public ClientSetup(IEventBus modBus) {
-        NeoForge.EVENT_BUS.register(this);
+        modBus.register(this);
     }
     @SubscribeEvent
     private void registerScreens(RegisterMenuScreensEvent event) {

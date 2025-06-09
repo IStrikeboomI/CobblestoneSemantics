@@ -1,26 +1,19 @@
 package Strikeboom.cobblestonesemantics.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.CoreShaders;
-import net.minecraft.client.renderer.GameRenderer;
+
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.block.entity.CommandBlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Matrix4f;
@@ -28,9 +21,8 @@ import org.joml.Matrix4f;
 import javax.annotation.Nullable;
 
 public class ClientUtil {
+    @SuppressWarnings("deprecation")
     public static void renderFluidBar(GuiGraphics guiGraphics, final int xPosition, final int yPosition, final int width, final int height, @Nullable FluidStack fluidStack, int capacityMb) {
-        RenderSystem.enableBlend();
-
         if (fluidStack == null) {
             return;
         }
@@ -53,9 +45,7 @@ public class ClientUtil {
         if (scaledAmount > height) {
             scaledAmount = height;
         }
-
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-        Matrix4f matrix = guiGraphics.pose().last().pose();
+        VertexConsumer bufferBuilder = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.guiTextured(TextureAtlas.LOCATION_BLOCKS));        Matrix4f matrix = guiGraphics.pose().last().pose();
         RenderSystem.setShaderColor(((fluidColor >> 16) & 0xFF) / 255f,((fluidColor >> 8) & 0xFF) / 255f,(fluidColor & 0xFF) / 255f,((fluidColor >> 24) & 0xFF) / 255f);
 
         final int xTileCount = width / 16;
@@ -82,10 +72,6 @@ public class ClientUtil {
                     uMax = uMax - (maskRight / 16F * (uMax - uMin));
                     vMax = vMax - (maskTop / 16F * (vMax - vMin));
 
-                    RenderSystem.setShader(CoreShaders.POSITION_TEX);
-
-                    Tesselator tessellator = Tesselator.getInstance();
-                    BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX);
                     bufferBuilder.addVertex(matrix, x, y + 16, 100).setUv(uMin, vMax);
                     bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + 16, 100).setUv(uMax, vMax);
                     bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + maskTop, 100).setUv(uMax, vMin);
@@ -94,8 +80,6 @@ public class ClientUtil {
             }
         }
         RenderSystem.setShaderColor(1, 1, 1, 1);
-
-        RenderSystem.disableBlend();
     }
     public static void drawFluidCapacityTooltip(int mouseX, int mouseY, int xPos, int yPos, int width, int height, AbstractContainerScreen<?> gui, Font font, GuiGraphics guiGraphics, FluidStack fluidStack) {
         if (fluidStack != null && !fluidStack.getFluid().isSame(Fluids.EMPTY)) {

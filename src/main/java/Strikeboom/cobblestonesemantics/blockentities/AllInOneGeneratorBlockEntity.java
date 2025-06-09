@@ -71,14 +71,14 @@ public class AllInOneGeneratorBlockEntity extends BlockEntity {
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider registries) {
         super.loadAdditional(pTag,registries);
         if (pTag.contains("ItemStackHandler")) {
-            itemStackHandler.deserializeNBT(registries,pTag.getCompound("ItemStackHandler"));
+            itemStackHandler.deserializeNBT(registries,pTag.getCompound("ItemStackHandler").orElseThrow());
         }
         if (pTag.contains("energy")) {
-            energyStorage.setEnergy(pTag.getInt("energy"));
+            energyStorage.setEnergy(pTag.getInt("energy").orElseThrow());
         }
         if (pTag.contains("Info")) {
-            cooldown = pTag.getCompound("Info").getInt("Cooldown");
-            delay = pTag.getCompound("Info").getInt("Delay");
+            cooldown = pTag.getCompound("Info").orElseThrow().getInt("Cooldown").orElseThrow();
+            delay = pTag.getCompound("Info").orElseThrow().getInt("Delay").orElseThrow();
         }
     }
     public void tickServer() {

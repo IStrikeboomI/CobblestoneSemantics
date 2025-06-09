@@ -15,6 +15,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,15 +27,15 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
     private final IDrawableAnimated ARROW;
     private final IDrawable ICON;
     public CobblestoneGeneratorRecipeCategory(IGuiHelper helper) {
-        BACKGROUND = helper.createDrawable(new ResourceLocation(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),40,20,100,50);
-        IDrawableStatic STATIC_ARROW = helper.createDrawable(new ResourceLocation(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),176,0,24,17);
+        BACKGROUND = helper.createDrawable(ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),40,20,100,50);
+        IDrawableStatic STATIC_ARROW = helper.createDrawable(ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),176,0,24,17);
         ARROW = helper.createAnimatedDrawable(STATIC_ARROW,60, IDrawableAnimated.StartDirection.LEFT,false);
         ICON = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10.get()));
 
     }
 
     @Override
-    public RecipeType<CobblestoneGeneratorRecipe> getRecipeType() {
+    public IRecipeType<CobblestoneGeneratorRecipe> getRecipeType() {
         return CobblestoneSemanticsJeiPlugin.COBBLESTONE_GENERATOR;
     }
 
@@ -43,10 +44,6 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
         return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_generator");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        return BACKGROUND;
-    }
 
     @Override
     public IDrawable getIcon() {
@@ -61,8 +58,8 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CobblestoneGeneratorRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,10,15).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,70,15).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT,10,15).add(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,70,15).add(recipe.getOutput());
     }
 
 }

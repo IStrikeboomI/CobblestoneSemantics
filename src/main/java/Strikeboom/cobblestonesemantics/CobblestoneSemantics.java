@@ -34,7 +34,7 @@ public class CobblestoneSemantics
         CobblestoneSemanticsCustomRecipes.RECIPES.register(modbus);
 
         //modbus.addListener(this::init);
-        NeoForge.EVENT_BUS.register(this);
+        //NeoForge.EVENT_BUS.register(this);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, CobblestoneSemanticsConfig.BUILDER.build());
     }
