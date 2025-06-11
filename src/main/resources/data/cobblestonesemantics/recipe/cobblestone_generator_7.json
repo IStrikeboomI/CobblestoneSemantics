@@ -1,0 +1,16 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_generator_7"
+    },
+    "pattern": [
+        "C C",
+        "CGC",
+        "C C"
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "C": "#c:gems/emerald",
+        "G": "cobblestonesemantics:cobblestone_generator_6"
+    }
+}

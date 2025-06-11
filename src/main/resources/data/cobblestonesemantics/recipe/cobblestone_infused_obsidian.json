@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        "#c:obsidians","#c:cobblestones","#c:cobblestones"
+    ],
+    "result":
+    {
+        "id": "cobblestonesemantics:cobblestone_infused_obsidian",
+        "count": 1
+    }
+}

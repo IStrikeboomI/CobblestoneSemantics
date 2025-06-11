@@ -1,0 +1,16 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_infused_obsidian_pickaxe"
+    },
+    "pattern": [
+        "OOO",
+        " S ",
+        " S "
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "S": "minecraft:stick",
+        "O": "#c:cobblestone_infused_obsidians"
+    }
+}

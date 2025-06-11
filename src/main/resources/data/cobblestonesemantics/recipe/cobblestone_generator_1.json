@@ -1,0 +1,18 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_generator_1"
+    },
+    "pattern": [
+        "DDD",
+        "LGW",
+        "DDD"
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "D": "minecraft:dirt",
+        "W": "minecraft:water_bucket",
+        "G": "#c:glass_blocks",
+        "L": "minecraft:lava_bucket"
+    }
+}

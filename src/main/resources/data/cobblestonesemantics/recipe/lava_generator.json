@@ -1,0 +1,18 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:lava_generator"
+    },
+    "pattern": [
+        "ISI",
+        "SES",
+        "RSR"
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "R": "#c:dusts/redstone",
+        "S": "#c:cobblestones",
+        "E": "minecraft:furnace",
+        "I": "#c:ingots/iron"
+    }
+}

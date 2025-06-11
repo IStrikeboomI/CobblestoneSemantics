@@ -1,0 +1,16 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_generator_6"
+    },
+    "pattern": [
+        "CCC",
+        "CGC",
+        "CCC"
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "C": "#c:gems/diamond",
+        "G": "cobblestonesemantics:cobblestone_generator_5"
+    }
+}

@@ -1,0 +1,17 @@
+
+{
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients":
+    [
+        "minecraft:dragon_egg",
+        "cobblestonesemantics:cobblestone_generator_9"
+
+
+    ],
+    "result":
+    {
+        "id": "cobblestonesemantics:cobblestone_generator_10",
+        "count": 1
+    }
+}

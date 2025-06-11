@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "OO",
+        "OS",
+        " S"
+    ],
+    "key":
+    {
+        "O": "#c:cobblestone_infused_obsidians",
+        "S": "minecraft:stick"
+    },
+    "result":
+    {
+        "id": "cobblestonesemantics:cobblestone_infused_obsidian_axe",
+        "count": 1
+    }
+}

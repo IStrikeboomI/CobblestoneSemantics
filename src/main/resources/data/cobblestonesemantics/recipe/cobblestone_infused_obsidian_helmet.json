@@ -1,0 +1,13 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_infused_obsidian_helmet"
+    },
+    "pattern": [
+        "OOO",
+        "O O",
+        "   "
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {"O": "#c:cobblestone_infused_obsidians"}
+}

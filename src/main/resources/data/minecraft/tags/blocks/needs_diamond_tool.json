@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "cobblestonesemantics:cobblestone_infused_obsidian"
+    "#cobblestonesemantics:cobblestone_infused_obsidian"
   ]
 }

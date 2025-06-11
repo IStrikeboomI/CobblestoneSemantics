@@ -1,0 +1,17 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_melter"
+    },
+    "pattern": [
+        "BSB",
+        "SES",
+        "BSB"
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "B": "#c:bricks",
+        "S": "#c:cobblestones",
+        "E": "minecraft:bucket"
+    }
+}

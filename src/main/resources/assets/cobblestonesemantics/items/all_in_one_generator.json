@@ -1,0 +1,6 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "cobblestonesemantics:block/all_in_one_generator"
+    }
+}

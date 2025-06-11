@@ -1,0 +1,16 @@
+{
+    "result": {
+        "count": 1,
+        "id": "cobblestonesemantics:cobblestone_generator_3"
+    },
+    "pattern": [
+        "CCC",
+        "CGC",
+        "CCC"
+    ],
+    "type": "minecraft:crafting_shaped",
+    "key": {
+        "C": "#c:ingots/iron",
+        "G": "cobblestonesemantics:cobblestone_generator_2"
+    }
+}
