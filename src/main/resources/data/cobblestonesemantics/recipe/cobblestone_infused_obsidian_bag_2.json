@@ -1,7 +1,0 @@
-{
-    "type": "minecraft:crafting_transmute",
-    "group": "cobblestone_infused_bag_items",
-    "input": "cobblestonesemantics:cobblestone_bag",
-    "material": "#cobblestonesemantics:cobblestone_infused_obsidian",
-    "result": "cobblestonesemantics:cobblestone_infused_obsidian_bag"
-}

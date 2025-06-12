@@ -11,6 +11,8 @@ import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,11 +33,10 @@ public class CobblestoneSemantics
         CobblestoneSemanticsFluids.FLUIDS.register(modbus);
         CobblestoneSemanticsMenus.MENUS.register(modbus);
         CobblestoneSemanticsBlockEntities.BLOCK_ENTITIES.register(modbus);
-        CobblestoneSemanticsCustomRecipes.RECIPES.register(modbus);
 
         //modbus.addListener(this::init);
-        //NeoForge.EVENT_BUS.register(this);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, CobblestoneSemanticsConfig.BUILDER.build());
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

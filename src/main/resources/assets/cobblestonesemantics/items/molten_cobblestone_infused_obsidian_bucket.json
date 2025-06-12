@@ -1,6 +1,10 @@
 {
     "model": {
-        "type": "minecraft:model",
-        "model": "cobblestonesemantics:item/molten_cobblestone_infused_obsidian_bucket"
+        "type": "neoforge:fluid_container",
+        "fluid": "cobblestonesemantics:molten_cobblestone_infused_obsidian",
+        "textures": {
+            "base": "item/bucket",
+            "fluid": "neoforge:item/mask/bucket_fluid_drip"
+        }
     }
 }

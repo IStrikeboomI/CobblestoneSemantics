@@ -3,12 +3,14 @@ package Strikeboom.cobblestonesemantics.blocks;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneGeneratorItemHandler;
+import io.netty.buffer.ByteBufUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +53,7 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                 .mapColor(MapColor.CLAY)
                 .sound(SoundType.METAL)
-                .strength(8f,250f)
+                .strength(2f,250f)
                 .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
         this.tier = tier;
         this.storageSlots = storageSlots;
@@ -95,7 +97,7 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
        if (!pLevel.isClientSide) {
            if (!pPlayer.isCrouching()) {
                CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) pLevel.getBlockEntity(pPos);
-               IItemHandler iItemHandler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK,pPos,null);
+               IItemHandler iItemHandler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK,pPos,pState,be,null);
                if (iItemHandler != null) {
                    ItemStack stack = ((CobblestoneGeneratorItemHandler) iItemHandler).getLargestSlotThenRemove();
                    if (!stack.isEmpty()) {
@@ -120,7 +122,8 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomOnly(pLevel.registryAccess())));
+                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomAndMetadata(pLevel.registryAccess())));
+                pBlockEntity.invalidateCapabilities();
             }
 
             ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
@@ -134,7 +137,11 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
         if (!pLevel.isClientSide) {
             CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
             if (!data.isEmpty()) {
-                pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
+                CompoundTag tag = data.copyTag();
+                tag.putInt("x",pPos.getX());
+                tag.putInt("y",pPos.getY());
+                tag.putInt("z",pPos.getZ());
+                pLevel.getBlockEntity(pPos).loadWithComponents(tag,pLevel.registryAccess());
             }
         }
     }

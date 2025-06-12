@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        "cobblestonesemantics:all_in_one_generator"
+    ],
+    "result":
+    {
+        "id": "cobblestonesemantics:all_in_one_generator",
+        "count": 1
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        "cobblestonesemantics:lava_generator.json"
+    ],
+    "result":
+    {
+        "id": "cobblestonesemantics:lava_generator.json",
+        "count": 1
+    }
+}

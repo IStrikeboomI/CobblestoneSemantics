@@ -25,8 +25,6 @@
     "item.cobblestonesemantics.cobblestone_infused_obsidian_sword":"Cobblestone Infused Obsidian Sword",
     "item.cobblestonesemantics.cobblestone_infused_obsidian_shovel":"Cobblestone Infused Obsidian Shovel",
     "item.cobblestonesemantics.cobblestone_infused_obsidian_hoe":"Cobblestone Infused Obsidian Hoe",
-    "item.cobblestonesemantics.cobblestone_bag":"Cobblestone Bag",
-    "item.cobblestonesemantics.cobblestone_infused_obsidian_bag":"Cobblestone Infused Obsidian Bag",
     "item.cobblestonesemantics.molten_cobblestone_infused_obsidian_bucket":"Molten Cobblestone Infused Obsidian Bucket",
 
     "fluid.cobblestonesemantics.molten_cobblestone_infused_obsidian":"Molten Cobblestone Infused Obsidian",
@@ -50,5 +48,19 @@
 
     "block.cobblestonesemantics.message.amount":"Cobblestone Amount: %s",
 
-    "itemGroup.cobblestonesemantics":"Cobblestone Semantics"
+    "itemGroup.cobblestonesemantics":"Cobblestone Semantics",
+
+    "cobblestonesemantics.configuration.title": "Cobblestone Semantics",
+    "cobblestonesemantics.configuration.melter": "Cobblestone Melter",
+    "cobblestonesemantics.configuration.melter.tooltip": "Control Speed And Output Amount Of the Cobblestone Melter",
+    "cobblestonesemantics.configuration.melter.delay": "Delay",
+    "cobblestonesemantics.configuration.melter.delay.tooltip": "The Time (In Ticks) It Takes For The Cobblestone Melter To Do One Cycle",
+    "cobblestonesemantics.configuration.melter.lava": "Lava Per Cobblestone",
+    "cobblestonesemantics.configuration.melter.lava.tooltip": "The Amount Of Lava (in mB) The Cobblestone Melter Outputs In One Cycle",
+    "cobblestonesemantics.configuration.generator": "Lava Generator",
+    "cobblestonesemantics.configuration.generator.tooltip": "Control Speed And Output Amount Of the Lava Generator",
+    "cobblestonesemantics.configuration.generator.delay": "Delay",
+    "cobblestonesemantics.configuration.generator.delay.tooltip": "The Time (In Ticks) It Takes For The Lava Generator To Do One Cycle",
+    "cobblestonesemantics.configuration.generator.power": "Power Per Lava Bucket",
+    "cobblestonesemantics.configuration.generator.power.tooltip": "The Amount Of Power (in rf) The Lava Generator Outputs In One Cycle"
 }

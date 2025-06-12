@@ -7,6 +7,7 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCapabilities;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,8 +21,8 @@ public class AllInOneGeneratorMenu extends AbstractContainerMenu {
     public final AllInOneGeneratorBlockEntity blockEntity;
     private AllInOneGeneratorItemHandler blockInventory;
 
-    public AllInOneGeneratorMenu(int containerId,Inventory playerInventory) {
-        this(containerId,BlockPos.ZERO,playerInventory);
+    public AllInOneGeneratorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
+        this(containerId,FriendlyByteBuf.readBlockPos(extraData),playerInventory);
     }
 
     public AllInOneGeneratorMenu(int windowId, BlockPos pos, Inventory playerInventory) {

@@ -4,6 +4,7 @@ import Strikeboom.cobblestonesemantics.blockentities.LavaGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 public class LavaGeneratorMenu extends AbstractContainerMenu {
     public final LavaGeneratorBlockEntity blockEntity;
 
-    public LavaGeneratorMenu(int windowId, Inventory playerInventory) {
-        this(windowId,BlockPos.ZERO,playerInventory);
+    public LavaGeneratorMenu(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
+        this(windowId,FriendlyByteBuf.readBlockPos(extraData),playerInventory);
     }
     public LavaGeneratorMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), windowId);

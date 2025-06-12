@@ -4,6 +4,7 @@ import Strikeboom.cobblestonesemantics.blockentities.CobblestoneMelterBlockEntit
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,8 +20,8 @@ public class CobblestoneMelterMenu extends AbstractContainerMenu {
 
     public final CobblestoneMelterBlockEntity blockEntity;
     private IItemHandler blockInventory;
-    public CobblestoneMelterMenu(int windowId, Inventory playerInventory) {
-        this(windowId,BlockPos.ZERO,playerInventory);
+    public CobblestoneMelterMenu(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
+        this(windowId,FriendlyByteBuf.readBlockPos(extraData),playerInventory);
     }
     public CobblestoneMelterMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(), windowId);

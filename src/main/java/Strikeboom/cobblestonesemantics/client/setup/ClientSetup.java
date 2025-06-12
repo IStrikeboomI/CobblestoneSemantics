@@ -9,6 +9,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -24,8 +25,6 @@ public class ClientSetup {
        event.register(CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(), CobblestoneMelterScreen::new);
        event.register(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), LavaGeneratorScreen::new);
        event.register(CobblestoneSemanticsMenus.ALL_IN_ONE_GENERATOR_MENU.get(), AllInOneGeneratorScreen::new);
-       event.register(CobblestoneSemanticsMenus.COBBLESTONE_BAG_MENU.get(), CobblestoneBagScreen::new);
-       event.register(CobblestoneSemanticsMenus.COBBLESTONE_INFUSED_OBSIDIAN_BAG_MENU.get(), CobblestoneInfusedObsidianBagScreen::new);
     }
     @SubscribeEvent
     private void registerFluidTextures(RegisterClientExtensionsEvent event) {

@@ -52,7 +52,7 @@ public class CobblestoneMelter extends Block implements EntityBlock, TooltipProv
     public CobblestoneMelter(ResourceLocation resourceLocation) {
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .sound(SoundType.METAL)
-                    .strength(6f,100f)
+                    .strength(2f,100f)
                     .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
                     .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
     }
@@ -109,7 +109,7 @@ public class CobblestoneMelter extends Block implements EntityBlock, TooltipProv
         return new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
+                return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
             }
 
             @Override
@@ -123,7 +123,7 @@ public class CobblestoneMelter extends Block implements EntityBlock, TooltipProv
     public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             if (pLevel.getBlockEntity(pPos) instanceof CobblestoneMelterBlockEntity) {
-                pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos));
+                pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos),pPos);
             }
         }
         return InteractionResult.SUCCESS;
@@ -136,7 +136,8 @@ public class CobblestoneMelter extends Block implements EntityBlock, TooltipProv
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomOnly(pLevel.registryAccess())));
+                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomAndMetadata(pLevel.registryAccess())));
+                pBlockEntity.invalidateCapabilities();
             }
 
             ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
@@ -150,7 +151,11 @@ public class CobblestoneMelter extends Block implements EntityBlock, TooltipProv
         if (!pLevel.isClientSide) {
             CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
             if (!data.isEmpty()) {
-                pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
+                CompoundTag tag = data.copyTag();
+                tag.putInt("x",pPos.getX());
+                tag.putInt("y",pPos.getY());
+                tag.putInt("z",pPos.getZ());
+                pLevel.getBlockEntity(pPos).loadWithComponents(tag,pLevel.registryAccess());
             }
         }
     }

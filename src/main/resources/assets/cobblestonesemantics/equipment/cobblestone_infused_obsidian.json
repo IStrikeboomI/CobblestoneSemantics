@@ -2,12 +2,12 @@
   "layers": {
     "humanoid": [
       {
-        "texture": "cobblestonesemantics:cobblestone_infused_obsidian/outer"
+        "texture": "cobblestonesemantics:cobblestone_infused_obsidian"
       }
     ],
     "humanoid_leggings": [
       {
-        "texture": "cobblestonesemantics:cobblestone_infused_obsidian/inner"
+        "texture": "cobblestonesemantics:cobblestone_infused_obsidian"
       }
     ]
   }

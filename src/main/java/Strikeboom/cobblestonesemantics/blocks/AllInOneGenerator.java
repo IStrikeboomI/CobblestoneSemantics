@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -42,9 +43,10 @@ public class AllInOneGenerator extends Block implements EntityBlock, TooltipProv
     public AllInOneGenerator(ResourceLocation resourceLocation) {
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                 .sound(SoundType.METAL)
-                .strength(6f,100f)
+                .strength(2f,100f)
                 .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
     }
+    
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
         if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).isEmpty()) {
@@ -61,8 +63,10 @@ public class AllInOneGenerator extends Block implements EntityBlock, TooltipProv
     public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
         if (!pLevel.isClientSide) {
             ItemStack stack = new ItemStack(this);
+
             if (pBlockEntity != null) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomOnly(pLevel.registryAccess())));
+                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomAndMetadata(pLevel.registryAccess())));
+                pBlockEntity.invalidateCapabilities();
             }
 
             ItemEntity itementity = new ItemEntity(pLevel, (double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, stack);
@@ -76,7 +80,11 @@ public class AllInOneGenerator extends Block implements EntityBlock, TooltipProv
         if (!pLevel.isClientSide) {
             CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
             if (!data.isEmpty()) {
-                pLevel.getBlockEntity(pPos).loadWithComponents(data.copyTag(),pLevel.registryAccess());
+                CompoundTag tag = data.copyTag();
+                tag.putInt("x",pPos.getX());
+                tag.putInt("y",pPos.getY());
+                tag.putInt("z",pPos.getZ());
+                pLevel.getBlockEntity(pPos).loadWithComponents(tag,pLevel.registryAccess());
             }
         }
     }
@@ -121,7 +129,7 @@ public class AllInOneGenerator extends Block implements EntityBlock, TooltipProv
     public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             if (pLevel.getBlockEntity(pPos) instanceof AllInOneGeneratorBlockEntity) {
-                pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos));
+                pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos),pPos);
             }
         }
         return InteractionResult.SUCCESS;

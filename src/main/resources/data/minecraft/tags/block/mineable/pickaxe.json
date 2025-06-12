@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "cobblestonesemantics:cobblestone_infused_obsidian",
+    "#c:cobblestone_infused_obsidians",
     "cobblestonesemantics:cobblestone_generator_1",
     "cobblestonesemantics:cobblestone_generator_2",
     "cobblestonesemantics:cobblestone_generator_3",

@@ -72,10 +72,10 @@ public class ClientUtil {
                     uMax = uMax - (maskRight / 16F * (uMax - uMin));
                     vMax = vMax - (maskTop / 16F * (vMax - vMin));
 
-                    bufferBuilder.addVertex(matrix, x, y + 16, 100).setUv(uMin, vMax);
-                    bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + 16, 100).setUv(uMax, vMax);
-                    bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + maskTop, 100).setUv(uMax, vMin);
-                    bufferBuilder.addVertex(matrix, x, y + maskTop, 100).setUv(uMin, vMin);
+                    bufferBuilder.addVertex(matrix, x, y + 16, 100).setUv(uMin, vMax).setColor(fluidColor);
+                    bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + 16, 100).setUv(uMax, vMax).setColor(fluidColor);
+                    bufferBuilder.addVertex(matrix, x + 16 - maskRight, y + maskTop, 100).setUv(uMax, vMin).setColor(fluidColor);
+                    bufferBuilder.addVertex(matrix, x, y + maskTop, 100).setUv(uMin, vMin).setColor(fluidColor);
                 }
             }
         }

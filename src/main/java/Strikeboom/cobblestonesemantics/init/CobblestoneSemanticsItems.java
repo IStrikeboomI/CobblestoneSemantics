@@ -1,15 +1,16 @@
 package Strikeboom.cobblestonesemantics.init;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.items.CobblestoneBag;
-import Strikeboom.cobblestonesemantics.items.CobblestoneInfusedObsidianBag;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.EquipmentAssets;
@@ -18,6 +19,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.EnumMap;
+import java.util.function.Consumer;
 
 
 public class CobblestoneSemanticsItems {
@@ -44,9 +46,6 @@ public class CobblestoneSemanticsItems {
     public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_LEGGINGS = ITEMS.register("cobblestone_infused_obsidian_leggings", (loc) -> new Item(TOOL_PROPERTIES.humanoidArmor(COBBLESTONE_INFUSED_OBSIDIAN_ARMOR_MATERIAL, ArmorType.LEGGINGS).setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc))));
     public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_BOOTS = ITEMS.register("cobblestone_infused_obsidian_boots", (loc) -> new Item(TOOL_PROPERTIES.humanoidArmor(COBBLESTONE_INFUSED_OBSIDIAN_ARMOR_MATERIAL, ArmorType.BOOTS).setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc))));
 
-    public static final DeferredHolder<Item,Item> COBBLESTONE_BAG = ITEMS.register("cobblestone_bag", CobblestoneBag::new);
-    public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_BAG = ITEMS.register("cobblestone_infused_obsidian_bag", CobblestoneInfusedObsidianBag::new);
-
     public static final DeferredHolder<Item,Item> MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN_BUCKET = ITEMS.register("molten_cobblestone_infused_obsidian_bucket", (loc) -> new BucketItem(CobblestoneSemanticsFluids.MOLTEN_COBBLESTONE_INFUSED_OBSIDIAN.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc))));
 
     public static final DeferredHolder<Item,Item> COBBLESTONE_GENERATOR_ITEM_1 = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_1);
@@ -65,6 +64,13 @@ public class CobblestoneSemanticsItems {
     public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_ITEM = fromBlock(CobblestoneSemanticsBlocks.COBBLESTONE_INFUSED_OBSIDIAN);
 
     public static <B extends Block> DeferredHolder<Item,Item> fromBlock(DeferredHolder<B,B> block) {
-        return CobblestoneSemanticsItems.ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),block.getId()))));
+        return CobblestoneSemanticsItems.ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),block.getId()))) {
+            @Override
+            public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+                if (block.get() instanceof TooltipProvider tp) {
+                    tp.addToTooltip(context,tooltipAdder,flag,stack);
+                }
+            }
+        });
     }
 }

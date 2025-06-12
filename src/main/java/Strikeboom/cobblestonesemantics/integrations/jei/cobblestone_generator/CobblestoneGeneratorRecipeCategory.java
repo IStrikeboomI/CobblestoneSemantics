@@ -41,9 +41,18 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_generator");
+        return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".cobblestone_generator");
     }
 
+    @Override
+    public int getHeight() {
+        return BACKGROUND.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return BACKGROUND.getWidth();
+    }
 
     @Override
     public IDrawable getIcon() {
@@ -54,6 +63,7 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
     public void draw(CobblestoneGeneratorRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
         ARROW.draw(guiGraphics,40,15);
+        BACKGROUND.draw(guiGraphics);
     }
 
     @Override

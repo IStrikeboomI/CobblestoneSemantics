@@ -38,12 +38,21 @@ public class LavaGeneratorRecipeCategory implements IRecipeCategory<LavaGenerato
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".lava_generator");
+        return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".lava_generator");
     }
     
     @Override
     public IDrawable getIcon() {
         return ICON;
+    }
+    @Override
+    public int getHeight() {
+        return BACKGROUND.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return BACKGROUND.getWidth();
     }
 
 
@@ -51,6 +60,7 @@ public class LavaGeneratorRecipeCategory implements IRecipeCategory<LavaGenerato
     public void draw(LavaGeneratorRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
         ARROW.draw(guiGraphics,72,29);
+        BACKGROUND.draw(guiGraphics);
     }
 
     @Override

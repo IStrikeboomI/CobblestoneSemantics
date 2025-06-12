@@ -1,5 +1,6 @@
 package Strikeboom.cobblestonesemantics.init;
 
+import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.blockentities.AllInOneGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneMelterBlockEntity;
@@ -8,6 +9,7 @@ import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.BagItemHandler
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -15,10 +17,10 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
-
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD,modid = CobblestoneSemantics.MOD_ID)
 public class CobblestoneSemanticsCapabilities {
     @SubscribeEvent
-    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK, // capability to register for
                 CobblestoneSemanticsBlockEntities.ALL_IN_ONE_GENERATOR_BLOCK_ENTITY.get(),
@@ -91,25 +93,6 @@ public class CobblestoneSemanticsCapabilities {
                         return object.energyStorage;
                     }
                 });
-        event.registerItem(
-                Capabilities.ItemHandler.ITEM,
-                new ICapabilityProvider<>() {
-                    @Override
-                    public @Nullable IItemHandler getCapability(ItemStack object, Void context) {
-                        return new BagItemHandler(9, object.getItem());
-                    }
-                },
-                CobblestoneSemanticsItems.COBBLESTONE_BAG.get()
-                );
-        event.registerItem(
-                Capabilities.ItemHandler.ITEM,
-                new ICapabilityProvider<>() {
-                    @Override
-                    public @Nullable IItemHandler getCapability(ItemStack object, Void context) {
-                        return new BagItemHandler(27, object.getItem());
-                    }
-                },
-                CobblestoneSemanticsItems.COBBLESTONE_INFUSED_OBSIDIAN_BAG.get()
-        );
+
     }
 }

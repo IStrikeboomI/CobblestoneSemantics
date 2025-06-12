@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class CobblestoneMelterRecipeCategory implements IRecipeCategory<CobblestoneMelterRecipe> {
     private final IDrawable BACKGROUND;
@@ -38,7 +39,7 @@ public class CobblestoneMelterRecipeCategory implements IRecipeCategory<Cobblest
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
+        return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
     }
 
     @Override
@@ -46,10 +47,20 @@ public class CobblestoneMelterRecipeCategory implements IRecipeCategory<Cobblest
         return ICON;
     }
 
+    @Override
+    public int getHeight() {
+        return BACKGROUND.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return BACKGROUND.getWidth();
+    }
 
     @Override
     public void draw(CobblestoneMelterRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
+        BACKGROUND.draw(guiGraphics);
         ARROW.draw(guiGraphics,77,28);
     }
 
