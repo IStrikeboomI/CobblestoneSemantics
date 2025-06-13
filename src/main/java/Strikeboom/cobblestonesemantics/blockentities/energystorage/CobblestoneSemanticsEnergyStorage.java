@@ -8,6 +8,13 @@ public class CobblestoneSemanticsEnergyStorage extends EnergyStorage {
         super(capacity,receivePower ? capacity : 0,sendPower ? capacity : 0);
     }
     protected void onEnergyChanged() {}
+
+    @Override
+    public int receiveEnergy(int toReceive, boolean simulate) {
+        onEnergyChanged();
+        return super.receiveEnergy(toReceive, simulate);
+    }
+
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         int rc = super.extractEnergy(maxExtract, simulate);

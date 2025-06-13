@@ -5,9 +5,7 @@ import Strikeboom.cobblestonesemantics.blockentities.AllInOneGeneratorBlockEntit
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneMelterBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.LavaGeneratorBlockEntity;
-import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.BagItemHandler;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -70,6 +68,16 @@ public class CobblestoneSemanticsCapabilities {
                     @Override
                     public @Nullable IFluidHandler getCapability(CobblestoneMelterBlockEntity object, @Nullable Direction context) {
                         return object.fluidTank;
+                    }
+                });
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK, // capability to register for
+                CobblestoneSemanticsBlockEntities.COBBLESTONE_MELTER_BLOCK_ENTITY.get(),
+                // blocks to register for
+                new ICapabilityProvider<>() {
+                    @Override
+                    public @Nullable IEnergyStorage getCapability(CobblestoneMelterBlockEntity object, @Nullable Direction context) {
+                        return object.energyStorage;
                     }
                 });
         event.registerBlockEntity(

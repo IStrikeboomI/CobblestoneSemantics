@@ -109,7 +109,7 @@ public class CobblestoneMelter extends Block implements EntityBlock, TooltipProv
         return new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return Component.translatable("item."+CobblestoneSemantics.MOD_ID+".cobblestone_melter");
+                return Component.translatable("block."+CobblestoneSemantics.MOD_ID+".melter");
             }
 
             @Override

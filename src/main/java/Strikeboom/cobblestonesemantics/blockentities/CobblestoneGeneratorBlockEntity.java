@@ -11,13 +11,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
-
-import javax.annotation.Nullable;
 
 public class CobblestoneGeneratorBlockEntity extends BlockEntity {
     public final CobblestoneGeneratorItemHandler itemStackHandler;
@@ -103,38 +98,37 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
             if (!(upBE instanceof CobblestoneGeneratorBlockEntity)) {
                 IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK,this.worldPosition.above(),Direction.DOWN);
                 if (cap != null) {
-                    if (!(cap instanceof EmptyItemHandler)) {
-                        if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-                            for (int i = 0; i < cap.getSlots(); i++) {
-                                if (cap.getStackInSlot(i).getCount() < cap.getSlotLimit(i)) {
-                                    int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
-                                    cap.insertItem(i, itemStackHandler.extractItem(largestSlotIndex, 64, false), false);
-                                    setChanged();
-                                }
+                    if (getCobblestoneAmount() > 0) {
+                        for (int i = 0; i < cap.getSlots(); i++) {
+                            if (cap.getStackInSlot(i).getCount() < 64) {
+                                int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
+                                cap.insertItem(i, itemStackHandler.extractItem(largestSlotIndex, Math.min(64,getCobblestoneAmount()), false), false);
+                                setChanged();
                             }
                         }
                     }
                 }
             }
         }
+
         BlockEntity downBE = level.getBlockEntity(this.worldPosition.below());
         if (downBE != null) {
             if (!(downBE instanceof CobblestoneGeneratorBlockEntity)) {
-                IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK,this.worldPosition.below(),Direction.UP);
+                IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK,this.worldPosition.above(),Direction.UP);
                 if (cap != null) {
-                    if (!(cap instanceof EmptyItemHandler)) {
-                        if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-                            for (int i = 0; i < cap.getSlots(); i++) {
-                                if (cap.getStackInSlot(i).getCount() < cap.getSlotLimit(i)) {
-                                    cap.insertItem(i, itemStackHandler.extractItem(((CobblestoneGeneratorItemHandler) itemStackHandler).getLargestSlotIndex(), 64, false), false);
-                                    setChanged();
-                                }
+                    if (getCobblestoneAmount() > 0) {
+                        for (int i = 0; i < cap.getSlots(); i++) {
+                            if (cap.getStackInSlot(i).getCount() < 64) {
+                                int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
+                                cap.insertItem(i, itemStackHandler.extractItem(largestSlotIndex, Math.min(64,getCobblestoneAmount()), false), false);
+                                setChanged();
                             }
                         }
                     }
                 }
             }
         }
+
     }
 
     public int getCobblestoneAmount() {

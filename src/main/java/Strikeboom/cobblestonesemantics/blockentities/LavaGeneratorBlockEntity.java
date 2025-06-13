@@ -5,6 +5,7 @@ import Strikeboom.cobblestonesemantics.blockentities.fluidtanks.LavaGeneratorFlu
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -13,6 +14,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nullable;
@@ -38,7 +42,8 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
                 if (level != null) {
                     setChanged();
                     level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-                }            }
+                }
+            }
         };
         cooldown = 0;
         delay = CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get();
@@ -96,6 +101,24 @@ public class LavaGeneratorBlockEntity extends BlockEntity {
                 level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
             }
             energyStorage.addEnergy(CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get());
+        }
+        //send energy all around
+        if (energyStorage.getEnergyStored() > Direction.values().length) {
+            for (Direction d : Direction.values()) {
+                BlockPos offset = worldPosition.offset(d.getUnitVec3i());
+                BlockEntity be = level.getBlockEntity(offset);
+                if (be != null) {
+                    IEnergyStorage e = level.getCapability(Capabilities.EnergyStorage.BLOCK,offset,d);
+                    if (e != null) {
+                        if (e.canReceive()
+                                && e.getMaxEnergyStored() >= e.getEnergyStored() + Math.min(energyStorage.getEnergyStored() / Direction.values().length,e.getMaxEnergyStored() - e.getEnergyStored())) {
+                            //divide up the energy so it distributes equally
+                            e.receiveEnergy(energyStorage.extractEnergy(Math.min(energyStorage.getEnergyStored() / Direction.values().length,e.getMaxEnergyStored() - e.getEnergyStored()),false),false);
+                            shouldUpdate = true;
+                        }
+                    }
+                }
+            }
         }
         if (shouldUpdate) {
             setChanged();

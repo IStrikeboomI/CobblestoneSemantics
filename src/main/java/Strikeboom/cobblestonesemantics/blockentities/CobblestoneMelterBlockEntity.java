@@ -1,5 +1,6 @@
 package Strikeboom.cobblestonesemantics.blockentities;
 
+import Strikeboom.cobblestonesemantics.blockentities.energystorage.CobblestoneSemanticsEnergyStorage;
 import Strikeboom.cobblestonesemantics.blockentities.fluidtanks.CobblestoneMelterFluidTank;
 import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneMelterItemHandler;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
@@ -28,6 +29,7 @@ import java.util.Objects;
 public class CobblestoneMelterBlockEntity extends BlockEntity {
     public ItemStackHandler itemStackHandler;
     public FluidTank fluidTank;
+    public CobblestoneSemanticsEnergyStorage energyStorage;
     int cooldown;
     int delay;
     public CobblestoneMelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
@@ -46,6 +48,15 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
                 level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
             }
         };
+        energyStorage = new CobblestoneSemanticsEnergyStorage(100000,true,false) {
+            @Override
+            protected void onEnergyChanged() {
+                if (level != null) {
+                    setChanged();
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
+            }
+        };
         cooldown = 0;
         delay = CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get();
     }
@@ -58,6 +69,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
 
     @Override
     protected void saveAdditional(CompoundTag pTag,HolderLookup.Provider registries) {
+        pTag.putInt("energy",energyStorage.getEnergyStored());
         pTag.put("ItemStackHandler",itemStackHandler.serializeNBT(registries));
         fluidTank.writeToNBT(registries,pTag);
         CompoundTag infoTag = new CompoundTag();
@@ -68,6 +80,9 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
 
     @Override
     public void loadAdditional(CompoundTag pTag,HolderLookup.Provider registries) {
+        if (pTag.contains("energy")) {
+            energyStorage.setEnergy(pTag.getInt("energy").orElseThrow());
+        }
         if (pTag.contains("ItemStackHandler")) {
             itemStackHandler.deserializeNBT(registries, pTag.getCompound("ItemStackHandler").orElseThrow());
         }
@@ -83,7 +98,8 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
         delay = CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get();
         boolean shouldUpdate = false;
         if ((fluidTank.getFluid().getAmount() + CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get() <= fluidTank.getCapacity())
-                        && !itemStackHandler.getStackInSlot(0).isEmpty()) {
+                        && !itemStackHandler.getStackInSlot(0).isEmpty()
+                        && energyStorage.getEnergyStored() >= CobblestoneSemanticsConfig.COBBLESTONE_MELTER_POWER_USAGE.get()) {
             cooldown++;
             level.setBlockAndUpdate(getBlockPos(),getBlockState().setValue(BlockStateProperties.POWERED,true));
             shouldUpdate = true;
@@ -104,6 +120,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
                 fluidTank.setFluid(new FluidStack(Fluids.LAVA,CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get()));
             }
             itemStackHandler.getStackInSlot(0).shrink(1);
+            energyStorage.addEnergy(-CobblestoneSemanticsConfig.COBBLESTONE_MELTER_POWER_USAGE.get());
             if (itemStackHandler.getStackInSlot(0).isEmpty()) {
                 level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
             }
@@ -149,6 +166,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
         int oldDelay = delay;
         ItemStackHandler oldItemStackHandler = itemStackHandler;
         FluidTank oldFluidTank = fluidTank;
+        CobblestoneSemanticsEnergyStorage oldEnergyStorage = energyStorage;
 
         CompoundTag tag = pkt.getTag();
         // This will call loadClientData()
@@ -157,6 +175,7 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
         // If any of the values was changed we request a refresh of our model data and send a block update
         if (oldCooldown != cooldown || oldDelay != delay ||
                 !Objects.equals(oldItemStackHandler,itemStackHandler) ||
+                !Objects.equals(oldEnergyStorage,energyStorage) ||
                 !Objects.equals(oldFluidTank, fluidTank)) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }

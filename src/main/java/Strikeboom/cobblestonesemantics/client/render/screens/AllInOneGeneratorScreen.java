@@ -29,7 +29,7 @@ public class AllInOneGeneratorScreen extends AbstractContainerScreen<AllInOneGen
         int relY = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/all_in_one_generator.png"),relX, relY, 0, 0, this.imageWidth, this.imageHeight,256,256);
         guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/all_in_one_generator.png"),getGuiLeft()+101,getGuiTop()+34,176,0,this.menu.blockEntity.getCooldown() * 23 / this.menu.blockEntity.getDelay(),16,256,256);
-        guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/all_in_one_generator.png"),getGuiLeft()+135, (int) (getGuiTop()+ 10 + (66 - (float)(this.energy.getEnergyStored() * 66) / this.energy.getMaxEnergyStored())),176,16,24,this.energy.getEnergyStored() * 66 / this.energy.getMaxEnergyStored(),256,256);
+        guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/all_in_one_generator.png"),getGuiLeft()+135, (int) (getGuiTop()+ 9 + (66 - Math.floor((float)(this.energy.getEnergyStored() * 66) / this.energy.getMaxEnergyStored()))),176,16,24,this.energy.getEnergyStored() * 66 / this.energy.getMaxEnergyStored(),256,256);
     }
 
     @Override

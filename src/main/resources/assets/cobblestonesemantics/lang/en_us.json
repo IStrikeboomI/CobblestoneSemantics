@@ -48,6 +48,8 @@
 
     "block.cobblestonesemantics.message.amount":"Cobblestone Amount: %s",
 
+    "block.cobblestonesemantics.melter":"Melter",
+
     "itemGroup.cobblestonesemantics":"Cobblestone Semantics",
 
     "cobblestonesemantics.configuration.title": "Cobblestone Semantics",
@@ -57,6 +59,8 @@
     "cobblestonesemantics.configuration.melter.delay.tooltip": "The Time (In Ticks) It Takes For The Cobblestone Melter To Do One Cycle",
     "cobblestonesemantics.configuration.melter.lava": "Lava Per Cobblestone",
     "cobblestonesemantics.configuration.melter.lava.tooltip": "The Amount Of Lava (in mB) The Cobblestone Melter Outputs In One Cycle",
+    "cobblestonesemantics.configuration.melter.power": "Power Usage Per Cobblestone",
+    "cobblestonesemantics.configuration.melter.power.tooltip": "The Amount Of Power (in rf) The Cobblestone Melter Uses In One Cycle",
     "cobblestonesemantics.configuration.generator": "Lava Generator",
     "cobblestonesemantics.configuration.generator.tooltip": "Control Speed And Output Amount Of the Lava Generator",
     "cobblestonesemantics.configuration.generator.delay": "Delay",

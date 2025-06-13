@@ -2,11 +2,11 @@
     "type": "minecraft:crafting_shapeless",
     "ingredients":
     [
-        "cobblestonesemantics:cobblestone_generator_4.json"
+        "cobblestonesemantics:cobblestone_generator_4"
     ],
     "result":
     {
-        "id": "cobblestonesemantics:cobblestone_generator_4.json",
+        "id": "cobblestonesemantics:cobblestone_generator_4",
         "count": 1
     }
 }

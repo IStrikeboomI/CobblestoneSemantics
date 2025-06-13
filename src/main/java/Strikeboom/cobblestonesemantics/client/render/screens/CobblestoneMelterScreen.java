@@ -1,7 +1,7 @@
 package Strikeboom.cobblestonesemantics.client.render.screens;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCapabilities;
+import Strikeboom.cobblestonesemantics.blockentities.energystorage.CobblestoneSemanticsEnergyStorage;
 import Strikeboom.cobblestonesemantics.menus.CobblestoneMelterMenu;
 import Strikeboom.cobblestonesemantics.util.ClientUtil;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,9 +15,14 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class CobblestoneMelterScreen extends AbstractContainerScreen<CobblestoneMelterMenu> {
     FluidTank tank;
+    CobblestoneSemanticsEnergyStorage energy;
     public CobblestoneMelterScreen(CobblestoneMelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.tank = menu.blockEntity.fluidTank;
+        this.energy = menu.blockEntity.energyStorage;
+
+        titleLabelX = getGuiLeft() + 70;
+        inventoryLabelX = getGuiLeft() + 60;
     }
 
     @Override
@@ -27,6 +32,7 @@ public class CobblestoneMelterScreen extends AbstractContainerScreen<Cobblestone
         guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/cobblestone_melter.png"), relX, relY, 0, 0, this.imageWidth, this.imageHeight,256,256);
         guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/cobblestone_melter.png"),getGuiLeft()+81,getGuiTop()+32,176,0,this.menu.blockEntity.getCooldown() * 23 / this.menu.blockEntity.getDelay(),16,256,256);
         ClientUtil.renderFluidBar(guiGraphics,getGuiLeft() + 127, getGuiTop() + 9,24,66,tank.getFluid(),tank.getCapacity());
+        guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"),getGuiLeft()+8, (int) (getGuiTop() + 9 + (66 - Math.floor((float)(this.energy.getEnergyStored() * 66) / this.energy.getMaxEnergyStored()))),176,16,24,this.energy.getEnergyStored() * 66 / this.energy.getMaxEnergyStored(),256,256);
 
     }
 
@@ -36,6 +42,8 @@ public class CobblestoneMelterScreen extends AbstractContainerScreen<Cobblestone
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
         ClientUtil.drawFluidCapacityTooltip(pMouseX,pMouseY,getGuiLeft() + 127,getGuiTop() + 9, 24,66,this,font,guiGraphics,tank.getFluid());
+        ClientUtil.drawEnergyTooltip(pMouseX,pMouseY,getGuiLeft() + 8,getGuiTop() + 9, 24,66,this,font,guiGraphics,energy.getEnergyStored());
+
     }
 
 }

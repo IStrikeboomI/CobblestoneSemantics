@@ -31,7 +31,7 @@ public class LavaGeneratorScreen extends AbstractContainerScreen<LavaGeneratorMe
         int relY = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"), relX, relY, 0, 0, this.imageWidth, this.imageHeight,256,256);
         guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"),getGuiLeft()+81,getGuiTop()+32,176,0,this.menu.blockEntity.getCooldown() * 23 / this.menu.blockEntity.getDelay(),16,256,256);
-        guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"),getGuiLeft()+135, (int) (getGuiTop()+ 10 + (66 - (float)(this.energy.getEnergyStored() * 66) / this.energy.getMaxEnergyStored())),176,16,24,this.energy.getEnergyStored() * 66 / this.energy.getMaxEnergyStored(),256,256);
+        guiGraphics.blit(RenderType::guiTextured,ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "textures/gui/container/lava_generator.png"),getGuiLeft()+135, (int) (getGuiTop()+ 9 + (66 - Math.floor((float)(this.energy.getEnergyStored() * 66) / this.energy.getMaxEnergyStored()))),176,16,24,this.energy.getEnergyStored() * 66 / this.energy.getMaxEnergyStored(),256,256);
 
         ClientUtil.renderFluidBar(guiGraphics,getGuiLeft() + 21, getGuiTop() + 9,24,66,tank.getFluid(),tank.getCapacity());
 

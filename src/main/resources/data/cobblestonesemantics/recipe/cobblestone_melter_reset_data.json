@@ -2,11 +2,11 @@
     "type": "minecraft:crafting_shapeless",
     "ingredients":
     [
-        "cobblestonesemantics:cobblestone_melter.json"
+        "cobblestonesemantics:cobblestone_melter"
     ],
     "result":
     {
-        "id": "cobblestonesemantics:cobblestone_melter.json",
+        "id": "cobblestonesemantics:cobblestone_melter",
         "count": 1
     }
 }
