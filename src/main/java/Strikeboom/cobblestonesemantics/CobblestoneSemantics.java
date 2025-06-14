@@ -37,6 +37,6 @@ public class CobblestoneSemantics
         //modbus.addListener(this::init);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, CobblestoneSemanticsConfig.BUILDER.build());
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+
     }
 }
