@@ -19,7 +19,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.Tags;
 
@@ -35,8 +35,8 @@ public class CobblestoneSemanticsJeiPlugin implements IModPlugin {
     public static final IRecipeType <CobblestoneGeneratorRecipe>  COBBLESTONE_GENERATOR = IRecipeType .create(CobblestoneSemantics.MOD_ID,"cobblestone_generator",CobblestoneGeneratorRecipe.class);
 
     @Override
-    public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"jei_plugin");
+    public Identifier getPluginUid() {
+        return Identifier.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"jei_plugin");
     }
 
     @Override

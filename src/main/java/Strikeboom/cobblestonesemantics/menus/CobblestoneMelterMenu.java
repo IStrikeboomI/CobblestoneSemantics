@@ -12,24 +12,25 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.StacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 
 public class CobblestoneMelterMenu extends AbstractContainerMenu {
 
     public final CobblestoneMelterBlockEntity blockEntity;
-    private IItemHandler blockInventory;
+    private StacksResourceHandler<ItemStack, ItemResource>  blockInventory;
     public CobblestoneMelterMenu(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(windowId,FriendlyByteBuf.readBlockPos(extraData),playerInventory);
     }
     public CobblestoneMelterMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.COBBLESTONE_MELTER_MENU.get(), windowId);
-        blockEntity = (CobblestoneMelterBlockEntity)playerInventory.player.getCommandSenderWorld().getBlockEntity(pos);
+        blockEntity = (CobblestoneMelterBlockEntity)playerInventory.player.level().getBlockEntity(pos);
 
         if (blockEntity != null) {
-            blockInventory = playerInventory.player.getCommandSenderWorld().getCapability(Capabilities.ItemHandler.BLOCK,pos,null);
-            addSlot(new SlotItemHandler(blockInventory,0,53,33));
+            blockInventory = (StacksResourceHandler<ItemStack, ItemResource>) playerInventory.player.level().getCapability(Capabilities.Item.BLOCK,pos,null);
+            addSlot(new ResourceHandlerSlot(blockInventory,blockInventory::set,0,53,33));
         }
 
         int xPos = 8;
@@ -56,11 +57,11 @@ public class CobblestoneMelterMenu extends AbstractContainerMenu {
         if (slot.hasItem()) {
             ItemStack current = slot.getItem();
             previous = current.copy();
-            if (index < this.blockInventory.getSlots()) {
-                if (!this.moveItemStackTo(current, blockInventory.getSlots(), blockInventory.getSlots() + 36, true))
+            if (index < this.blockInventory.size()) {
+                if (!this.moveItemStackTo(current, blockInventory.size(), blockInventory.size() + 36, true))
                     return ItemStack.EMPTY;
             } else {
-                if (!this.moveItemStackTo(current, 0, blockInventory.getSlots(), false))
+                if (!this.moveItemStackTo(current, 0, blockInventory.size(), false))
                     return ItemStack.EMPTY;
             }
 

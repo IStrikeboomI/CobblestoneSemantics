@@ -1,23 +1,23 @@
 package Strikeboom.cobblestonesemantics.blockentities.fluidtanks;
 
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 
-public class CobblestoneMelterFluidTank extends FluidTank {
+public class CobblestoneMelterFluidTank extends FluidStacksResourceHandler {
     public CobblestoneMelterFluidTank(int capacity) {
-        super(capacity);
+        super(1,capacity);
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
         return 0;
     }
 
     @Override
-    public boolean isFluidValid(FluidStack stack) {
-        return stack.getFluid() == Fluids.LAVA;
+    public boolean isValid(int index, FluidResource resource) {
+        return resource.getFluid() == Fluids.LAVA;
     }
-
 }

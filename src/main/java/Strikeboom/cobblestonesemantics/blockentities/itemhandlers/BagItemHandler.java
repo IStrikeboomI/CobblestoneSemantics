@@ -1,20 +1,23 @@
 package Strikeboom.cobblestonesemantics.blockentities.itemhandlers;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class BagItemHandler extends ItemStackHandler {
+public class BagItemHandler extends ItemStacksResourceHandler {
     Item item;
     public BagItemHandler(int size, Item item) {
         super(size);
         this.item = item;
     }
+
     @Override
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (stack.getItem() == item) {
-            return stack;
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (resource.getItem() == item) {
+            return 0;
         }
-        return super.insertItem(slot, stack, simulate);
+        return super.insert(index, resource, amount, transaction);
     }
+
 }

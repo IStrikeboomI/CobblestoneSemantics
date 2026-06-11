@@ -20,7 +20,7 @@ public class LavaGeneratorMenu extends AbstractContainerMenu {
     }
     public LavaGeneratorMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), windowId);
-        blockEntity = (LavaGeneratorBlockEntity) playerInventory.player.getCommandSenderWorld().getBlockEntity(pos);
+        blockEntity = (LavaGeneratorBlockEntity) playerInventory.player.level().getBlockEntity(pos);
 
         int xPos = 8;
         int yPos = 84;

@@ -7,7 +7,6 @@ import Strikeboom.cobblestonesemantics.blockentities.CobblestoneMelterBlockEntit
 import Strikeboom.cobblestonesemantics.blockentities.LavaGeneratorBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;

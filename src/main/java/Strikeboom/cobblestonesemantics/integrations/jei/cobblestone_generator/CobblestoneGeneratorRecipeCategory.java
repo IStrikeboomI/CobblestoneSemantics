@@ -3,7 +3,6 @@ package Strikeboom.cobblestonesemantics.integrations.jei.cobblestone_generator;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.integrations.jei.CobblestoneSemanticsJeiPlugin;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,12 +12,11 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<CobblestoneGeneratorRecipe> {
@@ -27,8 +25,8 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
     private final IDrawableAnimated ARROW;
     private final IDrawable ICON;
     public CobblestoneGeneratorRecipeCategory(IGuiHelper helper) {
-        BACKGROUND = helper.createDrawable(ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),40,20,100,50);
-        IDrawableStatic STATIC_ARROW = helper.createDrawable(ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),176,0,24,17);
+        BACKGROUND = helper.createDrawable(Identifier.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),40,20,100,50);
+        IDrawableStatic STATIC_ARROW = helper.createDrawable(Identifier.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID,"textures/gui/container/cobblestone_generator_jei.png"),176,0,24,17);
         ARROW = helper.createAnimatedDrawable(STATIC_ARROW,60, IDrawableAnimated.StartDirection.LEFT,false);
         ICON = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(CobblestoneSemanticsBlocks.COBBLESTONE_GENERATOR_10.get()));
 
@@ -60,7 +58,7 @@ public class CobblestoneGeneratorRecipeCategory implements IRecipeCategory<Cobbl
     }
 
     @Override
-    public void draw(CobblestoneGeneratorRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(CobblestoneGeneratorRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
         ARROW.draw(guiGraphics,40,15);
         BACKGROUND.draw(guiGraphics);

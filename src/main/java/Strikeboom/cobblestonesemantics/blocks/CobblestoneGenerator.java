@@ -3,29 +3,27 @@ package Strikeboom.cobblestonesemantics.blocks;
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneGeneratorItemHandler;
-import io.netty.buffer.ByteBufUtil;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.TooltipProvider;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -36,12 +34,13 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class CobblestoneGenerator extends Block implements EntityBlock, TooltipProvider {
@@ -49,12 +48,12 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
     int storageSlots;
     int delayUntilNextCobbleStone;
     int amountOfCobblestoneEachOperation;
-    public CobblestoneGenerator(int tier, int storageSlots, int delayUntilNextCobbleStone, int amountOfCobblestoneEachOperation, ResourceLocation resourceLocation) {
+    public CobblestoneGenerator(int tier, int storageSlots, int delayUntilNextCobbleStone, int amountOfCobblestoneEachOperation, Identifier Identifier) {
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                 .mapColor(MapColor.CLAY)
                 .sound(SoundType.METAL)
                 .strength(2f,250f)
-                .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
+                .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),Identifier)));
         this.tier = tier;
         this.storageSlots = storageSlots;
         this.delayUntilNextCobbleStone = delayUntilNextCobbleStone;
@@ -80,7 +79,7 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide) {
+        if (pLevel.isClientSide()) {
             return null;
         }
 
@@ -94,10 +93,10 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
 
     @Override
    public InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
-       if (!pLevel.isClientSide) {
+       if (!pLevel.isClientSide()) {
            if (!pPlayer.isCrouching()) {
                CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) pLevel.getBlockEntity(pPos);
-               IItemHandler iItemHandler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK,pPos,pState,be,null);
+               ResourceHandler<ItemResource> iItemHandler = pLevel.getCapability(Capabilities.Item.BLOCK,pPos,pState,be,null);
                if (iItemHandler != null) {
                    ItemStack stack = ((CobblestoneGeneratorItemHandler) iItemHandler).getLargestSlotThenRemove();
                    if (!stack.isEmpty()) {
@@ -108,7 +107,7 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
                }
            } else {
                if (pPlayer.isCrouching()) {
-                   pPlayer.displayClientMessage(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".message.amount",((CobblestoneGeneratorBlockEntity) pLevel.getBlockEntity(pPos)).getCobblestoneAmount()),false);
+                   pPlayer.sendOverlayMessage(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".message.amount",((CobblestoneGeneratorBlockEntity) pLevel.getBlockEntity(pPos)).getCobblestoneAmount()));
                }
            }
        }
@@ -118,11 +117,11 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
     //these 2 functions below help save the data into the item stack when breaking block
     @Override
     public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomAndMetadata(pLevel.registryAccess())));
+                stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(),pBlockEntity.saveWithFullMetadata(pLevel.registryAccess())));
                 pBlockEntity.invalidateCapabilities();
             }
 
@@ -134,21 +133,21 @@ public class CobblestoneGenerator extends Block implements EntityBlock, TooltipP
 
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (!pLevel.isClientSide) {
-            CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
-            if (!data.isEmpty()) {
-                CompoundTag tag = data.copyTag();
+        if (!pLevel.isClientSide()) {
+            TypedEntityData<BlockEntityType<?>> data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA,TypedEntityData.of(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(),new CompoundTag()));
+            if (!data.copyTagWithoutId().isEmpty()) {
+                CompoundTag tag = data.copyTagWithoutId();
                 tag.putInt("x",pPos.getX());
                 tag.putInt("y",pPos.getY());
                 tag.putInt("z",pPos.getZ());
-                pLevel.getBlockEntity(pPos).loadWithComponents(tag,pLevel.registryAccess());
+                pLevel.getBlockEntity(pPos).loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING,pLevel.registryAccess(),tag));
             }
         }
     }
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
-        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).isEmpty()) {
+        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA,TypedEntityData.of(CobblestoneSemanticsBlockEntities.COBBLESTONE_GENERATOR_BLOCK_ENTITY.get(),new CompoundTag())).copyTagWithoutId().isEmpty()) {
             tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
         }
        tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.crouch").withStyle(ChatFormatting.YELLOW));

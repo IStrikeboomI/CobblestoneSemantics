@@ -1,39 +1,35 @@
 package Strikeboom.cobblestonesemantics.blockentities.energystorage;
 
 
-import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class CobblestoneSemanticsEnergyStorage extends EnergyStorage {
+public class CobblestoneSemanticsEnergyStorage extends SimpleEnergyHandler {
     public CobblestoneSemanticsEnergyStorage(int capacity, boolean receivePower , boolean sendPower) {
         super(capacity,receivePower ? capacity : 0,sendPower ? capacity : 0);
     }
     protected void onEnergyChanged() {}
 
     @Override
-    public int receiveEnergy(int toReceive, boolean simulate) {
+    public int insert(int amount, TransactionContext transaction) {
         onEnergyChanged();
-        return super.receiveEnergy(toReceive, simulate);
+        return super.insert(amount, transaction);
     }
 
     @Override
-    public int extractEnergy(int maxExtract, boolean simulate) {
-        int rc = super.extractEnergy(maxExtract, simulate);
-        if (rc > 0 && !simulate) {
-            onEnergyChanged();
-        }
-        return rc;
+    public int extract(int amount, TransactionContext transaction) {
+        onEnergyChanged();
+        return super.extract(amount, transaction);
     }
 
-    public void setEnergy(int energy) {
-        this.energy = energy;
+    @Override
+    public void set(int amount) {
+        super.set(amount);
         onEnergyChanged();
     }
 
-    public void addEnergy(int energy) {
-        this.energy += energy;
-        if (this.energy > getMaxEnergyStored()) {
-            this.energy = getEnergyStored();
-        }
+    public void addEnergy(int energy,TransactionContext transaction) {
+        insert(energy,transaction);
         onEnergyChanged();
     }
 

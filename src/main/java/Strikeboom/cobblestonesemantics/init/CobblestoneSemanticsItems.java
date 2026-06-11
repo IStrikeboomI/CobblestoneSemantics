@@ -1,13 +1,13 @@
 package Strikeboom.cobblestonesemantics.init;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
@@ -40,7 +40,7 @@ public class CobblestoneSemanticsItems {
         p_371445_.put(ArmorType.CHESTPLATE, 8);
         p_371445_.put(ArmorType.HELMET, 3);
         p_371445_.put(ArmorType.BODY, 11);
-    }), 10, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 1.0f, CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG, ResourceKey.create(EquipmentAssets.ROOT_ID, ResourceLocation.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "cobblestone_infused_obsidian")));
+    }), 10, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 1.0f, CobblestoneSemanticsTags.COBBLESTONE_INFUSED_OBSIDIAN_TAG, ResourceKey.create(EquipmentAssets.ROOT_ID, Identifier.fromNamespaceAndPath(CobblestoneSemantics.MOD_ID, "cobblestone_infused_obsidian")));
     public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_HELMET = ITEMS.register("cobblestone_infused_obsidian_helmet", (loc) -> new Item(TOOL_PROPERTIES.humanoidArmor(COBBLESTONE_INFUSED_OBSIDIAN_ARMOR_MATERIAL, ArmorType.HELMET).setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc))));
     public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_CHESTPLATE = ITEMS.register("cobblestone_infused_obsidian_chestplate", (loc) -> new Item(TOOL_PROPERTIES.humanoidArmor(COBBLESTONE_INFUSED_OBSIDIAN_ARMOR_MATERIAL, ArmorType.CHESTPLATE).setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc))));
     public static final DeferredHolder<Item,Item> COBBLESTONE_INFUSED_OBSIDIAN_LEGGINGS = ITEMS.register("cobblestone_infused_obsidian_leggings", (loc) -> new Item(TOOL_PROPERTIES.humanoidArmor(COBBLESTONE_INFUSED_OBSIDIAN_ARMOR_MATERIAL, ArmorType.LEGGINGS).setId(ResourceKey.create(BuiltInRegistries.ITEM.key(),loc))));

@@ -2,9 +2,7 @@ package Strikeboom.cobblestonesemantics.menus;
 
 import Strikeboom.cobblestonesemantics.blockentities.AllInOneGeneratorBlockEntity;
 import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.AllInOneGeneratorItemHandler;
-import Strikeboom.cobblestonesemantics.blocks.AllInOneGenerator;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
-import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsCapabilities;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +13,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class AllInOneGeneratorMenu extends AbstractContainerMenu {
     public final AllInOneGeneratorBlockEntity blockEntity;
@@ -27,23 +25,23 @@ public class AllInOneGeneratorMenu extends AbstractContainerMenu {
 
     public AllInOneGeneratorMenu(int windowId, BlockPos pos, Inventory playerInventory) {
         super(CobblestoneSemanticsMenus.ALL_IN_ONE_GENERATOR_MENU.get(), windowId);
-        blockEntity = (AllInOneGeneratorBlockEntity)playerInventory.player.getCommandSenderWorld().getBlockEntity(pos);
+        blockEntity = (AllInOneGeneratorBlockEntity)playerInventory.player.level().getBlockEntity(pos);
 
         if (blockEntity != null) {
-            blockInventory = (AllInOneGeneratorItemHandler) playerInventory.player.getCommandSenderWorld().getCapability(Capabilities.ItemHandler.BLOCK,pos,null);
+            blockInventory = (AllInOneGeneratorItemHandler) playerInventory.player.level().getCapability(Capabilities.Item.BLOCK,pos,null);
             if (blockInventory != null) {
-                addSlot(new SlotItemHandler(blockInventory, 0, 29, 51));
+                addSlot(new ResourceHandlerSlot(blockInventory,blockInventory::set, 0, 29, 51));
                 int melterSlotIndex = 1;
                 for (int i = 60; i <= 78; i += 18) {
                     for (int j = 44; j <= 72; j += 18) {
-                        addSlot(new SlotItemHandler(blockInventory, melterSlotIndex, i, j));
+                        addSlot(new ResourceHandlerSlot(blockInventory,blockInventory::set, melterSlotIndex, i, j));
                         melterSlotIndex++;
                     }
                 }
                 int generatorSlotIndex = 5;
                 for (int i = 24; i <= 78; i += 18) {
                     for (int j = 5; j <= 32; j += 18) {
-                        this.addSlot(new SlotItemHandler(blockInventory, generatorSlotIndex, i, j));
+                        this.addSlot(new ResourceHandlerSlot(blockInventory,blockInventory::set, generatorSlotIndex, i, j));
                         generatorSlotIndex++;
                     }
                 }
@@ -72,11 +70,11 @@ public class AllInOneGeneratorMenu extends AbstractContainerMenu {
         if (slot.hasItem()) {
             ItemStack current = slot.getItem();
             previous = current.copy();
-            if (index < this.blockInventory.getSlots()) {
-                if (!this.moveItemStackTo(current, blockInventory.getSlots(), blockInventory.getSlots() + 36, true))
+            if (index < this.blockInventory.size()) {
+                if (!this.moveItemStackTo(current, blockInventory.size(), blockInventory.size() + 36, true))
                     return ItemStack.EMPTY;
             } else {
-                if (!this.moveItemStackTo(current, 0, blockInventory.getSlots(), false))
+                if (!this.moveItemStackTo(current, 0, blockInventory.size(), false))
                     return ItemStack.EMPTY;
             }
 

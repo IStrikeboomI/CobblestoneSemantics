@@ -1,13 +1,13 @@
 package Strikeboom.cobblestonesemantics.init;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
-import Strikeboom.cobblestonesemantics.menus.*;
+import Strikeboom.cobblestonesemantics.menus.AllInOneGeneratorMenu;
+import Strikeboom.cobblestonesemantics.menus.CobblestoneMelterMenu;
+import Strikeboom.cobblestonesemantics.menus.LavaGeneratorMenu;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.Supplier;
 

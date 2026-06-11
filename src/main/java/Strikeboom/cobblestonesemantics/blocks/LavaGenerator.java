@@ -2,6 +2,7 @@ package Strikeboom.cobblestonesemantics.blocks;
 
 import Strikeboom.cobblestonesemantics.CobblestoneSemantics;
 import Strikeboom.cobblestonesemantics.blockentities.LavaGeneratorBlockEntity;
+import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlockEntities;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import Strikeboom.cobblestonesemantics.menus.LavaGeneratorMenu;
 import net.minecraft.ChatFormatting;
@@ -11,9 +12,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -22,14 +23,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -41,20 +41,20 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class LavaGenerator extends Block implements EntityBlock, TooltipProvider {
-    public LavaGenerator(ResourceLocation resourceLocation) {
+    public LavaGenerator(Identifier Identifier) {
         super(Properties.ofFullCopy(Blocks.IRON_BLOCK)
                 .sound(SoundType.METAL)
                 .strength(2f,100f)
                 .lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0)
-                .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),resourceLocation)));
+                .requiresCorrectToolForDrops().setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(),Identifier)));
     }
 
 
@@ -75,11 +75,11 @@ public class LavaGenerator extends Block implements EntityBlock, TooltipProvider
     //these 2 functions below help save the data into the item stack when breaking block
     @Override
     public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             ItemStack stack = new ItemStack(this);
 
             if (pBlockEntity != null) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA,CustomData.of(pBlockEntity.saveCustomAndMetadata(pLevel.registryAccess())));
+                stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(CobblestoneSemanticsBlockEntities.LAVA_GENERATOR_BLOCK_ENTITY.get(),pBlockEntity.saveWithFullMetadata(pLevel.registryAccess())));
                 pBlockEntity.invalidateCapabilities();
             }
 
@@ -91,14 +91,14 @@ public class LavaGenerator extends Block implements EntityBlock, TooltipProvider
 
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (!pLevel.isClientSide) {
-            CustomData data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
-            if (!data.isEmpty()) {
-                CompoundTag tag = data.copyTag();
+        if (!pLevel.isClientSide()) {
+            TypedEntityData<BlockEntityType<?>> data = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA,TypedEntityData.of(CobblestoneSemanticsBlockEntities.LAVA_GENERATOR_BLOCK_ENTITY.get(),new CompoundTag()));
+            if (!data.copyTagWithoutId().isEmpty()) {
+                CompoundTag tag = data.copyTagWithoutId();
                 tag.putInt("x",pPos.getX());
                 tag.putInt("y",pPos.getY());
                 tag.putInt("z",pPos.getZ());
-                pLevel.getBlockEntity(pPos).loadWithComponents(tag,pLevel.registryAccess());
+                pLevel.getBlockEntity(pPos).loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING,pLevel.registryAccess(),tag));
             }
         }
     }
@@ -112,7 +112,7 @@ public class LavaGenerator extends Block implements EntityBlock, TooltipProvider
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide) {
+        if (pLevel.isClientSide()) {
             return null;
         }
 
@@ -125,9 +125,9 @@ public class LavaGenerator extends Block implements EntityBlock, TooltipProvider
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand hand, BlockHitResult hitResult) {
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             if (pLevel.getBlockEntity(pPos) instanceof LavaGeneratorBlockEntity) {
-                if (FluidUtil.interactWithFluidHandler(pPlayer, hand, pLevel, pPos, null)) {
+                if (FluidUtil.interactWithFluidHandler(pPlayer,hand,pLevel,pPos, null,null)) {
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -153,7 +153,7 @@ public class LavaGenerator extends Block implements EntityBlock, TooltipProvider
 
     @Override
     protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             if (pLevel.getBlockEntity(pPos) instanceof LavaGeneratorBlockEntity) {
                 pPlayer.openMenu(pState.getMenuProvider(pLevel,pPos),pPos);
             }
@@ -164,7 +164,7 @@ public class LavaGenerator extends Block implements EntityBlock, TooltipProvider
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag flag, DataComponentGetter componentGetter) {
-        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).isEmpty()) {
+        if (!componentGetter.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(CobblestoneSemanticsBlockEntities.LAVA_GENERATOR_BLOCK_ENTITY.get(),new CompoundTag())).copyTagWithoutId().isEmpty()) {
             tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.saved").withStyle(ChatFormatting.GREEN));
         }
         tooltipAdder.accept(Component.translatable("block." + CobblestoneSemantics.MOD_ID + ".tooltip.lava_generator", CobblestoneSemanticsConfig.LAVA_GENERATOR_POWER_PER_LAVA_BUCKET.get(),CobblestoneSemanticsConfig.LAVA_GENERATOR_DELAY.get()));

@@ -1,24 +1,25 @@
 package Strikeboom.cobblestonesemantics.blockentities.itemhandlers;
 
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class CobblestoneMelterItemHandler extends ItemStackHandler {
+public class CobblestoneMelterItemHandler extends ItemStacksResourceHandler {
     public CobblestoneMelterItemHandler(int size) {
         super(size);
     }
 
     @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.is(Tags.Items.COBBLESTONES) || stack.is(Tags.Items.STONES);
+    public boolean isValid(int index, ItemResource resource) {
+        return resource.is(Tags.Items.COBBLESTONES) || resource.is(Tags.Items.STONES);
     }
 
     @Override
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (!stack.is(Tags.Items.COBBLESTONES) && !stack.is(Tags.Items.STONES)) {
-            return stack;
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (!resource.is(Tags.Items.COBBLESTONES) && !resource.is(Tags.Items.STONES)) {
+            return 0;
         }
-        return super.insertItem(slot, stack, simulate);
+        return super.insert(index, resource, amount, transaction);
     }
 }
