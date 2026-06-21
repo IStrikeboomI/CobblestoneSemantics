@@ -28,7 +28,7 @@ public class AllInOneGeneratorMenu extends AbstractContainerMenu {
         blockEntity = (AllInOneGeneratorBlockEntity)playerInventory.player.level().getBlockEntity(pos);
 
         if (blockEntity != null) {
-            blockInventory = (AllInOneGeneratorItemHandler) playerInventory.player.level().getCapability(Capabilities.Item.BLOCK,pos,null);
+            blockInventory = blockEntity.itemStackHandler;
             if (blockInventory != null) {
                 addSlot(new ResourceHandlerSlot(blockInventory,blockInventory::set, 0, 29, 51));
                 int melterSlotIndex = 1;
@@ -47,20 +47,7 @@ public class AllInOneGeneratorMenu extends AbstractContainerMenu {
                 }
             }
         }
-        int xPos = 8;
-        int yPos = 84;
-
-        //draws hotbar
-        for (int x = 0; x < 9; x++) {
-            addSlot(new Slot(playerInventory, x, xPos + x * 18, yPos + 58));
-        }
-
-        //draws the 27 main slots
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(playerInventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18));
-            }
-        }
+        addStandardInventorySlots(playerInventory,8,84);
     }
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {

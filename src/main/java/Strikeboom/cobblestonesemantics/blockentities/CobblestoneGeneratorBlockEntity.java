@@ -15,6 +15,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.StacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class CobblestoneGeneratorBlockEntity extends BlockEntity {
     public final CobblestoneGeneratorItemHandler itemStackHandler;
@@ -27,7 +29,9 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
             @Override
             protected void onContentsChanged(int index, ItemStack previousContents) {
                 setChanged();
-                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+                if (level != null) {
+                    level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+                }
             }
         };
     }
@@ -37,18 +41,15 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
             @Override
             protected void onContentsChanged(int index, ItemStack previousContents) {
                 setChanged();
-                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+                if (level != null) {
+                    level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+                }
             }
         };
         this.delayUntilNextCobbleStone = delayUntilNextCobbleStone;
         this.amountOfCobblestoneEachOperation = amountOfCobblestoneEachOperation;
     }
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        level.invalidateCapabilities(getBlockPos());
-        invalidateCapabilities();
-    }
+
 
     @Override
     protected void saveAdditional(ValueOutput output) {
@@ -96,15 +97,20 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         BlockEntity upBE = level.getBlockEntity(this.worldPosition.relative(target));
         if (upBE != null) {
             if (!(upBE instanceof CobblestoneGeneratorBlockEntity)) {
-                StacksResourceHandler<ItemStack,ItemResource> cap = (StacksResourceHandler<ItemStack, ItemResource>) level.getCapability(Capabilities.Item.BLOCK,this.worldPosition.above(),target.getOpposite());
+                ItemStacksResourceHandler cap = (ItemStacksResourceHandler) level.getCapability(Capabilities.Item.BLOCK,this.worldPosition.above(),target.getOpposite());
                 if (cap != null) {
                     if (getCobblestoneAmount() > 0) {
                         for (int i = 0; i < cap.size(); i++) {
                             if (cap.getAmountAsInt(i) < 64) {
                                 int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
                                 int toInsert = Math.min(64,getCobblestoneAmount());
-                                int inserted = cap.insert(cap.getResource(i), itemStackHandler.extract(itemStackHandler.getResource(largestSlotIndex), toInsert, null), null);
-                                setChanged();
+                                try (Transaction tx = Transaction.openRoot()) {
+                                    int inserted = cap.insert(cap.getResource(i), itemStackHandler.extract(itemStackHandler.getResource(largestSlotIndex), toInsert, tx), tx);
+                                    if (inserted != 0) {
+                                        tx.commit();
+                                        setChanged();
+                                    }
+                                }
                             }
                         }
                     }

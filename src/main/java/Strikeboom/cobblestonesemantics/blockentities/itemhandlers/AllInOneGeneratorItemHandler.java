@@ -25,12 +25,6 @@ public class AllInOneGeneratorItemHandler extends ItemStacksResourceHandler {
         }
         return false;
     }
-
-    @Override
-    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
-        return super.insert(index, resource, amount, transaction);
-    }
-
     @Override
     protected int getCapacity(int index, ItemResource resource) {
         return 1;

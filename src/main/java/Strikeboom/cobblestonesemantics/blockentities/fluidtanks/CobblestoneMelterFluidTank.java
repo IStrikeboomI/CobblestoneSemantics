@@ -7,8 +7,8 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 
 public class CobblestoneMelterFluidTank extends FluidStacksResourceHandler {
-    public CobblestoneMelterFluidTank(int capacity) {
-        super(1,capacity);
+    public CobblestoneMelterFluidTank() {
+        super(1,10000);
     }
 
     @Override

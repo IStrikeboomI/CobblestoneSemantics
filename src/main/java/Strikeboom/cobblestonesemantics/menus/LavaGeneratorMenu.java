@@ -22,20 +22,7 @@ public class LavaGeneratorMenu extends AbstractContainerMenu {
         super(CobblestoneSemanticsMenus.LAVA_GENERATOR_MENU.get(), windowId);
         blockEntity = (LavaGeneratorBlockEntity) playerInventory.player.level().getBlockEntity(pos);
 
-        int xPos = 8;
-        int yPos = 84;
-
-        //draws hotbar
-        for (int x = 0; x < 9; x++) {
-            addSlot(new Slot(playerInventory, x, xPos + x * 18, yPos + 58));
-        }
-
-        //draws the 27 main slots
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(playerInventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18));
-            }
-        }
+        addStandardInventorySlots(playerInventory,8,84);
     }
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {

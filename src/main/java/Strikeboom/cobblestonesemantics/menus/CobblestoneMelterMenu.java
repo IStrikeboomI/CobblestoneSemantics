@@ -1,6 +1,7 @@
 package Strikeboom.cobblestonesemantics.menus;
 
 import Strikeboom.cobblestonesemantics.blockentities.CobblestoneMelterBlockEntity;
+import Strikeboom.cobblestonesemantics.blockentities.itemhandlers.CobblestoneMelterItemHandler;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsBlocks;
 import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsMenus;
 import net.minecraft.core.BlockPos;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 public class CobblestoneMelterMenu extends AbstractContainerMenu {
 
     public final CobblestoneMelterBlockEntity blockEntity;
-    private StacksResourceHandler<ItemStack, ItemResource>  blockInventory;
+    private CobblestoneMelterItemHandler blockInventory;
     public CobblestoneMelterMenu(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(windowId,FriendlyByteBuf.readBlockPos(extraData),playerInventory);
     }
@@ -29,24 +30,12 @@ public class CobblestoneMelterMenu extends AbstractContainerMenu {
         blockEntity = (CobblestoneMelterBlockEntity)playerInventory.player.level().getBlockEntity(pos);
 
         if (blockEntity != null) {
-            blockInventory = (StacksResourceHandler<ItemStack, ItemResource>) playerInventory.player.level().getCapability(Capabilities.Item.BLOCK,pos,null);
-            addSlot(new ResourceHandlerSlot(blockInventory,blockInventory::set,0,53,33));
-        }
-
-        int xPos = 8;
-        int yPos = 84;
-
-        //draws hotbar
-        for (int x = 0; x < 9; x++) {
-            addSlot(new Slot(playerInventory, x, xPos + x * 18, yPos + 58));
-        }
-
-        //draws the 27 main slots
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(playerInventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18));
+            blockInventory = blockEntity.itemStackHandler;
+            if (blockInventory != null) {
+                addSlot(new ResourceHandlerSlot(blockInventory, blockInventory::set, 0, 53, 33));
             }
         }
+        addStandardInventorySlots(playerInventory,8,84);
     }
 
     @Override

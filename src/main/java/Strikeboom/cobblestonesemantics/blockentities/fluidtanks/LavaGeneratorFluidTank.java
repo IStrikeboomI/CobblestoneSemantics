@@ -6,8 +6,8 @@ import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 
 
 public class LavaGeneratorFluidTank extends FluidStacksResourceHandler {
-    public LavaGeneratorFluidTank(int capacity) {
-        super(1,capacity);
+    public LavaGeneratorFluidTank() {
+        super(1,5000);
     }
 
     @Override

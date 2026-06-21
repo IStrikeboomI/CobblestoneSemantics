@@ -5,8 +5,8 @@ import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class CobblestoneSemanticsEnergyStorage extends SimpleEnergyHandler {
-    public CobblestoneSemanticsEnergyStorage(int capacity, boolean receivePower , boolean sendPower) {
-        super(capacity,receivePower ? capacity : 0,sendPower ? capacity : 0);
+    public CobblestoneSemanticsEnergyStorage(int capacity) {
+        super(capacity,capacity,capacity);
     }
     protected void onEnergyChanged() {}
 
@@ -25,11 +25,6 @@ public class CobblestoneSemanticsEnergyStorage extends SimpleEnergyHandler {
     @Override
     public void set(int amount) {
         super.set(amount);
-        onEnergyChanged();
-    }
-
-    public void addEnergy(int energy,TransactionContext transaction) {
-        insert(energy,transaction);
         onEnergyChanged();
     }
 

@@ -8,6 +8,9 @@ import Strikeboom.cobblestonesemantics.init.CobblestoneSemanticsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -21,32 +24,38 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class CobblestoneMelterBlockEntity extends BlockEntity {
-    public ItemStacksResourceHandler itemStackHandler;
-    public FluidStacksResourceHandler fluidTank;
+    public CobblestoneMelterItemHandler itemStackHandler;
+    public CobblestoneMelterFluidTank fluidTank;
     public CobblestoneSemanticsEnergyStorage energyStorage;
     int cooldown;
     int delay;
     public CobblestoneMelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(CobblestoneSemanticsBlockEntities.COBBLESTONE_MELTER_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
-        itemStackHandler = new CobblestoneMelterItemHandler(1)  {
+        itemStackHandler = new CobblestoneMelterItemHandler()  {
             @Override
             protected void onContentsChanged(int index, ItemStack previousContents) {
-                setChanged();
-                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+                if (level != null) {
+                    setChanged();
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
             }
         };
-        fluidTank = new CobblestoneMelterFluidTank(10000)  {
+        fluidTank = new CobblestoneMelterFluidTank()  {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
-                setChanged();
-                level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(), Block.UPDATE_ALL);
+                if (level != null) {
+                    setChanged();
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
             }
         };
-        energyStorage = new CobblestoneSemanticsEnergyStorage(100000,true,false) {
+        energyStorage = new CobblestoneSemanticsEnergyStorage(100000) {
             @Override
             protected void onEnergyChanged() {
                 if (level != null) {
@@ -58,21 +67,16 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
         cooldown = 0;
         delay = CobblestoneSemanticsConfig.COBBLESTONE_MELTER_DELAY.get();
     }
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        level.invalidateCapabilities(getBlockPos());
-        invalidateCapabilities();
-    }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("energy",energyStorage.getAmountAsInt());
         itemStackHandler.serialize(output);
-        fluidTank.serialize(output);
+        ValueOutput fluidStacks = output.child("fluidStacks");
+        fluidTank.serialize(fluidStacks);
         output.putInt("cooldown", cooldown);
-        output.putInt("delayUntilNextCobbleStone", delay);
+        output.putInt("delay", delay);
     }
 
     @Override
@@ -80,9 +84,9 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
         super.loadAdditional(input);
         energyStorage.set(input.getInt("energy").orElseThrow());
         itemStackHandler.deserialize(input);
-        fluidTank.deserialize(input);
+        fluidTank.deserialize(input.childOrEmpty("fluidStacks"));
         cooldown = input.getInt("cooldown").orElseThrow();
-        delay = input.getInt("delayUntilNextCobbleStone").orElseThrow();
+        delay = input.getInt("delay").orElseThrow();
     }
 
     public void tickServer() {
@@ -110,8 +114,16 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
             } else {
                 fluidTank.set(0,FluidResource.of(Fluids.LAVA),CobblestoneSemanticsConfig.COBBLESTONE_MELTER_LAVA_PER_COBBLESTONE.get());
             }
+
             itemStackHandler.set(0,itemStackHandler.getResource(0),itemStackHandler.getAmountAsInt(0) - 1);
-            energyStorage.addEnergy(-CobblestoneSemanticsConfig.COBBLESTONE_MELTER_POWER_USAGE.get(),null);
+
+            try (Transaction tx = Transaction.openRoot()) {
+                int energy = energyStorage.extract(CobblestoneSemanticsConfig.COBBLESTONE_MELTER_POWER_USAGE.get(),tx);
+                if (energy != 0) {
+                    tx.commit();
+                }
+            }
+
             if (itemStackHandler.getResource(0).isEmpty()) {
                 level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false));
             }
@@ -138,8 +150,28 @@ public class CobblestoneMelterBlockEntity extends BlockEntity {
 
     @Nullable
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    @Override
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
+        int oldCooldown = cooldown;
+        int oldDelay = delay;
+        CobblestoneMelterItemHandler oldItemStackHandler = itemStackHandler;
+        CobblestoneMelterFluidTank oldFluidTank = fluidTank;
+        CobblestoneSemanticsEnergyStorage oldEnergyStorage = energyStorage;
+
+        // This will call loadClientData()
+        handleUpdateTag(valueInput);
+
+        // If any of the values was changed we request a refresh of our model data and send a block update
+        if (oldCooldown != cooldown || oldDelay != delay ||
+                !Objects.equals(oldItemStackHandler,itemStackHandler) ||
+                !Objects.equals(oldEnergyStorage,energyStorage) ||
+                !Objects.equals(oldFluidTank, fluidTank)) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
+    }
 }

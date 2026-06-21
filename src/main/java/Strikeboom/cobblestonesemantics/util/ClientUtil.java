@@ -12,6 +12,8 @@ import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -35,7 +37,8 @@ public class ClientUtil {
         Material.Baked stillMaterial = fluidModel.stillMaterial();
         TextureAtlasSprite fluidStillSprite = stillMaterial.sprite();
 
-        int fluidColor = fluidModel.fluidTintSource().colorAsStack(fluidStack);
+        FluidTintSource tintSource = fluidModel.fluidTintSource();
+        int fluidColor = tintSource == null ? 0xFFFFFFFF : tintSource.colorAsStack(fluidStack);
 
         int amount = fluidStack.getAmount();
         int scaledAmount = (amount * height) / capacityMb;
