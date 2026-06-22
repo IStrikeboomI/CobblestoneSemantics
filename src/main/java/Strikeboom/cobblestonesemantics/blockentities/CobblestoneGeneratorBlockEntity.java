@@ -97,20 +97,16 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
         BlockEntity upBE = level.getBlockEntity(this.worldPosition.relative(target));
         if (upBE != null) {
             if (!(upBE instanceof CobblestoneGeneratorBlockEntity)) {
-                ItemStacksResourceHandler cap = (ItemStacksResourceHandler) level.getCapability(Capabilities.Item.BLOCK,this.worldPosition.above(),target.getOpposite());
+                ResourceHandler<ItemResource> cap = level.getCapability(Capabilities.Item.BLOCK, this.worldPosition.above(), target.getOpposite());
                 if (cap != null) {
                     if (getCobblestoneAmount() > 0) {
-                        for (int i = 0; i < cap.size(); i++) {
-                            if (cap.getAmountAsInt(i) < 64) {
-                                int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
-                                int toInsert = Math.min(64,getCobblestoneAmount());
-                                try (Transaction tx = Transaction.openRoot()) {
-                                    int inserted = cap.insert(cap.getResource(i), itemStackHandler.extract(itemStackHandler.getResource(largestSlotIndex), toInsert, tx), tx);
-                                    if (inserted != 0) {
-                                        tx.commit();
-                                        setChanged();
-                                    }
-                                }
+                        int largestSlotIndex = itemStackHandler.getLargestSlotIndex();
+                        int toInsert = Math.min(64, getCobblestoneAmount());
+                        try (Transaction tx = Transaction.openRoot()) {
+                            int inserted = cap.insert(itemStackHandler.getResource(largestSlotIndex), itemStackHandler.extract(itemStackHandler.getResource(largestSlotIndex), toInsert, tx), tx);
+                            if (inserted != 0) {
+                                tx.commit();
+                                setChanged();
                             }
                         }
                     }
@@ -118,6 +114,7 @@ public class CobblestoneGeneratorBlockEntity extends BlockEntity {
             }
         }
     }
+
     public int getCobblestoneAmount() {
         int amount = 0;
         for (int i = 0;i < itemStackHandler.size();i++) {
